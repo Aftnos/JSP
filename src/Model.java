@@ -276,6 +276,66 @@ public class Model {
         return 0;
     }
 
+    /** 绑定用户商品 */
+    public static int addUserProduct(int userId, int productId, String sn) {
+        String sql = "INSERT INTO user_products(user_id, product_id, sn) VALUES(?,?,?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ps.setString(3, sn);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /** 查询用户绑定的商品 */
+    public static List<UserProduct> getUserProducts(int userId) {
+        List<UserProduct> list = new ArrayList<>();
+        String sql = "SELECT up.id, up.user_id, up.product_id, up.sn, up.after_sale_status, p.name " +
+                     "FROM user_products up JOIN products p ON up.product_id=p.id WHERE up.user_id=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    UserProduct up = new UserProduct();
+                    up.id = rs.getInt("id");
+                    up.userId = rs.getInt("user_id");
+                    up.productId = rs.getInt("product_id");
+                    up.sn = rs.getString("sn");
+                    up.afterSaleStatus = rs.getString("after_sale_status");
+                    up.productName = rs.getString("name");
+                    list.add(up);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /** 用户申请售后 */
+    public static int applyAfterSale(int userProductId) {
+        return updateAfterSaleStatus(userProductId, "申请中");
+    }
+
+    /** 更新售后状态（管理员） */
+    public static int updateAfterSaleStatus(int userProductId, String status) {
+        String sql = "UPDATE user_products SET after_sale_status=? WHERE id=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, userProductId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     // ------- 内部辅助方法 --------
 
     private static List<OrderItem> getOrderItems(int orderId) {
@@ -332,5 +392,14 @@ public class Model {
         public String status;
         public double total;
         public List<OrderItem> items;
+    }
+
+    public static class UserProduct {
+        public int id;
+        public int userId;
+        public int productId;
+        public String sn;
+        public String afterSaleStatus;
+        public String productName;
     }
 }
