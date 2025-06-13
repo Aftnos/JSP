@@ -38,6 +38,9 @@ public class ModelTest {
         
         // 测试订单相关功能
         testOrderOperations();
+
+        // 测试用户绑定商品及售后功能
+        testUserProductOperations();
         
         System.out.println("\n所有测试完成！");
     }
@@ -322,6 +325,54 @@ public class ModelTest {
             }
         } catch (Exception e) {
             System.out.println("✗ 订单操作测试异常: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 测试用户绑定商品及售后操作
+     */
+    public static void testUserProductOperations() {
+        System.out.println("\n=== 测试用户绑定商品及售后 ===");
+
+        try {
+            List<Model.Product> products = Model.getAllProducts();
+            if (products.isEmpty()) {
+                System.out.println("? 没有商品可用于测试用户商品绑定");
+                return;
+            }
+
+            int userId = 1; // 假设存在ID为1的用户
+            int productId = products.get(0).id;
+            String sn = "SN_" + System.currentTimeMillis();
+
+            int addResult = Model.addUserProduct(userId, productId, sn);
+            if (addResult > 0) {
+                System.out.println("✓ 添加用户商品成功");
+            } else {
+                System.out.println("✗ 添加用户商品失败（可能用户或商品不存在）");
+            }
+
+            List<Model.UserProduct> list = Model.getUserProducts(userId);
+            System.out.println("✓ 用户已绑定 " + list.size() + " 个商品");
+
+            if (!list.isEmpty()) {
+                Model.UserProduct up = list.get(0);
+                int apply = Model.applyAfterSale(up.id);
+                if (apply > 0) {
+                    System.out.println("✓ 申请售后成功");
+                } else {
+                    System.out.println("✗ 申请售后失败");
+                }
+
+                int update = Model.updateAfterSaleStatus(up.id, "已完成");
+                if (update > 0) {
+                    System.out.println("✓ 管理员更新售后状态成功");
+                } else {
+                    System.out.println("✗ 管理员更新售后状态失败");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("✗ 用户商品操作测试异常: " + e.getMessage());
         }
     }
     
