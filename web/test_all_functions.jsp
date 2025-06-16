@@ -163,6 +163,9 @@
     </div>
 
     <%
+        // 统一设置请求字符编码，解决POST提交中文乱码问题
+        request.setCharacterEncoding("UTF-8");
+        
         String action = request.getParameter("action");
         String result = "";
         String resultClass = "info";
@@ -302,9 +305,7 @@
 
         <%
             if ("addProduct".equals(action)) {
-                request.setCharacterEncoding("UTF-8");
                 String productName = request.getParameter("productName");
-                //String productName = new String(request.getParameter("productName").getBytes(), StandardCharsets.UTF_8);
                 double productPrice = ServiceLayer.safeParseDouble(request.getParameter("productPrice"), 0);
                 int productStock = ServiceLayer.safeParseInt(request.getParameter("productStock"), 0);
                 String productDescription = request.getParameter("productDescription");
