@@ -2,6 +2,7 @@ import com.Model;
 
 import java.sql.*;
 import java.util.*;
+import com.entity.*;
 
 /**
  * Model类的测试类
@@ -201,13 +202,13 @@ public class ModelTest {
             }
             
             // 测试获取所有商品
-            List<Model.Product> allProducts = Model.getAllProducts();
+            List<Product> allProducts = Model.getAllProducts();
             System.out.println("✓ 获取到 " + allProducts.size() + " 个商品");
             
             // 如果有商品，测试根据ID获取商品
             if (!allProducts.isEmpty()) {
-                Model.Product firstProduct = allProducts.get(0);
-                Model.Product productById = Model.getProductById(firstProduct.id);
+                Product firstProduct = allProducts.get(0);
+                Product productById = Model.getProductById(firstProduct.id);
                 if (productById != null && productById.id == firstProduct.id) {
                     System.out.println("✓ 根据ID获取商品成功: " + productById.name);
                 } else {
@@ -224,7 +225,7 @@ public class ModelTest {
                 }
                 
                 // 验证更新是否生效
-                Model.Product updatedProduct = Model.getProductById(firstProduct.id);
+                Product updatedProduct = Model.getProductById(firstProduct.id);
                 if (updatedProduct != null && updatedProduct.name.equals(updatedName)) {
                     System.out.println("✓ 商品更新验证成功");
                 } else {
@@ -233,7 +234,7 @@ public class ModelTest {
             }
             
             // 测试获取不存在的商品
-            Model.Product nonExistentProduct = Model.getProductById(99999);
+            Product nonExistentProduct = Model.getProductById(99999);
             if (nonExistentProduct == null) {
                 System.out.println("✓ 获取不存在商品正确返回null");
             } else {
@@ -252,22 +253,22 @@ public class ModelTest {
         
         try {
             // 获取商品列表用于创建订单
-            List<Model.Product> products = Model.getAllProducts();
+            List<Product> products = Model.getAllProducts();
             if (products.isEmpty()) {
                 System.out.println("? 没有商品可用于测试订单功能");
                 return;
             }
             
             // 创建测试订单项
-            List<Model.CartItem> cartItems = new ArrayList<>();
-            Model.CartItem item1 = new Model.CartItem();
+            List<CartItem> cartItems = new ArrayList<>();
+            CartItem item1 = new CartItem();
             item1.productId = products.get(0).id;
             item1.quantity = 2;
             item1.price = products.get(0).price;
             cartItems.add(item1);
             
             if (products.size() > 1) {
-                Model.CartItem item2 = new Model.CartItem();
+                CartItem item2 = new CartItem();
                 item2.productId = products.get(1).id;
                 item2.quantity = 1;
                 item2.price = products.get(1).price;
@@ -283,16 +284,16 @@ public class ModelTest {
             }
             
             // 测试获取用户订单
-            List<Model.Order> userOrders = Model.getOrdersByUser(1);
+            List<Order> userOrders = Model.getOrdersByUser(1);
             System.out.println("✓ 用户1有 " + userOrders.size() + " 个订单");
             
             // 测试获取所有订单
-            List<Model.Order> allOrders = Model.getAllOrders();
+            List<Order> allOrders = Model.getAllOrders();
             System.out.println("✓ 系统中共有 " + allOrders.size() + " 个订单");
             
             // 如果有订单，测试更新订单状态
             if (!allOrders.isEmpty()) {
-                Model.Order firstOrder = allOrders.get(0);
+                Order firstOrder = allOrders.get(0);
                 int updateStatusResult = Model.updateOrderStatus(firstOrder.id, "已发货");
                 if (updateStatusResult > 0) {
                     System.out.println("✓ 更新订单状态成功");
@@ -301,9 +302,9 @@ public class ModelTest {
                 }
                 
                 // 验证订单状态更新
-                List<Model.Order> updatedOrders = Model.getAllOrders();
-                Model.Order updatedOrder = null;
-                for (Model.Order order : updatedOrders) {
+                List<Order> updatedOrders = Model.getAllOrders();
+                Order updatedOrder = null;
+                for (Order order : updatedOrders) {
                     if (order.id == firstOrder.id) {
                         updatedOrder = order;
                         break;
@@ -317,7 +318,7 @@ public class ModelTest {
             }
             
             // 测试获取不存在用户的订单
-            List<Model.Order> nonExistentUserOrders = Model.getOrdersByUser(99999);
+            List<Order> nonExistentUserOrders = Model.getOrdersByUser(99999);
             if (nonExistentUserOrders.isEmpty()) {
                 System.out.println("✓ 不存在用户的订单列表为空");
             } else {
@@ -335,7 +336,7 @@ public class ModelTest {
         System.out.println("\n=== 测试用户绑定商品及售后 ===");
 
         try {
-            List<Model.Product> products = Model.getAllProducts();
+            List<Product> products = Model.getAllProducts();
             if (products.isEmpty()) {
                 System.out.println("? 没有商品可用于测试用户商品绑定");
                 return;
@@ -352,11 +353,11 @@ public class ModelTest {
                 System.out.println("✗ 添加用户商品失败（可能用户或商品不存在）");
             }
 
-            List<Model.UserProduct> list = Model.getUserProducts(userId);
+            List<UserProduct> list = Model.getUserProducts(userId);
             System.out.println("✓ 用户已绑定 " + list.size() + " 个商品");
 
             if (!list.isEmpty()) {
-                Model.UserProduct up = list.get(0);
+                UserProduct up = list.get(0);
                 int apply = Model.applyAfterSale(up.id);
                 if (apply > 0) {
                     System.out.println("✓ 申请售后成功");
@@ -379,7 +380,7 @@ public class ModelTest {
     /**
      * 辅助方法：打印商品信息
      */
-    public static void printProduct(Model.Product product) {
+    public static void printProduct(Product product) {
         if (product != null) {
             System.out.println("商品ID: " + product.id + ", 名称: " + product.name + 
                              ", 价格: " + product.price + ", 库存: " + product.stock);
@@ -389,7 +390,7 @@ public class ModelTest {
     /**
      * 辅助方法：打印订单信息
      */
-    public static void printOrder(Model.Order order) {
+    public static void printOrder(Order order) {
         if (order != null) {
             System.out.println("订单ID: " + order.id + ", 用户ID: " + order.userId + 
                              ", 状态: " + order.status + ", 总金额: " + order.total + 

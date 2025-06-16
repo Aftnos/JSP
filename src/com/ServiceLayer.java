@@ -2,6 +2,7 @@ package com;
 
 import java.util.*;
 import java.sql.Timestamp;
+import com.entity.*;
 
 /**
  * 业务服务层 - 为JSP前端页面提供简单易用的接口
@@ -151,8 +152,8 @@ public class ServiceLayer {
      * 
      * 使用方法：
      * <%
-     *     List<com.Model.Product> products = com.ServiceLayer.getAllProducts();
-     *     for (com.Model.Product product : products) {
+     *     List<com.Product> products = com.ServiceLayer.getAllProducts();
+     *     for (com.Product product : products) {
      *         out.println("商品名：" + product.name);
      *         out.println("价格：" + product.price);
      *         out.println("库存：" + product.stock);
@@ -165,9 +166,9 @@ public class ServiceLayer {
      * - 返回的列表永远不会为null，最多是空列表
      * - 商品按照数据库中的顺序返回
      */
-    public static List<Model.Product> getAllProducts() {
+    public static List<Product> getAllProducts() {
         try {
-            List<Model.Product> products = Model.getAllProducts();
+            List<Product> products = Model.getAllProducts();
             return products != null ? products : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("获取商品列表失败: " + e.getMessage());
@@ -181,7 +182,7 @@ public class ServiceLayer {
      * 使用方法：
      * <%
      *     int productId = Integer.parseInt(request.getParameter("id"));
-     *     com.Model.Product product = com.ServiceLayer.getProductById(productId);
+     *     com.Product product = com.ServiceLayer.getProductById(productId);
      *     if (product != null) {
      *         out.println("商品详情：" + product.name);
      *     } else {
@@ -192,7 +193,7 @@ public class ServiceLayer {
      * @param productId 商品ID（必须大于0）
      * @return 商品对象，如果不存在则返回null
      */
-    public static Model.Product getProductById(int productId) {
+    public static Product getProductById(int productId) {
         if (productId <= 0) {
             return null;
         }
@@ -344,8 +345,8 @@ public class ServiceLayer {
      * 
      * 使用方法：
      * <%
-     *     List<com.Model.CartItem> cartItems = new ArrayList<>();
-     *     com.Model.CartItem item = new com.Model.CartItem();
+     *     List<com.CartItem> cartItems = new ArrayList<>();
+     *     com.CartItem item = new com.CartItem();
      *     item.productId = 1;
      *     item.quantity = 2;
      *     item.price = 2999.0;
@@ -368,7 +369,7 @@ public class ServiceLayer {
      * - 每个商品的数量必须大于0
      * - 商品价格必须大于0
      */
-    public static String createOrder(int userId, List<Model.CartItem> cartItems) {
+    public static String createOrder(int userId, List<CartItem> cartItems) {
         if (userId <= 0) {
             return "用户ID无效";
         }
@@ -377,7 +378,7 @@ public class ServiceLayer {
         }
         
         // 验证购物车商品
-        for (Model.CartItem item : cartItems) {
+        for (CartItem item : cartItems) {
             if (item.productId <= 0) {
                 return "商品ID无效";
             }
@@ -408,8 +409,8 @@ public class ServiceLayer {
      * 使用方法：
      * <%
      *     int userId = (Integer) session.getAttribute("userId");
-     *     List<com.Model.Order> orders = com.ServiceLayer.getUserOrders(userId);
-     *     for (com.Model.Order order : orders) {
+     *     List<com.Order> orders = com.ServiceLayer.getUserOrders(userId);
+     *     for (com.Order order : orders) {
      *         out.println("订单号：" + order.id);
      *         out.println("订单状态：" + order.status);
      *         out.println("订单总额：" + order.total);
@@ -419,13 +420,13 @@ public class ServiceLayer {
      * @param userId 用户ID
      * @return 用户的订单列表，按时间倒序排列
      */
-    public static List<Model.Order> getUserOrders(int userId) {
+    public static List<Order> getUserOrders(int userId) {
         if (userId <= 0) {
             return new ArrayList<>();
         }
         
         try {
-            List<Model.Order> orders = Model.getOrdersByUser(userId);
+            List<Order> orders = Model.getOrdersByUser(userId);
             return orders != null ? orders : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("获取用户订单失败: " + e.getMessage());
@@ -438,8 +439,8 @@ public class ServiceLayer {
      * 
      * 使用方法：
      * <%
-     *     List<com.Model.Order> allOrders = com.ServiceLayer.getAllOrders();
-     *     for (com.Model.Order order : allOrders) {
+     *     List<com.Order> allOrders = com.ServiceLayer.getAllOrders();
+     *     for (com.Order order : allOrders) {
      *         out.println("用户ID：" + order.userId);
      *         out.println("订单状态：" + order.status);
      *     }
@@ -447,9 +448,9 @@ public class ServiceLayer {
      * 
      * @return 所有订单列表，按时间倒序排列
      */
-    public static List<Model.Order> getAllOrders() {
+    public static List<Order> getAllOrders() {
         try {
-            List<Model.Order> orders = Model.getAllOrders();
+            List<Order> orders = Model.getAllOrders();
             return orders != null ? orders : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("获取所有订单失败: " + e.getMessage());
@@ -550,8 +551,8 @@ public class ServiceLayer {
      * 
      * 使用方法：
      * <%
-     *     List<com.Model.UserProduct> userProducts = com.ServiceLayer.getUserProducts(userId);
-     *     for (com.Model.UserProduct up : userProducts) {
+     *     List<com.UserProduct> userProducts = com.ServiceLayer.getUserProducts(userId);
+     *     for (com.UserProduct up : userProducts) {
      *         out.println("商品名：" + up.productName);
      *         out.println("序列号：" + up.sn);
      *         out.println("售后状态：" + up.afterSaleStatus);
@@ -561,13 +562,13 @@ public class ServiceLayer {
      * @param userId 用户ID
      * @return 用户绑定的商品列表
      */
-    public static List<Model.UserProduct> getUserProducts(int userId) {
+    public static List<UserProduct> getUserProducts(int userId) {
         if (userId <= 0) {
             return new ArrayList<>();
         }
         
         try {
-            List<Model.UserProduct> products = Model.getUserProducts(userId);
+            List<UserProduct> products = Model.getUserProducts(userId);
             return products != null ? products : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("获取用户商品失败: " + e.getMessage());
