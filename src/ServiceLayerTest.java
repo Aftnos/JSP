@@ -1,8 +1,8 @@
-import com.Model;
 import com.ServiceLayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.entity.*;
 import java.sql.Timestamp;
 
 /**
@@ -122,13 +122,13 @@ public class ServiceLayerTest {
         
         // 获取所有商品
         System.out.println("测试获取所有商品...");
-        List<Model.Product> products = ServiceLayer.getAllProducts();
+        List<Product> products = ServiceLayer.getAllProducts();
         System.out.println("商品数量: " + products.size());
         assert !products.isEmpty() : "商品列表不应为空";
         
         // 查找刚添加的商品
-        Model.Product addedProduct = null;
-        for (Model.Product p : products) {
+        Product addedProduct = null;
+        for (Product p : products) {
             if (p.name.equals(productName)) {
                 addedProduct = p;
                 break;
@@ -138,7 +138,7 @@ public class ServiceLayerTest {
         
         // 测试获取单个商品
         System.out.println("测试获取单个商品...");
-        Model.Product product = ServiceLayer.getProductById(addedProduct.id);
+        Product product = ServiceLayer.getProductById(addedProduct.id);
         System.out.println("获取到商品: " + product.name);
         assert product != null : "获取单个商品失败";
         assert product.name.equals(productName) : "获取的商品名称不匹配";
@@ -196,9 +196,9 @@ public class ServiceLayerTest {
         assert "success".equals(addResult) : "添加测试商品失败";
         
         // 获取刚添加的商品ID
-        List<Model.Product> products = ServiceLayer.getAllProducts();
-        Model.Product testProduct = null;
-        for (Model.Product p : products) {
+        List<Product> products = ServiceLayer.getAllProducts();
+        Product testProduct = null;
+        for (Product p : products) {
             if (p.name.equals(productName)) {
                 testProduct = p;
                 break;
@@ -207,8 +207,8 @@ public class ServiceLayerTest {
         assert testProduct != null : "未找到测试商品";
         
         // 创建购物车项目
-        List<Model.CartItem> cartItems = new ArrayList<>();
-        Model.CartItem item = new Model.CartItem();
+        List<CartItem> cartItems = new ArrayList<>();
+        CartItem item = new CartItem();
         item.productId = testProduct.id;
         item.quantity = 2;
         item.price = testProduct.price;
@@ -223,18 +223,18 @@ public class ServiceLayerTest {
         
         // 获取用户订单
         System.out.println("测试获取用户订单...");
-        List<Model.Order> userOrders = ServiceLayer.getUserOrders(userId);
+        List<Order> userOrders = ServiceLayer.getUserOrders(userId);
         System.out.println("用户订单数量: " + userOrders.size());
         assert !userOrders.isEmpty() : "用户订单列表不应为空";
         
         // 获取所有订单
         System.out.println("测试获取所有订单...");
-        List<Model.Order> allOrders = ServiceLayer.getAllOrders();
+        List<Order> allOrders = ServiceLayer.getAllOrders();
         System.out.println("所有订单数量: " + allOrders.size());
         assert !allOrders.isEmpty() : "所有订单列表不应为空";
         
         // 更新订单状态
-        Model.Order testOrder = userOrders.get(0);
+        Order testOrder = userOrders.get(0);
         System.out.println("测试更新订单状态...");
         String updateStatusResult = ServiceLayer.updateOrderStatus(testOrder.id, "已发货");
         System.out.println("更新订单状态结果: " + updateStatusResult);
@@ -243,7 +243,7 @@ public class ServiceLayerTest {
         // 验证订单状态更新
         userOrders = ServiceLayer.getUserOrders(userId);
         boolean statusUpdated = false;
-        for (Model.Order order : userOrders) {
+        for (Order order : userOrders) {
             if (order.id == testOrder.id && "已发货".equals(order.status)) {
                 statusUpdated = true;
                 break;
@@ -256,7 +256,7 @@ public class ServiceLayerTest {
         String invalidUserIdResult = ServiceLayer.createOrder(-1, cartItems);
         assert !"success".equals(invalidUserIdResult) : "无效用户ID应该创建订单失败";
         
-        List<Model.CartItem> emptyCart = new ArrayList<>();
+        List<CartItem> emptyCart = new ArrayList<>();
         String emptyCartResult = ServiceLayer.createOrder(userId, emptyCart);
         assert !"success".equals(emptyCartResult) : "空购物车应该创建订单失败";
         
@@ -279,9 +279,9 @@ public class ServiceLayerTest {
         assert "success".equals(addResult) : "添加测试商品失败";
         
         // 获取刚添加的商品ID
-        List<Model.Product> products = ServiceLayer.getAllProducts();
-        Model.Product testProduct = null;
-        for (Model.Product p : products) {
+        List<Product> products = ServiceLayer.getAllProducts();
+        Product testProduct = null;
+        for (Product p : products) {
             if (p.name.equals(productName)) {
                 testProduct = p;
                 break;
@@ -300,13 +300,13 @@ public class ServiceLayerTest {
         
         // 获取用户绑定的商品
         System.out.println("测试获取用户绑定商品...");
-        List<Model.UserProduct> userProducts = ServiceLayer.getUserProducts(userId);
+        List<UserProduct> userProducts = ServiceLayer.getUserProducts(userId);
         System.out.println("用户绑定商品数量: " + userProducts.size());
         assert !userProducts.isEmpty() : "用户绑定商品列表不应为空";
         
         // 查找刚绑定的商品
-        Model.UserProduct boundProduct = null;
-        for (Model.UserProduct up : userProducts) {
+        UserProduct boundProduct = null;
+        for (UserProduct up : userProducts) {
             if (up.sn.equals(serialNumber)) {
                 boundProduct = up;
                 break;
@@ -323,7 +323,7 @@ public class ServiceLayerTest {
         // 验证售后状态
         userProducts = ServiceLayer.getUserProducts(userId);
         boolean statusApplied = false;
-        for (Model.UserProduct up : userProducts) {
+        for (UserProduct up : userProducts) {
             if (up.id == boundProduct.id && "申请中".equals(up.afterSaleStatus)) {
                 statusApplied = true;
                 break;
@@ -340,7 +340,7 @@ public class ServiceLayerTest {
         // 验证售后状态更新
         userProducts = ServiceLayer.getUserProducts(userId);
         boolean statusUpdated = false;
-        for (Model.UserProduct up : userProducts) {
+        for (UserProduct up : userProducts) {
             if (up.id == boundProduct.id && "已处理".equals(up.afterSaleStatus)) {
                 statusUpdated = true;
                 break;

@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ page import="java.util.*" %>
 <%@ page import="com.ServiceLayer" %>
-<%@ page import="com.Model" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
+<%@ page import="com.entity.*" %>
 
 <!DOCTYPE html>
 <html>
@@ -396,7 +396,7 @@
 
         <%
             if ("getAllProducts".equals(action)) {
-                List<Model.Product> products = ServiceLayer.getAllProducts();
+                List<Product> products = ServiceLayer.getAllProducts();
         %>
         <div class="result info">
             <h4>商品列表 (共<%=products.size()%>个商品):</h4>
@@ -409,7 +409,7 @@
                     <th>库存</th>
                     <th>描述</th>
                 </tr>
-                <% for (Model.Product product : products) { %>
+                <% for (Product product : products) { %>
                 <tr>
                     <td><%=product.id%>
                     </td>
@@ -446,7 +446,7 @@
         <%
             if ("getProductById".equals(action)) {
                 int getProductId = ServiceLayer.safeParseInt(request.getParameter("getProductId"), 0);
-                Model.Product product = ServiceLayer.getProductById(getProductId);
+                Product product = ServiceLayer.getProductById(getProductId);
         %>
         <div class="result info">
             <% if (product != null) { %>
@@ -504,8 +504,8 @@
                 int orderQuantity = ServiceLayer.safeParseInt(request.getParameter("orderQuantity"), 0);
                 double orderPrice = ServiceLayer.safeParseDouble(request.getParameter("orderPrice"), 0);
 
-                List<Model.CartItem> cartItems = new ArrayList<>();
-                Model.CartItem item = new Model.CartItem();
+                List<CartItem> cartItems = new ArrayList<>();
+                CartItem item = new CartItem();
                 item.productId = orderProductId;
                 item.quantity = orderQuantity;
                 item.price = orderPrice;
@@ -535,7 +535,7 @@
         <%
             if ("getUserOrders".equals(action)) {
                 int getUserOrdersId = ServiceLayer.safeParseInt(request.getParameter("getUserOrdersId"), 0);
-                List<Model.Order> userOrders = ServiceLayer.getUserOrders(getUserOrdersId);
+                List<Order> userOrders = ServiceLayer.getUserOrders(getUserOrdersId);
         %>
         <div class="result info">
             <h4>用户订单列表 (共<%=userOrders.size()%>个订单):</h4>
@@ -548,7 +548,7 @@
                     <th>状态</th>
                     <th>总金额</th>
                 </tr>
-                <% for (Model.Order order : userOrders) { %>
+                <% for (Order order : userOrders) { %>
                 <tr>
                     <td><%=order.id%>
                     </td>
@@ -580,7 +580,7 @@
 
         <%
             if ("getAllOrders".equals(action)) {
-                List<Model.Order> allOrders = ServiceLayer.getAllOrders();
+                List<Order> allOrders = ServiceLayer.getAllOrders();
         %>
         <div class="result info">
             <h4>所有订单列表 (共<%=allOrders.size()%>个订单):</h4>
@@ -593,7 +593,7 @@
                     <th>状态</th>
                     <th>总金额</th>
                 </tr>
-                <% for (Model.Order order : allOrders) { %>
+                <% for (Order order : allOrders) { %>
                 <tr>
                     <td><%=order.id%>
                     </td>
@@ -703,7 +703,7 @@
         <%
             if ("getUserProducts".equals(action)) {
                 int getUserProductsId = ServiceLayer.safeParseInt(request.getParameter("getUserProductsId"), 0);
-                List<Model.UserProduct> userProducts = ServiceLayer.getUserProducts(getUserProductsId);
+                List<UserProduct> userProducts = ServiceLayer.getUserProducts(getUserProductsId);
         %>
         <div class="result info">
             <h4>用户绑定商品列表 (共<%=userProducts.size()%>个商品):</h4>
@@ -715,7 +715,7 @@
                     <th>序列号</th>
                     <th>售后状态</th>
                 </tr>
-                <% for (Model.UserProduct up : userProducts) { %>
+                <% for (UserProduct up : userProducts) { %>
                 <tr>
                     <td><%=up.id%>
                     </td>
