@@ -1,0 +1,432 @@
+/* ==================== 后台管理系统固定样式 ==================== */
+
+/* 全局重置和基础设置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #F9FAFC;
+    color: #666666;
+    font-size: 14px;
+    line-height: 1.5;
+    min-width: 1280px;
+}
+
+/* ==================== 整体布局 ==================== */
+
+/* 侧边栏 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #1E2128;
+    z-index: 1000;
+    transition: width 0.3s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* 侧边栏收缩状态 */
+.sidebar.collapsed {
+    width: 60px;
+}
+
+/* 主内容区 */
+.main-content {
+    margin-left: 220px;
+    min-height: 100vh;
+    background-color: #F9FAFC;
+    transition: margin-left 0.3s ease;
+    max-width: 1920px;
+}
+
+/* 主内容区适应侧边栏收缩 */
+.main-content.expanded {
+    margin-left: 60px;
+}
+
+/* 小屏幕适配 */
+@media (max-width: 1280px) {
+    .sidebar {
+        width: 60px;
+    }
+    .main-content {
+        margin-left: 60px;
+    }
+}
+
+/* ==================== 色彩体系 ==================== */
+
+/* 浅色模式侧边栏（可选） */
+.sidebar.light-mode {
+    background-color: #F5F7FA;
+}
+
+.sidebar.light-mode .menu-item {
+    color: #666666;
+}
+
+.sidebar.light-mode .menu-item.active,
+.sidebar.light-mode .menu-item:hover {
+    background-color: #E6F7FF;
+    color: #2F80ED;
+}
+
+/* ==================== 文字排版 ==================== */
+
+/* 标题层级 */
+h1, .h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 36px;
+    color: #2E384D;
+    margin-bottom: 16px;
+}
+
+h2, .h2 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 28px;
+    color: #333333;
+    margin-bottom: 12px;
+}
+
+h3, .h3 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: #444444;
+    margin-bottom: 8px;
+}
+
+/* 正文与辅助文字 */
+p, .text-normal {
+    font-size: 14px;
+    line-height: 24px;
+    color: #666666;
+    letter-spacing: 0.5px;
+}
+
+.text-secondary {
+    font-size: 12px;
+    line-height: 20px;
+    color: #999999;
+}
+
+/* ==================== 侧边栏设计 ==================== */
+
+/* 侧边栏头部 */
+.sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid #282B33;
+    text-align: center;
+}
+
+.sidebar-header .logo {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar.collapsed .sidebar-header .logo {
+    display: none;
+}
+
+/* 菜单容器 */
+.sidebar-menu {
+    padding: 8px 0;
+}
+
+/* 一级菜单项 */
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #C0C4CC;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: #282B33;
+    color: #FFFFFF;
+}
+
+.menu-item.active {
+    background-color: #242732;
+    color: #2F80ED;
+}
+
+.menu-item .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.sidebar.collapsed .menu-item .text {
+    display: none;
+}
+
+.sidebar.collapsed .menu-item {
+    justify-content: center;
+    padding: 12px;
+}
+
+.sidebar.collapsed .menu-item .icon {
+    margin-right: 0;
+}
+
+/* 二级菜单项 */
+.submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px;
+    color: #B0B6C0;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-left: 16px;
+}
+
+.submenu-item:hover {
+    background-color: #282B33;
+    color: #FFFFFF;
+}
+
+.submenu-item.active {
+    background-color: #242732;
+    color: #2F80ED;
+}
+
+.sidebar.collapsed .submenu-item {
+    display: none;
+}
+
+/* 收缩按钮 */
+.sidebar-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #C0C4CC;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    color: #FFFFFF;
+}
+
+/* ==================== 主内容区规范 ==================== */
+
+/* 内容容器 */
+.content-container {
+    padding: 24px;
+}
+
+/* 卡片与区块 */
+.card, .content-block {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 16px 24px;
+    margin-bottom: 24px;
+}
+
+.card-header {
+    border-bottom: 1px solid #F0F0F0;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* ==================== 表格样式 ==================== */
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.admin-table thead {
+    background-color: #F5F7FA;
+}
+
+.admin-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666666;
+    border-bottom: 1px solid #E8E8E8;
+    line-height: 40px;
+}
+
+.admin-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #666666;
+    border-bottom: 1px solid #F0F0F0;
+    line-height: 40px;
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background-color: #F9FAFC;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #F0F9FF;
+}
+
+/* ==================== 表单样式 ==================== */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    height: 36px;
+    padding: 8px 12px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #666666;
+    background-color: #FFFFFF;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #2F80ED;
+    box-shadow: 0 0 0 2px rgba(47, 128, 237, 0.1);
+}
+
+.form-textarea {
+    height: auto;
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* ==================== 按钮样式 ==================== */
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-primary {
+    background-color: #2F80ED;
+    color: #FFFFFF;
+    border-color: #2F80ED;
+}
+
+.btn-primary:hover {
+    background-color: #266FE8;
+    border-color: #266FE8;
+}
+
+.btn-secondary {
+    background-color: #F5F7FA;
+    color: #666666;
+    border-color: #DCDFE6;
+}
+
+.btn-secondary:hover {
+    background-color: #E8E8E8;
+    border-color: #C0C4CC;
+}
+
+.btn-danger {
+    background-color: #F56565;
+    color: #FFFFFF;
+    border-color: #F56565;
+}
+
+.btn-danger:hover {
+    background-color: #E53E3E;
+    border-color: #E53E3E;
+}
+
+/* ==================== 工具类 ==================== */
+
+/* 间距工具类 */
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.ml-8 { margin-left: 8px; }
+.mr-8 { margin-right: 8px; }
+
+/* 文本对齐 */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* 显示控制 */
+.d-none { display: none; }
+.d-block { display: block; }
+.d-flex { display: flex; }
+.d-inline-block { display: inline-block; }
+
+/* 弹性布局 */
+.flex-1 { flex: 1; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.align-center { align-items: center; }
+
+/* 状态颜色 */
+.text-success { color: #48BB78; }
+.text-warning { color: #ED8936; }
+.text-danger { color: #F56565; }
+.text-info { color: #4299E1; }
+
+/* 背景颜色 */
+.bg-success { background-color: #F0FFF4; }
+.bg-warning { background-color: #FFFAF0; }
+.bg-danger { background-color: #FED7D7; }
+.bg-info { background-color: #EBF8FF; }
