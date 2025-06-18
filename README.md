@@ -76,5 +76,3 @@ java -cp out:lib/mysql-connector-j-8.0.33.jar ServiceLayerTest
 运行前请确保 MySQL 数据库已启动且配置正确。
 
 ---
-
-该项目结构清晰，功能以简单示例为主，适合作为学习 JSP 与 JDBC 的参考。后续开发者可在此基础上扩展更多业务逻辑或前端页面。希望对你有所帮助！
