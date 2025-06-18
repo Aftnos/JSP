@@ -723,7 +723,8 @@ public class ServiceLayer {
      * 
      * 使用方法：
      * <%
-     *     String result = com.ServiceLayer.bindUserProduct(userId, productId, "SN123456789");
+     *     // 假设用户已完成订单号为 "110A0001"
+     *     String result = com.ServiceLayer.bindUserProduct(userId, productId, "110A0001");
      *     if ("success".equals(result)) {
      *         out.println("商品绑定成功");
      *     } else {
