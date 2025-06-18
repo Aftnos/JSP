@@ -29,4 +29,24 @@ public class AdminDAO {
         }
         return false;
     }
+
+    /**
+     * 更新管理员密码。
+     *
+     * @param adminId 管理员ID
+     * @param newPassword 新密码
+     * @return 更新的行数
+     */
+    public static int updatePassword(int adminId, String newPassword) {
+        String sql = "UPDATE admins SET password=? WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, adminId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

@@ -42,7 +42,13 @@ public class ModelTest {
 
         // 测试用户绑定商品及售后功能
         testUserProductOperations();
-        
+
+        // 测试广告功能
+        testAdvertisementOperations();
+
+        // 测试修改密码功能
+        testPasswordUpdate();
+
         System.out.println("\n所有测试完成！");
     }
     
@@ -374,6 +380,43 @@ public class ModelTest {
             }
         } catch (Exception e) {
             System.out.println("✗ 用户商品操作测试异常: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 测试广告相关操作
+     */
+    public static void testAdvertisementOperations() {
+        System.out.println("\n=== 测试广告操作 ===");
+
+        try {
+            int add = Model.addAdvertisement("测试广告", null, null, true);
+            System.out.println(add > 0 ? "✓ 添加广告成功" : "✗ 添加广告失败");
+
+            List<Advertisement> ads = Model.getAllAdvertisements();
+            System.out.println("✓ 当前广告数量: " + ads.size());
+
+            if (!ads.isEmpty()) {
+                Advertisement ad = ads.get(0);
+                Model.updateAdvertisement(ad.id, ad.title, ad.imageUrl, ad.link, ad.enabled);
+                Model.deleteAdvertisement(ad.id);
+            }
+        } catch (Exception e) {
+            System.out.println("✗ 广告操作测试异常: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 测试修改密码功能
+     */
+    public static void testPasswordUpdate() {
+        System.out.println("\n=== 测试密码修改 ===");
+        try {
+            Model.updateUserPassword(1, "newpass");
+            Model.updateAdminPassword(1, "newadminpass");
+            System.out.println("✓ 密码更新函数调用完成");
+        } catch (Exception e) {
+            System.out.println("✗ 密码修改测试异常: " + e.getMessage());
         }
     }
     

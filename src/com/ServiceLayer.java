@@ -110,6 +110,45 @@ public class ServiceLayer {
             return "系统错误，请稍后重试";
         }
     }
+
+    /**
+     * 更新用户密码
+     *
+     * @param userId 用户ID
+     * @param newPassword 新密码
+     * @return "success" 或错误信息
+     */
+    public static String updateUserPassword(int userId, String newPassword) {
+        if (userId <= 0) {
+            return "用户ID无效";
+        }
+        if (isEmpty(newPassword)) {
+            return "新密码不能为空";
+        }
+        try {
+            int result = Model.updateUserPassword(userId, newPassword);
+            return result > 0 ? "success" : "更新失败";
+        } catch (Exception e) {
+            System.err.println("更新用户密码失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    /**
+     * 更新用户资料
+     */
+    public static String updateUserProfile(int userId, String displayName, String avatar) {
+        if (userId <= 0) {
+            return "用户ID无效";
+        }
+        try {
+            int result = Model.updateUserProfile(userId, displayName, avatar);
+            return result > 0 ? "success" : "更新失败";
+        } catch (Exception e) {
+            System.err.println("更新用户资料失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
     
     // ==================== 管理员相关服务 ====================
     
@@ -132,7 +171,7 @@ public class ServiceLayer {
      * @return true-登录成功，false-登录失败
      */
     public static boolean adminLogin(String username, String password) {
-        if (username == null || username.trim().isEmpty() || 
+        if (username == null || username.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {
             return false;
         }
@@ -142,6 +181,25 @@ public class ServiceLayer {
         } catch (Exception e) {
             System.err.println("管理员登录验证失败: " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * 更新管理员密码
+     */
+    public static String updateAdminPassword(int adminId, String newPassword) {
+        if (adminId <= 0) {
+            return "管理员ID无效";
+        }
+        if (isEmpty(newPassword)) {
+            return "新密码不能为空";
+        }
+        try {
+            int result = Model.updateAdminPassword(adminId, newPassword);
+            return result > 0 ? "success" : "更新失败";
+        } catch (Exception e) {
+            System.err.println("更新管理员密码失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
         }
     }
     
@@ -650,6 +708,64 @@ public class ServiceLayer {
             }
         } catch (Exception e) {
             System.err.println("更新售后状态失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    // ==================== 广告相关服务 ====================
+
+    /** 获取所有广告 */
+    public static List<Advertisement> getAllAdvertisements() {
+        try {
+            List<Advertisement> ads = Model.getAllAdvertisements();
+            return ads != null ? ads : new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("获取广告列表失败: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /** 新增广告 */
+    public static String addAdvertisement(String title, String imageUrl, String link, boolean enabled) {
+        if (isEmpty(title)) {
+            return "标题不能为空";
+        }
+        try {
+            int r = Model.addAdvertisement(title, imageUrl, link, enabled);
+            return r > 0 ? "success" : "添加失败";
+        } catch (Exception e) {
+            System.err.println("添加广告失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    /** 更新广告 */
+    public static String updateAdvertisement(int id, String title, String imageUrl, String link, boolean enabled) {
+        if (id <= 0) {
+            return "广告ID无效";
+        }
+        if (isEmpty(title)) {
+            return "标题不能为空";
+        }
+        try {
+            int r = Model.updateAdvertisement(id, title, imageUrl, link, enabled);
+            return r > 0 ? "success" : "更新失败";
+        } catch (Exception e) {
+            System.err.println("更新广告失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    /** 删除广告 */
+    public static String deleteAdvertisement(int id) {
+        if (id <= 0) {
+            return "广告ID无效";
+        }
+        try {
+            int r = Model.deleteAdvertisement(id);
+            return r > 0 ? "success" : "删除失败";
+        } catch (Exception e) {
+            System.err.println("删除广告失败: " + e.getMessage());
             return "系统错误，请稍后重试";
         }
     }

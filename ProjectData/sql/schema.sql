@@ -4,7 +4,9 @@ USE xiaomi_mall;
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL
+    password VARCHAR(50) NOT NULL,
+    display_name VARCHAR(100),
+    avatar VARCHAR(255)
 );
 
 CREATE TABLE admins (
@@ -48,4 +50,12 @@ CREATE TABLE user_products (
     after_sale_status VARCHAR(20) DEFAULT '正常',
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+CREATE TABLE advertisements (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(100) NOT NULL,
+    image_url VARCHAR(255),
+    link VARCHAR(255),
+    enabled TINYINT DEFAULT 1
 );
