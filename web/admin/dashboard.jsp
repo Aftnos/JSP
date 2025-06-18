@@ -18,7 +18,9 @@
     <h2>欢迎，<%= admin %></h2>
     <nav>
         <a href="products.jsp">商品管理</a>
+        <a href="users.jsp">用户管理</a>
         <a href="orders.jsp">订单管理</a>
+        <a href="after_sale.jsp">售后管理</a>
         <a href="ads.jsp">广告管理</a>
         <a href="logout.jsp">退出</a>
     </nav>
