@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- 引入CSS样式 -->
-<link rel="stylesheet" type="text/css" href="../css/admin-layout.css">
+<link rel="stylesheet" type="text/css" href="./css/admin-layout.css">
 <!-- 侧边栏组件 -->
 <div class="sidebar" id="sidebar">
     <!-- 侧边栏头部 -->

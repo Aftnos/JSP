@@ -69,5 +69,3 @@ POST提交请求出现中文乱码，数据传递到ServiceLayer.java时已经�
     out.println("参数字符长度: " + (testParam != null ? testParam.length() : 0));
 %>
 ```
-
-通过以上配置，应该能够完全解决POST请求中文乱码问题。
