@@ -9,6 +9,8 @@ public class Product {
     public int id;
     /** 商品名称 */
     public String name;
+    /** 商品分类ID */
+    public int categoryId;
     /** 商品价格 */
     public double price;
     /** 库存数量 */

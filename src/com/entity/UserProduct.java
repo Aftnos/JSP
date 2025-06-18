@@ -11,8 +11,8 @@ public class UserProduct {
     public int userId;
     /** 商品ID */
     public int productId;
-    /** 商品序列号 */
-    public String sn;
+    /** 订单编号 */
+    public String orderNo;
     /** 售后状态 */
     public String afterSaleStatus;
     /** 商品名称（联表查询时填充） */

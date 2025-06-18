@@ -23,7 +23,7 @@ public class OrderDAO {
      * @return 1 表示成功，0 表示失败
      */
     public static int createOrder(int userId, List<CartItem> items) {
-        String orderSql = "INSERT INTO orders(user_id, order_date, status, total) VALUES(?, ?, '未发货', ?)";
+        String orderSql = "INSERT INTO orders(order_no, user_id, order_date, status, total, pay_status) VALUES(?, ?, ?, '待支付', ?, '未支付')";
         String itemSql = "INSERT INTO order_items(order_id, product_id, quantity, price) VALUES(?, ?, ?, ?)";
         double total = 0;
         for (CartItem item : items) {
@@ -33,9 +33,10 @@ public class OrderDAO {
             conn.setAutoCommit(false);
             int orderId;
             try (PreparedStatement ps = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setInt(1, userId);
-                ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setDouble(3, total);
+                ps.setString(1, generateOrderNo());
+                ps.setInt(2, userId);
+                ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setDouble(4, total);
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -80,9 +81,11 @@ public class OrderDAO {
                 while (rs.next()) {
                     Order o = new Order();
                     o.id = rs.getInt("id");
+                    o.orderNo = rs.getString("order_no");
                     o.userId = rs.getInt("user_id");
                     o.orderDate = rs.getTimestamp("order_date");
                     o.status = rs.getString("status");
+                    o.payStatus = rs.getString("pay_status");
                     o.total = rs.getDouble("total");
                     o.items = getOrderItems(o.id);
                     list.add(o);
@@ -108,9 +111,11 @@ public class OrderDAO {
             while (rs.next()) {
                 Order o = new Order();
                 o.id = rs.getInt("id");
+                o.orderNo = rs.getString("order_no");
                 o.userId = rs.getInt("user_id");
                 o.orderDate = rs.getTimestamp("order_date");
                 o.status = rs.getString("status");
+                o.payStatus = rs.getString("pay_status");
                 o.total = rs.getDouble("total");
                 o.items = getOrderItems(o.id);
                 list.add(o);
@@ -151,9 +156,37 @@ public class OrderDAO {
                 if (rs.next()) {
                     Order o = new Order();
                     o.id = rs.getInt("id");
+                    o.orderNo = rs.getString("order_no");
                     o.userId = rs.getInt("user_id");
                     o.orderDate = rs.getTimestamp("order_date");
                     o.status = rs.getString("status");
+                    o.payStatus = rs.getString("pay_status");
+                    o.total = rs.getDouble("total");
+                    o.items = getOrderItems(o.id);
+                    return o;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /** 根据订单号获取订单 */
+    public static Order getOrderByNo(String orderNo) {
+        String sql = "SELECT * FROM orders WHERE order_no=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, orderNo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Order o = new Order();
+                    o.id = rs.getInt("id");
+                    o.orderNo = rs.getString("order_no");
+                    o.userId = rs.getInt("user_id");
+                    o.orderDate = rs.getTimestamp("order_date");
+                    o.status = rs.getString("status");
+                    o.payStatus = rs.getString("pay_status");
                     o.total = rs.getDouble("total");
                     o.items = getOrderItems(o.id);
                     return o;
@@ -215,5 +248,24 @@ public class OrderDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    /** 生成8位16进制订单号 */
+    private static String generateOrderNo() {
+        String hex = Integer.toHexString((int) (System.currentTimeMillis() & 0xFFFFFFF));
+        return String.format("%8s", hex).replace(' ', '0').toUpperCase();
+    }
+
+    /** 支付订单 */
+    public static int payOrder(int orderId) {
+        String sql = "UPDATE orders SET pay_status='已支付', status='待发货' WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

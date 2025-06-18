@@ -27,6 +27,7 @@ public class ProductDAO {
                 Product p = new Product();
                 p.id = rs.getInt("id");
                 p.name = rs.getString("name");
+                p.categoryId = rs.getInt("category_id");
                 p.price = rs.getDouble("price");
                 p.stock = rs.getInt("stock");
                 p.description = rs.getString("description");
@@ -54,6 +55,7 @@ public class ProductDAO {
                     Product p = new Product();
                     p.id = rs.getInt("id");
                     p.name = rs.getString("name");
+                    p.categoryId = rs.getInt("category_id");
                     p.price = rs.getDouble("price");
                     p.stock = rs.getInt("stock");
                     p.description = rs.getString("description");
@@ -75,14 +77,15 @@ public class ProductDAO {
      * @param desc 描述
      * @return 影响的行数
      */
-    public static int addProduct(String name, double price, int stock, String desc) {
-        String sql = "INSERT INTO products(name, price, stock, description) VALUES(?, ?, ?, ?)";
+    public static int addProduct(String name, double price, int stock, String desc, int categoryId) {
+        String sql = "INSERT INTO products(name, price, stock, description, category_id) VALUES(?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, name);
             ps.setDouble(2, price);
             ps.setInt(3, stock);
             ps.setString(4, desc);
+            ps.setInt(5, categoryId);
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,15 +103,16 @@ public class ProductDAO {
      * @param desc 描述
      * @return 影响的行数
      */
-    public static int updateProduct(int id, String name, double price, int stock, String desc) {
-        String sql = "UPDATE products SET name=?, price=?, stock=?, description=? WHERE id=?";
+    public static int updateProduct(int id, String name, double price, int stock, String desc, int categoryId) {
+        String sql = "UPDATE products SET name=?, price=?, stock=?, description=?, category_id=? WHERE id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, name);
             ps.setDouble(2, price);
             ps.setInt(3, stock);
             ps.setString(4, desc);
-            ps.setInt(5, id);
+            ps.setInt(5, categoryId);
+            ps.setInt(6, id);
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

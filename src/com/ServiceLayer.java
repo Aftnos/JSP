@@ -258,6 +258,67 @@ public class ServiceLayer {
     }
     
     // ==================== 商品相关服务 ====================
+
+    /** 获取所有商品分类 */
+    public static List<Category> getAllCategories() {
+        try {
+            List<Category> cs = Model.getAllCategories();
+            return cs != null ? cs : new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("获取分类列表失败: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /** 新增分类 */
+    public static String addCategory(String name) {
+        if (isEmpty(name)) {
+            return "分类名称不能为空";
+        }
+        try {
+            int r = Model.addCategory(name.trim());
+            return r > 0 ? "success" : "添加失败";
+        } catch (Exception e) {
+            System.err.println("添加分类失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    /** 更新分类 */
+    public static String updateCategory(int id, String name) {
+        if (id <= 0) return "分类ID无效";
+        if (isEmpty(name)) return "分类名称不能为空";
+        try {
+            int r = Model.updateCategory(id, name.trim());
+            return r > 0 ? "success" : "更新失败";
+        } catch (Exception e) {
+            System.err.println("更新分类失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    /** 删除分类 */
+    public static String deleteCategory(int id) {
+        if (id <= 0) return "分类ID无效";
+        try {
+            int r = Model.deleteCategory(id);
+            return r > 0 ? "success" : "删除失败";
+        } catch (Exception e) {
+            System.err.println("删除分类失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
+    /** 根据ID获取分类 */
+    public static Category getCategoryById(int id) {
+        if (id <= 0) return null;
+        try {
+            return Model.getCategoryById(id);
+        } catch (Exception e) {
+            System.err.println("获取分类失败: " + e.getMessage());
+            return null;
+        }
+    }
     
     /**
      * 获取所有商品列表服务
@@ -337,7 +398,7 @@ public class ServiceLayer {
      * @param description 商品描述（可以为空，最长200字符）
      * @return "success"-添加成功，其他-错误信息
      */
-    public static String addProduct(String name, double price, int stock, String description) {
+    public static String addProduct(String name, double price, int stock, String description, int categoryId) {
         // 参数验证
         if (name == null || name.trim().isEmpty()) {
             return "商品名称不能为空";
@@ -356,7 +417,7 @@ public class ServiceLayer {
         }
         
         try {
-            int result = Model.addProduct(name.trim(), price, stock, description);
+            int result = Model.addProduct(name.trim(), price, stock, description, categoryId);
             if (result > 0) {
                 return "success";
             } else {
@@ -388,19 +449,19 @@ public class ServiceLayer {
      * @param description 新的商品描述
      * @return "success"-更新成功，其他-错误信息
      */
-    public static String updateProduct(int productId, String name, double price, int stock, String description) {
+    public static String updateProduct(int productId, String name, double price, int stock, String description, int categoryId) {
         if (productId <= 0) {
             return "商品ID无效";
         }
         
         // 复用添加商品的验证逻辑
-        String validation = addProduct(name, price, stock, description);
+        String validation = addProduct(name, price, stock, description, categoryId);
         if (!"success".equals(validation)) {
             return validation;
         }
         
         try {
-            int result = Model.updateProduct(productId, name.trim(), price, stock, description);
+            int result = Model.updateProduct(productId, name.trim(), price, stock, description, categoryId);
             if (result > 0) {
                 return "success";
             } else {
@@ -614,6 +675,20 @@ public class ServiceLayer {
         }
     }
 
+    /** 支付订单 */
+    public static String payOrder(int orderId) {
+        if (orderId <= 0) {
+            return "订单ID无效";
+        }
+        try {
+            int r = Model.payOrder(orderId);
+            return r > 0 ? "success" : "支付失败";
+        } catch (Exception e) {
+            System.err.println("支付订单失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
     /** 获取单个订单 */
     public static Order getOrderById(int orderId) {
         if (orderId <= 0) {
@@ -658,22 +733,26 @@ public class ServiceLayer {
      * 
      * @param userId 用户ID
      * @param productId 商品ID
-     * @param serialNumber 商品序列号
+     * @param orderNo 订单编号
      * @return "success"-绑定成功，其他-错误信息
      */
-    public static String bindUserProduct(int userId, int productId, String serialNumber) {
+    public static String bindUserProduct(int userId, int productId, String orderNo) {
         if (userId <= 0) {
             return "用户ID无效";
         }
         if (productId <= 0) {
             return "商品ID无效";
         }
-        if (serialNumber == null || serialNumber.trim().isEmpty()) {
-            return "商品序列号不能为空";
+        if (isEmpty(orderNo)) {
+            return "订单编号不能为空";
         }
-        
+
         try {
-            int result = Model.addUserProduct(userId, productId, serialNumber.trim());
+            Order order = Model.getOrderByNo(orderNo.trim());
+            if (order == null || order.userId != userId || !"已完成".equals(order.status)) {
+                return "订单不存在或未完成";
+            }
+            int result = Model.addUserProduct(userId, productId, orderNo.trim());
             if (result > 0) {
                 return "success";
             } else {
@@ -693,7 +772,7 @@ public class ServiceLayer {
      *     List<com.UserProduct> userProducts = com.ServiceLayer.getUserProducts(userId);
      *     for (com.UserProduct up : userProducts) {
      *         out.println("商品名：" + up.productName);
-     *         out.println("序列号：" + up.sn);
+     *         out.println("订单号：" + up.orderNo);
      *         out.println("售后状态：" + up.afterSaleStatus);
      *     }
      * %>

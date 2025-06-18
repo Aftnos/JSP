@@ -200,7 +200,7 @@ public class ModelTest {
             int productStock = 100;
             String productDesc = "这是一个测试商品";
             
-            int addProductResult = Model.addProduct(productName, productPrice, productStock, productDesc);
+            int addProductResult = Model.addProduct(productName, productPrice, productStock, productDesc, 1);
             if (addProductResult > 0) {
                 System.out.println("✓ 添加商品成功: " + productName);
             } else {
@@ -223,7 +223,7 @@ public class ModelTest {
                 
                 // 测试更新商品
                 String updatedName = "更新后的商品名_" + System.currentTimeMillis();
-                int updateResult = Model.updateProduct(firstProduct.id, updatedName, 199.99, 50, "更新后的描述");
+                int updateResult = Model.updateProduct(firstProduct.id, updatedName, 199.99, 50, "更新后的描述", 1);
                 if (updateResult > 0) {
                     System.out.println("✓ 更新商品成功");
                 } else {

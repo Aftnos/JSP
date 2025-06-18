@@ -17,16 +17,16 @@ public class UserProductDAO {
      *
      * @param userId 用户ID
      * @param productId 商品ID
-     * @param sn 商品序列号
+     * @param orderNo 订单编号
      * @return 插入的行数
      */
-    public static int addUserProduct(int userId, int productId, String sn) {
-        String sql = "INSERT INTO user_products(user_id, product_id, sn) VALUES(?,?,?)";
+    public static int addUserProduct(int userId, int productId, String orderNo) {
+        String sql = "INSERT INTO user_products(user_id, product_id, order_no) VALUES(?,?,?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, productId);
-            ps.setString(3, sn);
+            ps.setString(3, orderNo);
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class UserProductDAO {
      */
     public static List<UserProduct> getUserProducts(int userId) {
         List<UserProduct> list = new ArrayList<>();
-        String sql = "SELECT up.id, up.user_id, up.product_id, up.sn, up.after_sale_status, p.name " +
+        String sql = "SELECT up.id, up.user_id, up.product_id, up.order_no, up.after_sale_status, p.name " +
                      "FROM user_products up JOIN products p ON up.product_id=p.id WHERE up.user_id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -53,7 +53,7 @@ public class UserProductDAO {
                     up.id = rs.getInt("id");
                     up.userId = rs.getInt("user_id");
                     up.productId = rs.getInt("product_id");
-                    up.sn = rs.getString("sn");
+                    up.orderNo = rs.getString("order_no");
                     up.afterSaleStatus = rs.getString("after_sale_status");
                     up.productName = rs.getString("name");
                     list.add(up);
@@ -97,7 +97,7 @@ public class UserProductDAO {
 
     /** 根据ID获取用户绑定商品 */
     public static UserProduct getUserProductById(int id) {
-        String sql = "SELECT up.id, up.user_id, up.product_id, up.sn, up.after_sale_status, p.name " +
+        String sql = "SELECT up.id, up.user_id, up.product_id, up.order_no, up.after_sale_status, p.name " +
                      "FROM user_products up JOIN products p ON up.product_id=p.id WHERE up.id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -108,7 +108,7 @@ public class UserProductDAO {
                     up.id = rs.getInt("id");
                     up.userId = rs.getInt("user_id");
                     up.productId = rs.getInt("product_id");
-                    up.sn = rs.getString("sn");
+                    up.orderNo = rs.getString("order_no");
                     up.afterSaleStatus = rs.getString("after_sale_status");
                     up.productName = rs.getString("name");
                     return up;

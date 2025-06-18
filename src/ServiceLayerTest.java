@@ -157,7 +157,7 @@ public class ServiceLayerTest {
         String description = "这是一个测试商品描述";
         
         System.out.println("测试添加商品...");
-        String addResult = ServiceLayer.addProduct(productName, price, stock, description);
+        String addResult = ServiceLayer.addProduct(productName, price, stock, description, 1);
         System.out.println("添加商品结果: " + addResult);
         assert "success".equals(addResult) : "添加商品失败";
         
@@ -188,7 +188,7 @@ public class ServiceLayerTest {
         System.out.println("测试更新商品...");
         String updatedName = productName + "_更新";
         double updatedPrice = 1099.99;
-        String updateResult = ServiceLayer.updateProduct(product.id, updatedName, updatedPrice, stock, description);
+        String updateResult = ServiceLayer.updateProduct(product.id, updatedName, updatedPrice, stock, description, 1);
         System.out.println("更新商品结果: " + updateResult);
         assert "success".equals(updateResult) : "更新商品失败";
         
@@ -209,13 +209,13 @@ public class ServiceLayerTest {
         
         // 测试参数验证
         System.out.println("测试商品参数验证...");
-        String emptyNameResult = ServiceLayer.addProduct("", price, stock, description);
+        String emptyNameResult = ServiceLayer.addProduct("", price, stock, description, 1);
         assert !"success".equals(emptyNameResult) : "空商品名称应该添加失败";
         
-        String negativeStockResult = ServiceLayer.addProduct(productName, price, -1, description);
+        String negativeStockResult = ServiceLayer.addProduct(productName, price, -1, description, 1);
         assert !"success".equals(negativeStockResult) : "负库存应该添加失败";
         
-        String negativePriceResult = ServiceLayer.addProduct(productName, -1, stock, description);
+        String negativePriceResult = ServiceLayer.addProduct(productName, -1, stock, description, 1);
         assert !"success".equals(negativePriceResult) : "负价格应该添加失败";
         
         System.out.println("商品服务测试完成\n");
@@ -233,7 +233,7 @@ public class ServiceLayerTest {
         int stock = 50;
         String description = "这是订单测试用的商品";
         
-        String addResult = ServiceLayer.addProduct(productName, price, stock, description);
+        String addResult = ServiceLayer.addProduct(productName, price, stock, description, 1);
         assert "success".equals(addResult) : "添加测试商品失败";
         
         // 获取刚添加的商品ID
@@ -261,6 +261,8 @@ public class ServiceLayerTest {
         String createOrderResult = ServiceLayer.createOrder(userId, cartItems);
         System.out.println("创建订单结果: " + createOrderResult);
         assert "success".equals(createOrderResult) : "创建订单失败";
+        Order testOrder = ServiceLayer.getUserOrders(userId).get(0);
+        ServiceLayer.payOrder(testOrder.id);
         
         // 获取用户订单
         System.out.println("测试获取用户订单...");
@@ -275,7 +277,7 @@ public class ServiceLayerTest {
         assert !allOrders.isEmpty() : "所有订单列表不应为空";
         
         // 更新订单状态
-        Order testOrder = userOrders.get(0);
+        testOrder = userOrders.get(0);
         System.out.println("测试更新订单状态...");
         String updateStatusResult = ServiceLayer.updateOrderStatus(testOrder.id, "已发货");
         System.out.println("更新订单状态结果: " + updateStatusResult);
@@ -326,7 +328,7 @@ public class ServiceLayerTest {
         int stock = 30;
         String description = "这是售后测试用的商品";
         
-        String addResult = ServiceLayer.addProduct(productName, price, stock, description);
+        String addResult = ServiceLayer.addProduct(productName, price, stock, description, 1);
         assert "success".equals(addResult) : "添加测试商品失败";
         
         // 获取刚添加的商品ID
@@ -340,12 +342,21 @@ public class ServiceLayerTest {
         }
         assert testProduct != null : "未找到测试商品";
         
-        // 绑定用户商品 (假设用户ID为1)
+        // 创建并完成订单以便绑定
         int userId = 1;
-        String serialNumber = "SN" + System.currentTimeMillis();
-        
+        List<CartItem> items = new ArrayList<>();
+        CartItem ci = new CartItem();
+        ci.productId = testProduct.id;
+        ci.quantity = 1;
+        ci.price = testProduct.price;
+        items.add(ci);
+        ServiceLayer.createOrder(userId, items);
+        Order o = ServiceLayer.getUserOrders(userId).get(0);
+        ServiceLayer.payOrder(o.id);
+        ServiceLayer.updateOrderStatus(o.id, "已完成");
+
         System.out.println("测试绑定用户商品...");
-        String bindResult = ServiceLayer.bindUserProduct(userId, testProduct.id, serialNumber);
+        String bindResult = ServiceLayer.bindUserProduct(userId, testProduct.id, o.orderNo);
         System.out.println("绑定用户商品结果: " + bindResult);
         assert "success".equals(bindResult) : "绑定用户商品失败";
         
@@ -358,7 +369,7 @@ public class ServiceLayerTest {
         // 查找刚绑定的商品
         UserProduct boundProduct = null;
         for (UserProduct up : userProducts) {
-            if (up.sn.equals(serialNumber)) {
+            if (up.orderNo.equals(o.orderNo)) {
                 boundProduct = up;
                 break;
             }
@@ -411,10 +422,10 @@ public class ServiceLayerTest {
 
         // 测试参数验证
         System.out.println("测试售后参数验证...");
-        String invalidUserIdResult = ServiceLayer.bindUserProduct(-1, testProduct.id, serialNumber + "1");
+        String invalidUserIdResult = ServiceLayer.bindUserProduct(-1, testProduct.id, o.orderNo + "1");
         assert !"success".equals(invalidUserIdResult) : "无效用户ID应该绑定商品失败";
         
-        String invalidProductIdResult = ServiceLayer.bindUserProduct(userId, -1, serialNumber + "2");
+        String invalidProductIdResult = ServiceLayer.bindUserProduct(userId, -1, o.orderNo + "2");
         assert !"success".equals(invalidProductIdResult) : "无效商品ID应该绑定商品失败";
         
         String emptySNResult = ServiceLayer.bindUserProduct(userId, testProduct.id, "");
