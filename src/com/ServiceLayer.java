@@ -726,12 +726,12 @@ public class ServiceLayer {
     }
 
     /** 新增广告 */
-    public static String addAdvertisement(String title, String imageUrl, String link, boolean enabled) {
+    public static String addAdvertisement(String title, String imagePath, String targetUrl, boolean enabled) {
         if (isEmpty(title)) {
             return "标题不能为空";
         }
         try {
-            int r = Model.addAdvertisement(title, imageUrl, link, enabled);
+            int r = Model.addAdvertisement(title, imagePath, targetUrl, enabled);
             return r > 0 ? "success" : "添加失败";
         } catch (Exception e) {
             System.err.println("添加广告失败: " + e.getMessage());
@@ -740,7 +740,7 @@ public class ServiceLayer {
     }
 
     /** 更新广告 */
-    public static String updateAdvertisement(int id, String title, String imageUrl, String link, boolean enabled) {
+    public static String updateAdvertisement(int id, String title, String imagePath, String targetUrl, boolean enabled) {
         if (id <= 0) {
             return "广告ID无效";
         }
@@ -748,7 +748,7 @@ public class ServiceLayer {
             return "标题不能为空";
         }
         try {
-            int r = Model.updateAdvertisement(id, title, imageUrl, link, enabled);
+            int r = Model.updateAdvertisement(id, title, imagePath, targetUrl, enabled);
             return r > 0 ? "success" : "更新失败";
         } catch (Exception e) {
             System.err.println("更新广告失败: " + e.getMessage());

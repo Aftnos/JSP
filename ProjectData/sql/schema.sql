@@ -55,7 +55,7 @@ CREATE TABLE user_products (
 CREATE TABLE advertisements (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL,
-    image_url VARCHAR(255),
-    link VARCHAR(255),
+    image_path VARCHAR(255),
+    target_url VARCHAR(255),
     enabled TINYINT DEFAULT 1
 );

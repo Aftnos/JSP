@@ -23,8 +23,8 @@ public class AdvertisementDAO {
                 Advertisement ad = new Advertisement();
                 ad.id = rs.getInt("id");
                 ad.title = rs.getString("title");
-                ad.imageUrl = rs.getString("image_url");
-                ad.link = rs.getString("link");
+                ad.imagePath = rs.getString("image_path");
+                ad.targetUrl = rs.getString("target_url");
                 ad.enabled = rs.getInt("enabled") == 1;
                 list.add(ad);
             }
@@ -35,13 +35,13 @@ public class AdvertisementDAO {
     }
 
     /** 新增广告 */
-    public static int addAdvertisement(String title, String imageUrl, String link, boolean enabled) {
-        String sql = "INSERT INTO advertisements(title, image_url, link, enabled) VALUES(?,?,?,?)";
+    public static int addAdvertisement(String title, String imagePath, String targetUrl, boolean enabled) {
+        String sql = "INSERT INTO advertisements(title, image_path, target_url, enabled) VALUES(?,?,?,?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, title);
-            ps.setString(2, imageUrl);
-            ps.setString(3, link);
+            ps.setString(2, imagePath);
+            ps.setString(3, targetUrl);
             ps.setInt(4, enabled ? 1 : 0);
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -51,13 +51,13 @@ public class AdvertisementDAO {
     }
 
     /** 更新广告 */
-    public static int updateAdvertisement(int id, String title, String imageUrl, String link, boolean enabled) {
-        String sql = "UPDATE advertisements SET title=?, image_url=?, link=?, enabled=? WHERE id=?";
+    public static int updateAdvertisement(int id, String title, String imagePath, String targetUrl, boolean enabled) {
+        String sql = "UPDATE advertisements SET title=?, image_path=?, target_url=?, enabled=? WHERE id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, title);
-            ps.setString(2, imageUrl);
-            ps.setString(3, link);
+            ps.setString(2, imagePath);
+            ps.setString(3, targetUrl);
             ps.setInt(4, enabled ? 1 : 0);
             ps.setInt(5, id);
             return ps.executeUpdate();

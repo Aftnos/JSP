@@ -870,13 +870,23 @@
                 <label>标题:</label>
                 <input type="text" name="adTitle" required>
             </div>
+            <div class="form-group">
+                <label>图片路径:</label>
+                <input type="text" name="adImg">
+            </div>
+            <div class="form-group">
+                <label>跳转地址:</label>
+                <input type="text" name="adUrl">
+            </div>
             <button type="submit" class="btn">添加广告</button>
         </form>
 
         <%
             if ("addAd".equals(action)) {
                 String title = request.getParameter("adTitle");
-                result = ServiceLayer.addAdvertisement(title, null, null, true);
+                String img = request.getParameter("adImg");
+                String url = request.getParameter("adUrl");
+                result = ServiceLayer.addAdvertisement(title, img, url, true);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">添加广告结果: <%=result%></div>
@@ -898,9 +908,14 @@
             <h4>广告列表(<%=ads.size()%>)</h4>
             <% if (!ads.isEmpty()) { %>
             <table>
-                <tr><th>ID</th><th>标题</th></tr>
+                <tr><th>ID</th><th>标题</th><th>图片路径</th><th>跳转地址</th></tr>
                 <% for (Advertisement ad : ads) { %>
-                <tr><td><%=ad.id%></td><td><%=ad.title%></td></tr>
+                <tr>
+                    <td><%=ad.id%></td>
+                    <td><%=ad.title%></td>
+                    <td><%=ad.imagePath%></td>
+                    <td><%=ad.targetUrl%></td>
+                </tr>
                 <% } %>
             </table>
             <% } else { %>

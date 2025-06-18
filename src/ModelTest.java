@@ -390,7 +390,7 @@ public class ModelTest {
         System.out.println("\n=== 测试广告操作 ===");
 
         try {
-            int add = Model.addAdvertisement("测试广告", null, null, true);
+            int add = Model.addAdvertisement("测试广告", "img.png", "http://example.com", true);
             System.out.println(add > 0 ? "✓ 添加广告成功" : "✗ 添加广告失败");
 
             List<Advertisement> ads = Model.getAllAdvertisements();
@@ -398,7 +398,7 @@ public class ModelTest {
 
             if (!ads.isEmpty()) {
                 Advertisement ad = ads.get(0);
-                Model.updateAdvertisement(ad.id, ad.title, ad.imageUrl, ad.link, ad.enabled);
+                Model.updateAdvertisement(ad.id, ad.title, ad.imagePath, ad.targetUrl, ad.enabled);
                 Model.deleteAdvertisement(ad.id);
             }
         } catch (Exception e) {
