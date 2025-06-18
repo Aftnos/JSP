@@ -382,7 +382,9 @@ public class ServiceLayerTest {
         System.out.println("========== 测试广告服务 ==========");
 
         String title = "广告" + System.currentTimeMillis();
-        String addResult = ServiceLayer.addAdvertisement(title, null, null, true);
+        String img = "img" + System.currentTimeMillis() + ".png";
+        String url = "http://example.com";
+        String addResult = ServiceLayer.addAdvertisement(title, img, url, true);
         System.out.println("添加广告结果: " + addResult);
         assert "success".equals(addResult) : "添加广告失败";
 
@@ -390,7 +392,7 @@ public class ServiceLayerTest {
         assert !ads.isEmpty() : "广告列表不应为空";
 
         Advertisement ad = ads.get(ads.size() - 1);
-        String updateResult = ServiceLayer.updateAdvertisement(ad.id, ad.title + "_up", ad.imageUrl, ad.link, ad.enabled);
+        String updateResult = ServiceLayer.updateAdvertisement(ad.id, ad.title + "_up", ad.imagePath, ad.targetUrl, ad.enabled);
         System.out.println("更新广告结果: " + updateResult);
         assert "success".equals(updateResult) : "更新广告失败";
 

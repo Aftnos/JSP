@@ -120,13 +120,13 @@ public class Model {
     }
 
     /** 新增广告 */
-    public static int addAdvertisement(String title, String imageUrl, String link, boolean enabled) {
-        return AdvertisementDAO.addAdvertisement(title, imageUrl, link, enabled);
+    public static int addAdvertisement(String title, String imagePath, String targetUrl, boolean enabled) {
+        return AdvertisementDAO.addAdvertisement(title, imagePath, targetUrl, enabled);
     }
 
     /** 更新广告 */
-    public static int updateAdvertisement(int id, String title, String imageUrl, String link, boolean enabled) {
-        return AdvertisementDAO.updateAdvertisement(id, title, imageUrl, link, enabled);
+    public static int updateAdvertisement(int id, String title, String imagePath, String targetUrl, boolean enabled) {
+        return AdvertisementDAO.updateAdvertisement(id, title, imagePath, targetUrl, enabled);
     }
 
     /** 删除广告 */

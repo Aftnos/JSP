@@ -6,7 +6,7 @@ package com.entity;
 public class Advertisement {
     public int id;
     public String title;
-    public String imageUrl;
-    public String link;
+    public String imagePath;
+    public String targetUrl;
     public boolean enabled;
 }
