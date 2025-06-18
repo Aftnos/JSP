@@ -94,4 +94,42 @@ public class UserProductDAO {
         }
         return 0;
     }
+
+    /** 根据ID获取用户绑定商品 */
+    public static UserProduct getUserProductById(int id) {
+        String sql = "SELECT up.id, up.user_id, up.product_id, up.sn, up.after_sale_status, p.name " +
+                     "FROM user_products up JOIN products p ON up.product_id=p.id WHERE up.id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    UserProduct up = new UserProduct();
+                    up.id = rs.getInt("id");
+                    up.userId = rs.getInt("user_id");
+                    up.productId = rs.getInt("product_id");
+                    up.sn = rs.getString("sn");
+                    up.afterSaleStatus = rs.getString("after_sale_status");
+                    up.productName = rs.getString("name");
+                    return up;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /** 删除用户绑定商品 */
+    public static int deleteUserProduct(int id) {
+        String sql = "DELETE FROM user_products WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

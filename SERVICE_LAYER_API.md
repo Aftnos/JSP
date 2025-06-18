@@ -32,6 +32,12 @@
 快捷获取用户头像地址，若不存在则返回 `null`。
 - **userId**: 用户 ID
 
+### `List<User> getAllUsers()`
+获取所有用户列表，若无用户返回空列表。
+
+### `String deleteUser(int userId)`
+删除指定用户，返回 "success" 或错误信息。
+
 ## 管理员相关
 ### `boolean adminLogin(String username, String password)`
 根据管理员帐号验证登录，成功返回 `true`。
@@ -88,6 +94,12 @@
 - **orderId**: 订单 ID
 - **status**: 新状态字符串
 
+### `Order getOrderById(int orderId)`
+根据订单 ID 获取订单详情，未找到时返回 `null`。
+
+### `String deleteOrder(int orderId)`
+删除指定订单及其订单项，返回 "success" 或错误信息。
+
 ## 售后相关
 ### `String bindUserProduct(int userId, int productId, String serialNumber)`
 为用户绑定实际产品序列号，无错返回 "success"。
@@ -108,6 +120,12 @@
 - **userProductId**: 用户产品绑定 ID
 - **status**: 新售后状态
 
+### `UserProduct getUserProductById(int id)`
+根据绑定记录 ID 获取用户商品详情，未找到时返回 `null`。
+
+### `String deleteUserProduct(int id)`
+删除用户绑定商品记录，返回 "success" 或错误提示。
+
 ## 广告相关
 ### `List<Advertisement> getAllAdvertisements()`
 返回当前所有广告信息的列表，如无列表前置空列表。
@@ -126,6 +144,9 @@
 - **imagePath**: 图片地址
 - **targetUrl**: 跳转地址
 - **enabled**: 是否显示
+
+### `Advertisement getAdvertisementById(int id)`
+根据ID获取广告详情，未找到时返回 `null`。
 
 ### `String deleteAdvertisement(int id)`
 删除指定广告。

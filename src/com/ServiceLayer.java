@@ -178,6 +178,31 @@ public class ServiceLayer {
         com.entity.User u = getUserById(userId);
         return u != null ? u.avatar : null;
     }
+
+    /** 获取所有用户 */
+    public static List<com.entity.User> getAllUsers() {
+        try {
+            List<com.entity.User> users = Model.getAllUsers();
+            return users != null ? users : new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("获取用户列表失败: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /** 删除用户（管理员功能） */
+    public static String deleteUser(int userId) {
+        if (userId <= 0) {
+            return "用户ID无效";
+        }
+        try {
+            int r = Model.deleteUser(userId);
+            return r > 0 ? "success" : "删除失败";
+        } catch (Exception e) {
+            System.err.println("删除用户失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
     
     // ==================== 管理员相关服务 ====================
     
@@ -588,6 +613,33 @@ public class ServiceLayer {
             return "系统错误，请稍后重试";
         }
     }
+
+    /** 获取单个订单 */
+    public static Order getOrderById(int orderId) {
+        if (orderId <= 0) {
+            return null;
+        }
+        try {
+            return Model.getOrderById(orderId);
+        } catch (Exception e) {
+            System.err.println("获取订单失败: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /** 删除订单（管理员功能） */
+    public static String deleteOrder(int orderId) {
+        if (orderId <= 0) {
+            return "订单ID无效";
+        }
+        try {
+            int r = Model.deleteOrder(orderId);
+            return r > 0 ? "success" : "删除失败";
+        } catch (Exception e) {
+            System.err.println("删除订单失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
     
     // ==================== 售后相关服务 ====================
     
@@ -741,6 +793,33 @@ public class ServiceLayer {
         }
     }
 
+    /** 根据ID获取用户绑定商品 */
+    public static UserProduct getUserProductById(int id) {
+        if (id <= 0) {
+            return null;
+        }
+        try {
+            return Model.getUserProductById(id);
+        } catch (Exception e) {
+            System.err.println("获取绑定商品失败: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /** 删除用户绑定商品 */
+    public static String deleteUserProduct(int id) {
+        if (id <= 0) {
+            return "商品绑定ID无效";
+        }
+        try {
+            int r = Model.deleteUserProduct(id);
+            return r > 0 ? "success" : "删除失败";
+        } catch (Exception e) {
+            System.err.println("删除绑定商品失败: " + e.getMessage());
+            return "系统错误，请稍后重试";
+        }
+    }
+
     // ==================== 广告相关服务 ====================
 
     /** 获取所有广告 */
@@ -782,6 +861,19 @@ public class ServiceLayer {
         } catch (Exception e) {
             System.err.println("更新广告失败: " + e.getMessage());
             return "系统错误，请稍后重试";
+        }
+    }
+
+    /** 根据ID获取广告 */
+    public static Advertisement getAdvertisementById(int id) {
+        if (id <= 0) {
+            return null;
+        }
+        try {
+            return Model.getAdvertisementById(id);
+        } catch (Exception e) {
+            System.err.println("获取广告失败: " + e.getMessage());
+            return null;
         }
     }
 

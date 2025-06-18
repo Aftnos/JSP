@@ -44,6 +44,16 @@ public class Model {
         return UserDAO.getUserById(userId);
     }
 
+    /** 获取所有用户 */
+    public static List<com.entity.User> getAllUsers() {
+        return UserDAO.getAllUsers();
+    }
+
+    /** 删除用户 */
+    public static int deleteUser(int userId) {
+        return UserDAO.deleteUser(userId);
+    }
+
     /** 验证管理员登录 */
     public static boolean validateAdmin(String username, String password) {
         return AdminDAO.validateAdmin(username, password);
@@ -94,6 +104,16 @@ public class Model {
         return OrderDAO.getAllOrders();
     }
 
+    /** 根据ID获取订单 */
+    public static Order getOrderById(int orderId) {
+        return OrderDAO.getOrderById(orderId);
+    }
+
+    /** 删除订单 */
+    public static int deleteOrder(int orderId) {
+        return OrderDAO.deleteOrder(orderId);
+    }
+
     /** 更新订单状态 */
     public static int updateOrderStatus(int orderId, String status) {
         return OrderDAO.updateOrderStatus(orderId, status);
@@ -119,6 +139,16 @@ public class Model {
         return UserProductDAO.updateAfterSaleStatus(userProductId, status);
     }
 
+    /** 根据ID获取用户绑定商品 */
+    public static UserProduct getUserProductById(int id) {
+        return UserProductDAO.getUserProductById(id);
+    }
+
+    /** 删除用户绑定商品 */
+    public static int deleteUserProduct(int id) {
+        return UserProductDAO.deleteUserProduct(id);
+    }
+
     /** 获取所有广告 */
     public static List<Advertisement> getAllAdvertisements() {
         return AdvertisementDAO.getAllAdvertisements();
@@ -137,5 +167,10 @@ public class Model {
     /** 删除广告 */
     public static int deleteAdvertisement(int id) {
         return AdvertisementDAO.deleteAdvertisement(id);
+    }
+
+    /** 根据ID获取广告 */
+    public static Advertisement getAdvertisementById(int id) {
+        return AdvertisementDAO.getAdvertisementById(id);
     }
 }

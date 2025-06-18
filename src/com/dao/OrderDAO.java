@@ -141,6 +141,53 @@ public class OrderDAO {
         return 0;
     }
 
+    /** 根据ID获取订单 */
+    public static Order getOrderById(int orderId) {
+        String sql = "SELECT * FROM orders WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Order o = new Order();
+                    o.id = rs.getInt("id");
+                    o.userId = rs.getInt("user_id");
+                    o.orderDate = rs.getTimestamp("order_date");
+                    o.status = rs.getString("status");
+                    o.total = rs.getDouble("total");
+                    o.items = getOrderItems(o.id);
+                    return o;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /** 删除订单及其订单项 */
+    public static int deleteOrder(int orderId) {
+        String delItems = "DELETE FROM order_items WHERE order_id=?";
+        String delOrder = "DELETE FROM orders WHERE id=?";
+        try (Connection conn = DBUtil.getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps1 = conn.prepareStatement(delItems)) {
+                ps1.setInt(1, orderId);
+                ps1.executeUpdate();
+            }
+            int r;
+            try (PreparedStatement ps2 = conn.prepareStatement(delOrder)) {
+                ps2.setInt(1, orderId);
+                r = ps2.executeUpdate();
+            }
+            conn.commit();
+            return r;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     /**
      * 查询指定订单的所有订单项。
      *

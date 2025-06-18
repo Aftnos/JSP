@@ -334,6 +334,56 @@
                 }
             }
         %>
+
+        <!-- 获取所有用户 -->
+        <h3>获取所有用户</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="listUsers">
+            <button type="submit" class="btn">查询所有用户</button>
+        </form>
+
+        <%
+            if ("listUsers".equals(action)) {
+                List<com.entity.User> users = ServiceLayer.getAllUsers();
+        %>
+        <div class="result info">
+            <h4>用户列表 (共<%=users.size()%>人)</h4>
+            <% if (!users.isEmpty()) { %>
+            <table>
+                <tr><th>ID</th><th>用户名</th><th>显示名称</th></tr>
+                <% for (com.entity.User u2 : users) { %>
+                <tr><td><%=u2.id%></td><td><%=u2.username%></td><td><%=u2.displayName%></td></tr>
+                <% } %>
+            </table>
+            <% } else { %>
+            <p>暂无用户</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 删除用户 -->
+        <h3>删除用户</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteUser">
+            <div class="form-group">
+                <label>用户ID:</label>
+                <input type="number" name="deleteUserId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除用户</button>
+        </form>
+
+        <%
+            if ("deleteUser".equals(action)) {
+                int duid = ServiceLayer.safeParseInt(request.getParameter("deleteUserId"), 0);
+                result = ServiceLayer.deleteUser(duid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除用户结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 管理员功能测试 -->
@@ -746,6 +796,55 @@
         <%
             }
         %>
+
+        <!-- 根据ID获取订单 -->
+        <h3>根据ID获取订单</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getOrderById">
+            <div class="form-group">
+                <label>订单ID:</label>
+                <input type="number" name="queryOrderId" min="1" required>
+            </div>
+            <button type="submit" class="btn">查询订单</button>
+        </form>
+
+        <%
+            if ("getOrderById".equals(action)) {
+                int qoid = ServiceLayer.safeParseInt(request.getParameter("queryOrderId"), 0);
+                Order oinfo = ServiceLayer.getOrderById(qoid);
+        %>
+        <div class="result info">
+            <% if (oinfo != null) { %>
+            <p>订单ID: <%=oinfo.id%> 用户ID: <%=oinfo.userId%> 状态: <%=oinfo.status%></p>
+            <% } else { %>
+            <p>订单不存在</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 删除订单 -->
+        <h3>删除订单</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteOrder">
+            <div class="form-group">
+                <label>订单ID:</label>
+                <input type="number" name="deleteOrderId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除订单</button>
+        </form>
+
+        <%
+            if ("deleteOrder".equals(action)) {
+                int doid = ServiceLayer.safeParseInt(request.getParameter("deleteOrderId"), 0);
+                result = ServiceLayer.deleteOrder(doid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除订单结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 售后管理测试 -->
@@ -890,6 +989,55 @@
         <%
             }
         %>
+
+        <!-- 根据ID获取绑定商品 -->
+        <h3>根据ID获取绑定商品</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getUserProductById">
+            <div class="form-group">
+                <label>绑定ID:</label>
+                <input type="number" name="queryUserProductId" min="1" required>
+            </div>
+            <button type="submit" class="btn">查询绑定商品</button>
+        </form>
+
+        <%
+            if ("getUserProductById".equals(action)) {
+                int qupid = ServiceLayer.safeParseInt(request.getParameter("queryUserProductId"), 0);
+                UserProduct upInfo = ServiceLayer.getUserProductById(qupid);
+        %>
+        <div class="result info">
+            <% if (upInfo != null) { %>
+            <p>ID:<%=upInfo.id%> SN:<%=upInfo.sn%> 状态:<%=upInfo.afterSaleStatus%></p>
+            <% } else { %>
+            <p>绑定记录不存在</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 删除绑定商品 -->
+        <h3>删除绑定商品</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteUserProduct">
+            <div class="form-group">
+                <label>绑定ID:</label>
+                <input type="number" name="deleteUserProductId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除绑定商品</button>
+        </form>
+
+        <%
+            if ("deleteUserProduct".equals(action)) {
+                int duPid = ServiceLayer.safeParseInt(request.getParameter("deleteUserProductId"), 0);
+                result = ServiceLayer.deleteUserProduct(duPid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除绑定商品结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 广告管理测试 -->
@@ -953,6 +1101,33 @@
             </table>
             <% } else { %>
             <p>暂无广告</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 根据ID获取广告 -->
+        <h3>根据ID获取广告</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getAdById">
+            <div class="form-group">
+                <label>广告ID:</label>
+                <input type="number" name="adId" min="1" required>
+            </div>
+            <button type="submit" class="btn">查询广告</button>
+        </form>
+
+        <%
+            if ("getAdById".equals(action)) {
+                int aid = ServiceLayer.safeParseInt(request.getParameter("adId"), 0);
+                Advertisement adv = ServiceLayer.getAdvertisementById(aid);
+        %>
+        <div class="result info">
+            <% if (adv != null) { %>
+            <p>ID:<%=adv.id%> 标题:<%=adv.title%></p>
+            <% } else { %>
+            <p>广告不存在</p>
             <% } %>
         </div>
         <%

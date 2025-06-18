@@ -98,6 +98,23 @@ public class ServiceLayerTest {
             System.out.println("未找到用户信息");
         }
 
+        // 获取所有用户并删除刚注册的测试用户
+        System.out.println("测试获取所有用户...");
+        List<com.entity.User> users = ServiceLayer.getAllUsers();
+        int newUserId = -1;
+        for (com.entity.User u : users) {
+            if (u.username.equals(username)) {
+                newUserId = u.id;
+                break;
+            }
+        }
+        System.out.println("当前用户数量: " + users.size());
+        if (newUserId > 0) {
+            System.out.println("测试删除用户...");
+            String del = ServiceLayer.deleteUser(newUserId);
+            System.out.println("删除用户结果: " + del);
+        }
+
         System.out.println("用户服务测试完成\n");
     }
     
@@ -274,7 +291,17 @@ public class ServiceLayerTest {
             }
         }
         assert statusUpdated : "订单状态未成功更新";
-        
+
+        // 根据ID获取订单并测试删除
+        Order fetched = ServiceLayer.getOrderById(testOrder.id);
+        System.out.println("根据ID获取订单: " + (fetched != null));
+        if (fetched != null) {
+            String delOrderResult = ServiceLayer.deleteOrder(fetched.id);
+            System.out.println("删除订单结果: " + delOrderResult);
+            Order afterDel = ServiceLayer.getOrderById(fetched.id);
+            System.out.println("删除后查询订单: " + afterDel);
+        }
+
         // 测试参数验证
         System.out.println("测试订单参数验证...");
         String invalidUserIdResult = ServiceLayer.createOrder(-1, cartItems);
@@ -371,7 +398,17 @@ public class ServiceLayerTest {
             }
         }
         assert statusUpdated : "售后状态未成功更新为'已处理'";
-        
+
+        // 根据ID获取绑定商品并删除
+        UserProduct fetchedUP = ServiceLayer.getUserProductById(boundProduct.id);
+        System.out.println("根据ID获取绑定商品: " + (fetchedUP != null));
+        if (fetchedUP != null) {
+            String delUP = ServiceLayer.deleteUserProduct(fetchedUP.id);
+            System.out.println("删除绑定商品结果: " + delUP);
+            UserProduct afterDelUP = ServiceLayer.getUserProductById(fetchedUP.id);
+            System.out.println("删除后查询绑定商品: " + afterDelUP);
+        }
+
         // 测试参数验证
         System.out.println("测试售后参数验证...");
         String invalidUserIdResult = ServiceLayer.bindUserProduct(-1, testProduct.id, serialNumber + "1");
@@ -406,6 +443,9 @@ public class ServiceLayerTest {
         String updateResult = ServiceLayer.updateAdvertisement(ad.id, ad.title + "_up", ad.imagePath, ad.targetUrl, ad.enabled);
         System.out.println("更新广告结果: " + updateResult);
         assert "success".equals(updateResult) : "更新广告失败";
+
+        Advertisement one = ServiceLayer.getAdvertisementById(ad.id);
+        System.out.println("根据ID获取广告: " + (one != null));
 
         String deleteResult = ServiceLayer.deleteAdvertisement(ad.id);
         System.out.println("删除广告结果: " + deleteResult);
