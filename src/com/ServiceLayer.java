@@ -149,6 +149,35 @@ public class ServiceLayer {
             return "系统错误，请稍后重试";
         }
     }
+
+    /**
+     * 根据用户ID获取用户信息
+     *
+     * @param userId 用户ID
+     * @return 用户对象，未找到返回 null
+     */
+    public static com.entity.User getUserById(int userId) {
+        if (userId <= 0) {
+            return null;
+        }
+        try {
+            return Model.getUserById(userId);
+        } catch (Exception e) {
+            System.err.println("获取用户信息失败: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 获取用户头像地址
+     *
+     * @param userId 用户ID
+     * @return 头像URL，不存在时返回 null
+     */
+    public static String getUserAvatar(int userId) {
+        com.entity.User u = getUserById(userId);
+        return u != null ? u.avatar : null;
+    }
     
     // ==================== 管理员相关服务 ====================
     

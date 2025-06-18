@@ -301,6 +301,39 @@
         <%
             }
         %>
+
+        <!-- 获取用户信息 -->
+        <h3>获取用户信息</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getUserInfo">
+            <div class="form-group">
+                <label>用户ID:</label>
+                <input type="number" name="queryUserId" value="1" required>
+            </div>
+            <button type="submit" class="btn">查询用户</button>
+        </form>
+
+        <%
+            if ("getUserInfo".equals(action)) {
+                int qid = ServiceLayer.safeParseInt(request.getParameter("queryUserId"), 0);
+                com.entity.User u = ServiceLayer.getUserById(qid);
+                if (u != null) {
+                    String avatar = ServiceLayer.getUserAvatar(qid);
+        %>
+        <div class="result success">
+            ID: <%=u.id%> <br>
+            用户名: <%=u.username%> <br>
+            显示名称: <%=u.displayName%> <br>
+            头像URL: <%=avatar%>
+        </div>
+        <%
+                } else {
+        %>
+        <div class="result error">用户不存在</div>
+        <%
+                }
+            }
+        %>
     </div>
 
     <!-- 管理员功能测试 -->
