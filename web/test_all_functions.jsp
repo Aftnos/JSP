@@ -1066,7 +1066,7 @@
         %>
         <div class="result info">
             <% if (upInfo != null) { %>
-            <p>ID:<%=upInfo.id%> SN:<%=upInfo.sn%> 状态:<%=upInfo.afterSaleStatus%></p>
+            <p>ID:<%=upInfo.id%> 订单号:<%=upInfo.orderNo%> 状态:<%=upInfo.afterSaleStatus%></p>
             <% } else { %>
             <p>绑定记录不存在</p>
             <% } %>

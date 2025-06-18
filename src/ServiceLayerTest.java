@@ -428,8 +428,8 @@ public class ServiceLayerTest {
         String invalidProductIdResult = ServiceLayer.bindUserProduct(userId, -1, o.orderNo + "2");
         assert !"success".equals(invalidProductIdResult) : "无效商品ID应该绑定商品失败";
         
-        String emptySNResult = ServiceLayer.bindUserProduct(userId, testProduct.id, "");
-        assert !"success".equals(emptySNResult) : "空序列号应该绑定商品失败";
+        String emptyOrderNoResult = ServiceLayer.bindUserProduct(userId, testProduct.id, "");
+        assert !"success".equals(emptyOrderNoResult) : "订单号不能为空";
         
         System.out.println("售后服务测试完成\n");
     }
