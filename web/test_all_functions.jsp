@@ -158,6 +158,7 @@
         <a href="#admin-section">管理员功能</a>
         <a href="#product-section">商品管理</a>
         <a href="#order-section">订单管理</a>
+        <a href="#category-section">分类管理</a>
         <a href="#aftersale-section">售后管理</a>
         <a href="#ad-section">广告管理</a>
         <a href="#utility-section">工具方法</a>
@@ -444,6 +445,10 @@
                 <input type="number" name="productStock" min="0" required>
             </div>
             <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="categoryId" min="1" value="1" required>
+            </div>
+            <div class="form-group">
                 <label>商品描述:</label>
                 <textarea name="productDescription" placeholder="最长200字符"></textarea>
             </div>
@@ -455,8 +460,9 @@
                 String productName = request.getParameter("productName");
                 double productPrice = ServiceLayer.safeParseDouble(request.getParameter("productPrice"), 0);
                 int productStock = ServiceLayer.safeParseInt(request.getParameter("productStock"), 0);
+                int categoryId = ServiceLayer.safeParseInt(request.getParameter("categoryId"), 1);
                 String productDescription = request.getParameter("productDescription");
-                result = ServiceLayer.addProduct(productName, productPrice, productStock, productDescription);
+                result = ServiceLayer.addProduct(productName, productPrice, productStock, productDescription, categoryId);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">
@@ -487,6 +493,10 @@
                 <input type="number" name="updateProductStock" min="0" required>
             </div>
             <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="updateCategoryId" min="1" value="1" required>
+            </div>
+            <div class="form-group">
                 <label>商品描述:</label>
                 <textarea name="updateProductDescription"></textarea>
             </div>
@@ -499,8 +509,9 @@
                 String updateProductName = request.getParameter("updateProductName");
                 double updateProductPrice = ServiceLayer.safeParseDouble(request.getParameter("updateProductPrice"), 0);
                 int updateProductStock = ServiceLayer.safeParseInt(request.getParameter("updateProductStock"), 0);
+                int updateCategoryId = ServiceLayer.safeParseInt(request.getParameter("updateCategoryId"), 1);
                 String updateProductDescription = request.getParameter("updateProductDescription");
-                result = ServiceLayer.updateProduct(updateProductId, updateProductName, updateProductPrice, updateProductStock, updateProductDescription);
+                result = ServiceLayer.updateProduct(updateProductId, updateProductName, updateProductPrice, updateProductStock, updateProductDescription, updateCategoryId);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">
@@ -611,6 +622,53 @@
             <% } else { %>
             <p>商品不存在</p>
             <% } %>
+        </div>
+        <%
+            }
+        %>
+    </div>
+
+    <!-- 分类管理测试 -->
+    <div id="category-section" class="section">
+        <h2>4. 分类管理测试</h2>
+
+        <h3>添加分类</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="addCategory">
+            <div class="form-group">
+                <label>分类名称:</label>
+                <input type="text" name="categoryName" required>
+            </div>
+            <button type="submit" class="btn">添加分类</button>
+        </form>
+
+        <%
+            if ("addCategory".equals(action)) {
+                String name = request.getParameter("categoryName");
+                result = ServiceLayer.addCategory(name);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">添加分类结果: <%=result%></div>
+        <%
+            }
+        %>
+
+        <h3>分类列表</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="listCategory">
+            <button type="submit" class="btn">获取分类</button>
+        </form>
+        <%
+            if ("listCategory".equals(action)) {
+                List<Category> cts = ServiceLayer.getAllCategories();
+        %>
+        <div class="result info">
+            <table>
+                <tr><th>ID</th><th>名称</th></tr>
+                <% for(Category c: cts){ %>
+                <tr><td><%=c.id%></td><td><%=c.name%></td></tr>
+                <% } %>
+            </table>
         </div>
         <%
             }
@@ -864,8 +922,8 @@
                 <input type="number" name="bindProductId" min="1" required>
             </div>
             <div class="form-group">
-                <label>序列号:</label>
-                <input type="text" name="bindSerialNumber" placeholder="商品序列号" required>
+                <label>订单号:</label>
+                <input type="text" name="bindOrderNo" placeholder="完成订单号" required>
             </div>
             <button type="submit" class="btn">绑定商品</button>
         </form>
@@ -874,8 +932,8 @@
             if ("bindUserProduct".equals(action)) {
                 int bindUserId = ServiceLayer.safeParseInt(request.getParameter("bindUserId"), 0);
                 int bindProductId = ServiceLayer.safeParseInt(request.getParameter("bindProductId"), 0);
-                String bindSerialNumber = request.getParameter("bindSerialNumber");
-                result = ServiceLayer.bindUserProduct(bindUserId, bindProductId, bindSerialNumber);
+                String bindOrderNo = request.getParameter("bindOrderNo");
+                result = ServiceLayer.bindUserProduct(bindUserId, bindProductId, bindOrderNo);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">
@@ -908,7 +966,7 @@
                 <tr>
                     <th>绑定ID</th>
                     <th>商品名称</th>
-                    <th>序列号</th>
+                    <th>订单号</th>
                     <th>售后状态</th>
                 </tr>
                 <% for (UserProduct up : userProducts) { %>
@@ -917,7 +975,7 @@
                     </td>
                     <td><%=up.productName%>
                     </td>
-                    <td><%=up.sn%>
+                    <td><%=up.orderNo%>
                     </td>
                     <td><%=up.afterSaleStatus != null ? up.afterSaleStatus : "正常"%>
                     </td>
