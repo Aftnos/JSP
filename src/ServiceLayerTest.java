@@ -87,6 +87,17 @@ public class ServiceLayerTest {
         System.out.println("更新密码结果: " + pwdResult);
         ServiceLayer.updateUserProfile(1, "测试用户", null);
 
+        // 测试获取用户信息与头像
+        System.out.println("测试获取用户信息...");
+        com.entity.User info = ServiceLayer.getUserById(1);
+        if (info != null) {
+            System.out.println("用户显示名: " + info.displayName);
+            String avatar = ServiceLayer.getUserAvatar(1);
+            System.out.println("用户头像URL: " + avatar);
+        } else {
+            System.out.println("未找到用户信息");
+        }
+
         System.out.println("用户服务测试完成\n");
     }
     

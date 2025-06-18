@@ -39,6 +39,11 @@ public class Model {
         return UserDAO.updateProfile(userId, displayName, avatar);
     }
 
+    /** 根据ID获取用户信息 */
+    public static com.entity.User getUserById(int userId) {
+        return UserDAO.getUserById(userId);
+    }
+
     /** 验证管理员登录 */
     public static boolean validateAdmin(String username, String password) {
         return AdminDAO.validateAdmin(username, password);

@@ -91,4 +91,31 @@ public class UserDAO {
         }
         return 0;
     }
+
+    /**
+     * 根据ID获取用户信息。
+     *
+     * @param userId 用户ID
+     * @return 用户对象，不存在时返回 {@code null}
+     */
+    public static com.entity.User getUserById(int userId) {
+        String sql = "SELECT id, username, display_name, avatar FROM users WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    com.entity.User u = new com.entity.User();
+                    u.id = rs.getInt("id");
+                    u.username = rs.getString("username");
+                    u.displayName = rs.getString("display_name");
+                    u.avatar = rs.getString("avatar");
+                    return u;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
