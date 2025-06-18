@@ -26,7 +26,10 @@ public class ServiceLayerTest {
         
         // 测试售后服务
         testAfterSaleServices();
-        
+
+        // 测试广告服务
+        testAdvertisementServices();
+
         // 测试工具方法
         testUtilityMethods();
         
@@ -77,7 +80,13 @@ public class ServiceLayerTest {
         String longUsernameResult = ServiceLayer.userRegister(longUsername, password);
         System.out.println("长用户名注册结果: " + longUsernameResult);
         assert !"success".equals(longUsernameResult) || "success".equals(longUsernameResult) : "长用户名可能注册成功或失败";
-        
+
+        // 测试更新密码和资料
+        System.out.println("测试更新用户密码和资料...");
+        String pwdResult = ServiceLayer.updateUserPassword(1, "newpass123");
+        System.out.println("更新密码结果: " + pwdResult);
+        ServiceLayer.updateUserProfile(1, "测试用户", null);
+
         System.out.println("用户服务测试完成\n");
     }
     
@@ -99,7 +108,11 @@ public class ServiceLayerTest {
         boolean invalidAdminLoginResult = ServiceLayer.adminLogin("admin", "wrongpassword");
         System.out.println("无效管理员登录结果: " + invalidAdminLoginResult);
         assert !invalidAdminLoginResult : "无效管理员登录应该失败";
-        
+
+        System.out.println("测试更新管理员密码...");
+        String adminPwd = ServiceLayer.updateAdminPassword(1, "adminNew");
+        System.out.println("更新管理员密码结果: " + adminPwd);
+
         System.out.println("管理员服务测试完成\n");
     }
     
@@ -361,7 +374,33 @@ public class ServiceLayerTest {
         
         System.out.println("售后服务测试完成\n");
     }
-    
+
+    /**
+     * 测试广告相关服务
+     */
+    private static void testAdvertisementServices() {
+        System.out.println("========== 测试广告服务 ==========");
+
+        String title = "广告" + System.currentTimeMillis();
+        String addResult = ServiceLayer.addAdvertisement(title, null, null, true);
+        System.out.println("添加广告结果: " + addResult);
+        assert "success".equals(addResult) : "添加广告失败";
+
+        List<Advertisement> ads = ServiceLayer.getAllAdvertisements();
+        assert !ads.isEmpty() : "广告列表不应为空";
+
+        Advertisement ad = ads.get(ads.size() - 1);
+        String updateResult = ServiceLayer.updateAdvertisement(ad.id, ad.title + "_up", ad.imageUrl, ad.link, ad.enabled);
+        System.out.println("更新广告结果: " + updateResult);
+        assert "success".equals(updateResult) : "更新广告失败";
+
+        String deleteResult = ServiceLayer.deleteAdvertisement(ad.id);
+        System.out.println("删除广告结果: " + deleteResult);
+        assert "success".equals(deleteResult) : "删除广告失败";
+
+        System.out.println("广告服务测试完成\n");
+    }
+
     /**
      * 测试工具方法
      */

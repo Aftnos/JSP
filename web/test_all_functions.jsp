@@ -159,6 +159,7 @@
         <a href="#product-section">商品管理</a>
         <a href="#order-section">订单管理</a>
         <a href="#aftersale-section">售后管理</a>
+        <a href="#ad-section">广告管理</a>
         <a href="#utility-section">工具方法</a>
     </div>
 
@@ -233,6 +234,69 @@
         %>
         <div class="result <%=resultClass%>">
             登录结果: <%=result%>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 修改用户密码 -->
+        <h3>修改用户密码</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="updateUserPassword">
+            <div class="form-group">
+                <label>用户ID:</label>
+                <input type="number" name="updateUserId" value="1" required>
+            </div>
+            <div class="form-group">
+                <label>新密码:</label>
+                <input type="password" name="newUserPassword" required>
+            </div>
+            <button type="submit" class="btn">修改密码</button>
+        </form>
+
+        <%
+            if ("updateUserPassword".equals(action)) {
+                int uid = ServiceLayer.safeParseInt(request.getParameter("updateUserId"), 0);
+                String np = request.getParameter("newUserPassword");
+                result = ServiceLayer.updateUserPassword(uid, np);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">
+            修改密码结果: <%=result%>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 更新用户资料 -->
+        <h3>更新用户资料</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="updateUserProfile">
+            <div class="form-group">
+                <label>用户ID:</label>
+                <input type="number" name="profileUserId" value="1" required>
+            </div>
+            <div class="form-group">
+                <label>显示名称:</label>
+                <input type="text" name="displayName">
+            </div>
+            <div class="form-group">
+                <label>头像URL:</label>
+                <input type="text" name="avatar">
+            </div>
+            <button type="submit" class="btn">更新资料</button>
+        </form>
+
+        <%
+            if ("updateUserProfile".equals(action)) {
+                int uid = ServiceLayer.safeParseInt(request.getParameter("profileUserId"), 0);
+                String dn = request.getParameter("displayName");
+                String av = request.getParameter("avatar");
+                result = ServiceLayer.updateUserProfile(uid, dn, av);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">
+            更新资料结果: <%=result%>
         </div>
         <%
             }
@@ -795,9 +859,62 @@
         %>
     </div>
 
+    <!-- 广告管理测试 -->
+    <div id="ad-section" class="section">
+        <h2>6. 广告管理测试</h2>
+
+        <h3>添加广告</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="addAd">
+            <div class="form-group">
+                <label>标题:</label>
+                <input type="text" name="adTitle" required>
+            </div>
+            <button type="submit" class="btn">添加广告</button>
+        </form>
+
+        <%
+            if ("addAd".equals(action)) {
+                String title = request.getParameter("adTitle");
+                result = ServiceLayer.addAdvertisement(title, null, null, true);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">添加广告结果: <%=result%></div>
+        <%
+            }
+        %>
+
+        <h3>查看广告</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="listAd">
+            <button type="submit" class="btn">获取广告列表</button>
+        </form>
+
+        <%
+            if ("listAd".equals(action)) {
+                List<Advertisement> ads = ServiceLayer.getAllAdvertisements();
+        %>
+        <div class="result info">
+            <h4>广告列表(<%=ads.size()%>)</h4>
+            <% if (!ads.isEmpty()) { %>
+            <table>
+                <tr><th>ID</th><th>标题</th></tr>
+                <% for (Advertisement ad : ads) { %>
+                <tr><td><%=ad.id%></td><td><%=ad.title%></td></tr>
+                <% } %>
+            </table>
+            <% } else { %>
+            <p>暂无广告</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+    </div>
+
     <!-- 工具方法测试 -->
     <div id="utility-section" class="section">
-        <h2>6. 工具方法测试</h2>
+        <h2>7. 工具方法测试</h2>
 
         <h3>工具方法演示</h3>
         <div class="result info">

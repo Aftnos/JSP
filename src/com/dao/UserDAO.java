@@ -49,4 +49,46 @@ public class UserDAO {
         }
         return 0;
     }
+
+    /**
+     * 更新用户密码。
+     *
+     * @param userId 用户ID
+     * @param newPassword 新密码
+     * @return 更新的行数
+     */
+    public static int updatePassword(int userId, String newPassword) {
+        String sql = "UPDATE users SET password=? WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 更新用户资料（头像和显示名称）。
+     *
+     * @param userId 用户ID
+     * @param displayName 显示名称
+     * @param avatar 头像URL
+     * @return 更新的行数
+     */
+    public static int updateProfile(int userId, String displayName, String avatar) {
+        String sql = "UPDATE users SET display_name=?, avatar=? WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, displayName);
+            ps.setString(2, avatar);
+            ps.setInt(3, userId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

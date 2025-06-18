@@ -29,9 +29,24 @@ public class Model {
         return UserDAO.addUser(username, password);
     }
 
+    /** 更新用户密码 */
+    public static int updateUserPassword(int userId, String newPassword) {
+        return UserDAO.updatePassword(userId, newPassword);
+    }
+
+    /** 更新用户资料 */
+    public static int updateUserProfile(int userId, String displayName, String avatar) {
+        return UserDAO.updateProfile(userId, displayName, avatar);
+    }
+
     /** 验证管理员登录 */
     public static boolean validateAdmin(String username, String password) {
         return AdminDAO.validateAdmin(username, password);
+    }
+
+    /** 更新管理员密码 */
+    public static int updateAdminPassword(int adminId, String newPassword) {
+        return AdminDAO.updatePassword(adminId, newPassword);
     }
 
     /** 获取所有商品 */
@@ -97,5 +112,25 @@ public class Model {
     /** 更新售后状态（管理员） */
     public static int updateAfterSaleStatus(int userProductId, String status) {
         return UserProductDAO.updateAfterSaleStatus(userProductId, status);
+    }
+
+    /** 获取所有广告 */
+    public static List<Advertisement> getAllAdvertisements() {
+        return AdvertisementDAO.getAllAdvertisements();
+    }
+
+    /** 新增广告 */
+    public static int addAdvertisement(String title, String imageUrl, String link, boolean enabled) {
+        return AdvertisementDAO.addAdvertisement(title, imageUrl, link, enabled);
+    }
+
+    /** 更新广告 */
+    public static int updateAdvertisement(int id, String title, String imageUrl, String link, boolean enabled) {
+        return AdvertisementDAO.updateAdvertisement(id, title, imageUrl, link, enabled);
+    }
+
+    /** 删除广告 */
+    public static int deleteAdvertisement(int id) {
+        return AdvertisementDAO.deleteAdvertisement(id);
     }
 }
