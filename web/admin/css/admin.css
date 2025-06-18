@@ -1,0 +1,8 @@
+body {font-family: Arial, sans-serif; background:#f5f5f5;}
+.container {width: 960px; margin: auto; background:#fff; padding:20px; border-radius:5px;}
+nav a {margin-right: 15px;}
+table {width:100%; border-collapse:collapse; margin-top:15px;}
+th, td {border:1px solid #ddd; padding:8px;}
+th {background:#f0f0f0;}
+form {margin:10px 0;}
+.message {color:red;}
