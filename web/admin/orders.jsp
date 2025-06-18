@@ -10,13 +10,37 @@
     }
     List<Order> list = ServiceLayer.getAllOrders();
     String msg = null;
+    String createMsg = null;
     if ("POST".equalsIgnoreCase(request.getMethod())) {
-        int oid = ServiceLayer.safeParseInt(request.getParameter("id"), 0);
-        String status = request.getParameter("status");
-        msg = ServiceLayer.updateOrderStatus(oid, status);
-        if ("success".equals(msg)) {
-            response.sendRedirect("orders.jsp");
-            return;
+        String action = request.getParameter("action");
+        if ("create".equals(action)) {
+            int uid = ServiceLayer.safeParseInt(request.getParameter("userId"), 0);
+            int pid = ServiceLayer.safeParseInt(request.getParameter("productId"), 0);
+            int qty = ServiceLayer.safeParseInt(request.getParameter("quantity"), 1);
+            com.entity.Product p = ServiceLayer.getProductById(pid);
+            if (p != null) {
+                java.util.List<com.entity.CartItem> cart = new java.util.ArrayList<>();
+                com.entity.CartItem item = new com.entity.CartItem();
+                item.productId = pid;
+                item.quantity = qty;
+                item.price = p.price;
+                cart.add(item);
+                createMsg = ServiceLayer.createOrder(uid, cart);
+            } else {
+                createMsg = "商品不存在";
+            }
+            if ("success".equals(createMsg)) {
+                response.sendRedirect("orders.jsp");
+                return;
+            }
+        } else {
+            int oid = ServiceLayer.safeParseInt(request.getParameter("id"), 0);
+            String status = request.getParameter("status");
+            msg = ServiceLayer.updateOrderStatus(oid, status);
+            if ("success".equals(msg)) {
+                response.sendRedirect("orders.jsp");
+                return;
+            }
         }
     }
 %>
@@ -30,6 +54,16 @@
 <body>
 <div class="container">
     <nav><a href="dashboard.jsp">返回控制台</a></nav>
+    <h2>创建订单</h2>
+    <% if (createMsg != null) { %><p class="message"><%= createMsg %></p><% } %>
+    <form method="post">
+        <input type="hidden" name="action" value="create">
+        <label>用户ID:<input type="number" name="userId"></label>
+        <label>商品ID:<input type="number" name="productId"></label>
+        <label>数量:<input type="number" name="quantity" value="1"></label>
+        <button type="submit">创建</button>
+    </form>
+
     <h2>订单管理</h2>
     <% if (msg != null && !"success".equals(msg)) { %>
     <p class="message"><%= msg %></p>
