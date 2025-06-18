@@ -18,6 +18,9 @@ public class ServiceLayerTest {
         // 测试管理员服务
         testAdminServices();
         
+        // 测试分类服务
+        testCategoryServices();
+
         // 测试商品服务
         testProductServices();
         
@@ -143,6 +146,33 @@ public class ServiceLayerTest {
 
         System.out.println("管理员服务测试完成\n");
     }
+
+    /**
+     * 测试分类相关服务
+     */
+    private static void testCategoryServices() {
+        System.out.println("========== 测试分类服务 ==========");
+
+        String name = "分类" + System.currentTimeMillis();
+        String addRes = ServiceLayer.addCategory(name);
+        System.out.println("添加分类结果: " + addRes);
+
+        List<Category> list = ServiceLayer.getAllCategories();
+        System.out.println("分类数量: " + list.size());
+        Category last = list.isEmpty() ? null : list.get(list.size() - 1);
+
+        if (last != null) {
+            String up = ServiceLayer.updateCategory(last.id, name + "_新");
+            System.out.println("更新分类结果: " + up);
+            Category info = ServiceLayer.getCategoryById(last.id);
+            System.out.println("根据ID获取分类: " + (info != null));
+            String del = ServiceLayer.deleteCategory(last.id);
+            System.out.println("删除分类结果: " + del);
+        }
+
+        System.out.println("分类服务测试完成\n");
+    }
+
     
     /**
      * 测试商品相关服务

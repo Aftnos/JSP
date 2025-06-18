@@ -94,7 +94,7 @@
 
 ## 订单相关
 ### `String createOrder(int userId, List<CartItem> cartItems)`
-根据购物车创建订单，返回 "success" 或错误提示。
+根据购物车创建订单，返回 "success" 或错误提示。系统会生成8位16进制订单号。
 - **userId**: 主义为所属用户 ID
 - **cartItems**: 包含商品信息的列表
 
@@ -111,7 +111,7 @@
 - **status**: 新状态字符串
 
 ### `String payOrder(int orderId)`
-标记订单已支付。
+标记订单已支付，仅限状态为 "待支付" 的订单。
 - **orderId**: 订单 ID
 
 ### `Order getOrderById(int orderId)`
@@ -125,7 +125,7 @@
 为用户绑定已完成订单中的商品，无错返回 "success"。
 - **userId**: 用户 ID
 - **productId**: 商品 ID
-- **orderNo**: 8 位订单号
+- **orderNo**: 8 位订单号，格式为16进制，例如 `110A0001`
 
 ### `List<UserProduct> getUserProducts(int userId)`
 获取用户绑定的所有产品信息。

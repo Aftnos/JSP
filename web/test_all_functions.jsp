@@ -673,6 +673,51 @@
         <%
             }
         %>
+
+        <h3>更新分类</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="updateCategory">
+            <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="updateCategoryId" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>新名称:</label>
+                <input type="text" name="updateCategoryName" required>
+            </div>
+            <button type="submit" class="btn">更新分类</button>
+        </form>
+        <%
+            if ("updateCategory".equals(action)) {
+                int cid = ServiceLayer.safeParseInt(request.getParameter("updateCategoryId"), 0);
+                String cname = request.getParameter("updateCategoryName");
+                result = ServiceLayer.updateCategory(cid, cname);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">更新分类结果: <%=result%></div>
+        <%
+            }
+        %>
+
+        <h3>删除分类</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteCategory">
+            <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="deleteCategoryId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除分类</button>
+        </form>
+        <%
+            if ("deleteCategory".equals(action)) {
+                int cid = ServiceLayer.safeParseInt(request.getParameter("deleteCategoryId"), 0);
+                result = ServiceLayer.deleteCategory(cid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除分类结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 订单管理测试 -->
@@ -851,6 +896,27 @@
         <div class="result <%=resultClass%>">
             更新订单状态结果: <%=result%>
         </div>
+        <%
+            }
+        %>
+
+        <h3>支付订单</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="payOrder">
+            <div class="form-group">
+                <label>订单ID:</label>
+                <input type="number" name="payOrderId" min="1" required>
+            </div>
+            <button type="submit" class="btn">支付订单</button>
+        </form>
+
+        <%
+            if ("payOrder".equals(action)) {
+                int poid = ServiceLayer.safeParseInt(request.getParameter("payOrderId"), 0);
+                result = ServiceLayer.payOrder(poid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">支付订单结果: <%=result%></div>
         <%
             }
         %>
