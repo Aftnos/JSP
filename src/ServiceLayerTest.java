@@ -405,6 +405,14 @@ public class ServiceLayerTest {
             }
         }
         assert boundProduct != null : "未找到刚绑定的商品";
+
+        // 再次尝试绑定同一商品，应该失败
+        String duplicateBind = ServiceLayer.bindUserProduct(userId, testProduct.id, o.orderNo);
+        assert !"success".equals(duplicateBind) : "重复绑定应该失败";
+
+        // 尝试绑定订单中不存在的商品
+        String invalidBind = ServiceLayer.bindUserProduct(userId, 999999, o.orderNo);
+        assert !"success".equals(invalidBind) : "订单中不存在的商品绑定应失败";
         
         // 申请售后
         System.out.println("测试申请售后...");
@@ -439,6 +447,12 @@ public class ServiceLayerTest {
             }
         }
         assert statusUpdated : "售后状态未成功更新为'已处理'";
+
+        // 获取所有绑定记录
+        System.out.println("测试获取所有绑定记录...");
+        List<UserProduct> allBindings = ServiceLayer.getAllUserProducts();
+        System.out.println("所有绑定记录数量: " + allBindings.size());
+        assert !allBindings.isEmpty() : "所有绑定记录列表不应为空";
 
         // 根据ID获取绑定商品并删除
         UserProduct fetchedUP = ServiceLayer.getUserProductById(boundProduct.id);

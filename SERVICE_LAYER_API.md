@@ -131,6 +131,10 @@
 获取用户绑定的所有产品信息。
 - **userId**: 用户 ID
 
+### `List<UserProduct> getAllUserProducts()`
+管理员获取所有用户商品绑定记录。
+返回值为 `UserProduct` 列表，用于后台查看售后申请。
+
 ### `String applyAfterSale(int userProductId)`
 提交品质或维修等售后申请，成功返回 "success"。
 - **userProductId**: 用户产品绑定 ID

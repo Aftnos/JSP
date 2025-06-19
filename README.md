@@ -174,6 +174,7 @@ JSP/
 
    * `bindUserProduct(int userId, int productId, String orderNo)`：绑定用户与商品关系。将 **订单号** 为 `orderNo` 且 **商品ID** 为 `productId` 的商品绑定到用户 `userId` 名下。内部会校验订单存在且属于该用户并已完成，符合条件则插入绑定记录。成功返回 `"success"`，否则返回错误原因（如“订单不存在或未完成”）。
    * `getUserProducts(int userId)`：获取用户已绑定的商品列表。返回列表中的每个 `UserProduct` 对象包含商品名称、订单号、售后状态等，可用于前端展示绑定商品及其售后进度。
+   * `getAllUserProducts()`：管理员查看所有用户绑定记录的列表，用于售后管理后台。
    * `applyAfterSale(int userProductId)`：用户申请售后服务。将对应绑定记录的 `after_sale_status` 更新为“申请中”，并返回 `"success"` 或失败信息。后续管理员处理结果再更新状态。
    * `updateAfterSaleStatus(int userProductId, String status)`：管理员更新售后状态。例如将状态改为“已处理”表示售后完成。返回 `"success"` 或错误信息（如记录不存在等）。
    * `getUserProductById(int id)`：根据绑定记录ID获取具体的绑定信息（包括哪个用户、商品及订单号，以及当前售后状态）。
