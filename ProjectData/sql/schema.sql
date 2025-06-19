@@ -58,7 +58,8 @@ CREATE TABLE user_products (
     order_no VARCHAR(8) NOT NULL,
     after_sale_status VARCHAR(20) DEFAULT '正常',
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    UNIQUE KEY uk_order_product(order_no, product_id)
 );
 
 CREATE TABLE advertisements (
