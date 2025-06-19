@@ -44,6 +44,16 @@ public class Model {
         return UserDAO.getUserById(userId);
     }
 
+    /** 获取所有用户 */
+    public static List<com.entity.User> getAllUsers() {
+        return UserDAO.getAllUsers();
+    }
+
+    /** 删除用户 */
+    public static int deleteUser(int userId) {
+        return UserDAO.deleteUser(userId);
+    }
+
     /** 验证管理员登录 */
     public static boolean validateAdmin(String username, String password) {
         return AdminDAO.validateAdmin(username, password);
@@ -65,13 +75,13 @@ public class Model {
     }
 
     /** 新增商品 */
-    public static int addProduct(String name, double price, int stock, String desc) {
-        return ProductDAO.addProduct(name, price, stock, desc);
+    public static int addProduct(String name, double price, int stock, String desc, int categoryId) {
+        return ProductDAO.addProduct(name, price, stock, desc, categoryId);
     }
 
     /** 更新商品 */
-    public static int updateProduct(int id, String name, double price, int stock, String desc) {
-        return ProductDAO.updateProduct(id, name, price, stock, desc);
+    public static int updateProduct(int id, String name, double price, int stock, String desc, int categoryId) {
+        return ProductDAO.updateProduct(id, name, price, stock, desc, categoryId);
     }
 
     /** 删除商品 */
@@ -94,14 +104,34 @@ public class Model {
         return OrderDAO.getAllOrders();
     }
 
+    /** 根据ID获取订单 */
+    public static Order getOrderById(int orderId) {
+        return OrderDAO.getOrderById(orderId);
+    }
+
+    /** 根据订单号获取订单 */
+    public static Order getOrderByNo(String orderNo) {
+        return OrderDAO.getOrderByNo(orderNo);
+    }
+
+    /** 删除订单 */
+    public static int deleteOrder(int orderId) {
+        return OrderDAO.deleteOrder(orderId);
+    }
+
     /** 更新订单状态 */
     public static int updateOrderStatus(int orderId, String status) {
         return OrderDAO.updateOrderStatus(orderId, status);
     }
 
+    /** 支付订单 */
+    public static int payOrder(int orderId) {
+        return OrderDAO.payOrder(orderId);
+    }
+
     /** 绑定用户商品 */
-    public static int addUserProduct(int userId, int productId, String sn) {
-        return UserProductDAO.addUserProduct(userId, productId, sn);
+    public static int addUserProduct(int userId, int productId, String orderNo) {
+        return UserProductDAO.addUserProduct(userId, productId, orderNo);
     }
 
     /** 查询用户绑定的商品 */
@@ -117,6 +147,41 @@ public class Model {
     /** 更新售后状态（管理员） */
     public static int updateAfterSaleStatus(int userProductId, String status) {
         return UserProductDAO.updateAfterSaleStatus(userProductId, status);
+    }
+
+    /** 根据ID获取用户绑定商品 */
+    public static UserProduct getUserProductById(int id) {
+        return UserProductDAO.getUserProductById(id);
+    }
+
+    /** 删除用户绑定商品 */
+    public static int deleteUserProduct(int id) {
+        return UserProductDAO.deleteUserProduct(id);
+    }
+
+    /** 获取所有分类 */
+    public static List<Category> getAllCategories() {
+        return CategoryDAO.getAllCategories();
+    }
+
+    /** 新增分类 */
+    public static int addCategory(String name) {
+        return CategoryDAO.addCategory(name);
+    }
+
+    /** 更新分类 */
+    public static int updateCategory(int id, String name) {
+        return CategoryDAO.updateCategory(id, name);
+    }
+
+    /** 删除分类 */
+    public static int deleteCategory(int id) {
+        return CategoryDAO.deleteCategory(id);
+    }
+
+    /** 根据ID获取分类 */
+    public static Category getCategoryById(int id) {
+        return CategoryDAO.getCategoryById(id);
     }
 
     /** 获取所有广告 */
@@ -137,5 +202,10 @@ public class Model {
     /** 删除广告 */
     public static int deleteAdvertisement(int id) {
         return AdvertisementDAO.deleteAdvertisement(id);
+    }
+
+    /** 根据ID获取广告 */
+    public static Advertisement getAdvertisementById(int id) {
+        return AdvertisementDAO.getAdvertisementById(id);
     }
 }

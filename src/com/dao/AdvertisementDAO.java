@@ -79,4 +79,27 @@ public class AdvertisementDAO {
         }
         return 0;
     }
+
+    /** 根据ID获取广告 */
+    public static Advertisement getAdvertisementById(int id) {
+        String sql = "SELECT * FROM advertisements WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Advertisement ad = new Advertisement();
+                    ad.id = rs.getInt("id");
+                    ad.title = rs.getString("title");
+                    ad.imagePath = rs.getString("image_path");
+                    ad.targetUrl = rs.getString("target_url");
+                    ad.enabled = rs.getInt("enabled") == 1;
+                    return ad;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -32,6 +32,12 @@
 快捷获取用户头像地址，若不存在则返回 `null`。
 - **userId**: 用户 ID
 
+### `List<User> getAllUsers()`
+获取所有用户列表，若无用户返回空列表。
+
+### `String deleteUser(int userId)`
+删除指定用户，返回 "success" 或错误信息。
+
 ## 管理员相关
 ### `boolean adminLogin(String username, String password)`
 根据管理员帐号验证登录，成功返回 `true`。
@@ -44,6 +50,20 @@
 - **newPassword**: 新密码
 
 ## 商品相关
+### `List<Category> getAllCategories()`
+获取所有商品分类列表。
+
+### `String addCategory(String name)`
+新增分类。
+
+### `String updateCategory(int id, String name)`
+更新分类名称。
+
+### `String deleteCategory(int id)`
+删除指定分类。
+
+### `Category getCategoryById(int id)`
+根据ID获取分类。
 ### `List<Product> getAllProducts()`
 获取所有商品列表，如果无数据返回空列表。
 
@@ -51,20 +71,22 @@
 根据 ID 查看單个商品。若未找到，返回 `null`。
 - **productId**: 商品 ID
 
-### `String addProduct(String name, double price, int stock, String description)`
+### `String addProduct(String name, double price, int stock, String description, int categoryId)`
 新增商品，成功时返回 "success"。
 - **name**: 商品名称
 - **price**: 商品价格
 - **stock**: 库存数量
 - **description**: 描述，可以为空
+- **categoryId**: 所属分类 ID
 
-### `String updateProduct(int productId, String name, double price, int stock, String description)`
+### `String updateProduct(int productId, String name, double price, int stock, String description, int categoryId)`
 修改已存在的商品信息，返回操作结果。
 - **productId**: 商品 ID
 - **name**: 新商品名称
 - **price**: 新价格
 - **stock**: 新库存
 - **description**: 新描述
+- **categoryId**: 分类 ID
 
 ### `String deleteProduct(int productId)`
 删除指定商品，返回 "success" 或错误信息。
@@ -72,7 +94,7 @@
 
 ## 订单相关
 ### `String createOrder(int userId, List<CartItem> cartItems)`
-根据购物车创建订单，返回 "success" 或错误提示。
+根据购物车创建订单，返回 "success" 或错误提示。系统会生成8位16进制订单号。
 - **userId**: 主义为所属用户 ID
 - **cartItems**: 包含商品信息的列表
 
@@ -88,12 +110,22 @@
 - **orderId**: 订单 ID
 - **status**: 新状态字符串
 
+### `String payOrder(int orderId)`
+标记订单已支付，仅限状态为 "待支付" 的订单。
+- **orderId**: 订单 ID
+
+### `Order getOrderById(int orderId)`
+根据订单 ID 获取订单详情，未找到时返回 `null`。
+
+### `String deleteOrder(int orderId)`
+删除指定订单及其订单项，返回 "success" 或错误信息。
+
 ## 售后相关
-### `String bindUserProduct(int userId, int productId, String serialNumber)`
-为用户绑定实际产品序列号，无错返回 "success"。
+### `String bindUserProduct(int userId, int productId, String orderNo)`
+为用户绑定已完成订单中的商品，无错返回 "success"。
 - **userId**: 用户 ID
 - **productId**: 商品 ID
-- **serialNumber**: 实物序列号
+- **orderNo**: 8 位订单号，格式为16进制，例如 `110A0001`
 
 ### `List<UserProduct> getUserProducts(int userId)`
 获取用户绑定的所有产品信息。
@@ -107,6 +139,12 @@
 更新售后处理状态，返回工作结果。
 - **userProductId**: 用户产品绑定 ID
 - **status**: 新售后状态
+
+### `UserProduct getUserProductById(int id)`
+根据绑定记录 ID 获取用户商品详情，未找到时返回 `null`。
+
+### `String deleteUserProduct(int id)`
+删除用户绑定商品记录，返回 "success" 或错误提示。
 
 ## 广告相关
 ### `List<Advertisement> getAllAdvertisements()`
@@ -126,6 +164,9 @@
 - **imagePath**: 图片地址
 - **targetUrl**: 跳转地址
 - **enabled**: 是否显示
+
+### `Advertisement getAdvertisementById(int id)`
+根据ID获取广告详情，未找到时返回 `null`。
 
 ### `String deleteAdvertisement(int id)`
 删除指定广告。

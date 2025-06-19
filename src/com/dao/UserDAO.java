@@ -118,4 +118,47 @@ public class UserDAO {
         }
         return null;
     }
+
+    /**
+     * 获取所有用户信息。
+     *
+     * @return 用户列表
+     */
+    public static java.util.List<com.entity.User> getAllUsers() {
+        java.util.List<com.entity.User> list = new java.util.ArrayList<>();
+        String sql = "SELECT id, username, display_name, avatar FROM users";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                com.entity.User u = new com.entity.User();
+                u.id = rs.getInt("id");
+                u.username = rs.getString("username");
+                u.displayName = rs.getString("display_name");
+                u.avatar = rs.getString("avatar");
+                list.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 删除用户。
+     *
+     * @param userId 用户ID
+     * @return 删除的行数
+     */
+    public static int deleteUser(int userId) {
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

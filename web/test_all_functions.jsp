@@ -158,6 +158,7 @@
         <a href="#admin-section">管理员功能</a>
         <a href="#product-section">商品管理</a>
         <a href="#order-section">订单管理</a>
+        <a href="#category-section">分类管理</a>
         <a href="#aftersale-section">售后管理</a>
         <a href="#ad-section">广告管理</a>
         <a href="#utility-section">工具方法</a>
@@ -334,6 +335,56 @@
                 }
             }
         %>
+
+        <!-- 获取所有用户 -->
+        <h3>获取所有用户</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="listUsers">
+            <button type="submit" class="btn">查询所有用户</button>
+        </form>
+
+        <%
+            if ("listUsers".equals(action)) {
+                List<com.entity.User> users = ServiceLayer.getAllUsers();
+        %>
+        <div class="result info">
+            <h4>用户列表 (共<%=users.size()%>人)</h4>
+            <% if (!users.isEmpty()) { %>
+            <table>
+                <tr><th>ID</th><th>用户名</th><th>显示名称</th></tr>
+                <% for (com.entity.User u2 : users) { %>
+                <tr><td><%=u2.id%></td><td><%=u2.username%></td><td><%=u2.displayName%></td></tr>
+                <% } %>
+            </table>
+            <% } else { %>
+            <p>暂无用户</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 删除用户 -->
+        <h3>删除用户</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteUser">
+            <div class="form-group">
+                <label>用户ID:</label>
+                <input type="number" name="deleteUserId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除用户</button>
+        </form>
+
+        <%
+            if ("deleteUser".equals(action)) {
+                int duid = ServiceLayer.safeParseInt(request.getParameter("deleteUserId"), 0);
+                result = ServiceLayer.deleteUser(duid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除用户结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 管理员功能测试 -->
@@ -394,6 +445,10 @@
                 <input type="number" name="productStock" min="0" required>
             </div>
             <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="categoryId" min="1" value="1" required>
+            </div>
+            <div class="form-group">
                 <label>商品描述:</label>
                 <textarea name="productDescription" placeholder="最长200字符"></textarea>
             </div>
@@ -405,8 +460,9 @@
                 String productName = request.getParameter("productName");
                 double productPrice = ServiceLayer.safeParseDouble(request.getParameter("productPrice"), 0);
                 int productStock = ServiceLayer.safeParseInt(request.getParameter("productStock"), 0);
+                int categoryId = ServiceLayer.safeParseInt(request.getParameter("categoryId"), 1);
                 String productDescription = request.getParameter("productDescription");
-                result = ServiceLayer.addProduct(productName, productPrice, productStock, productDescription);
+                result = ServiceLayer.addProduct(productName, productPrice, productStock, productDescription, categoryId);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">
@@ -437,6 +493,10 @@
                 <input type="number" name="updateProductStock" min="0" required>
             </div>
             <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="updateCategoryId" min="1" value="1" required>
+            </div>
+            <div class="form-group">
                 <label>商品描述:</label>
                 <textarea name="updateProductDescription"></textarea>
             </div>
@@ -449,8 +509,9 @@
                 String updateProductName = request.getParameter("updateProductName");
                 double updateProductPrice = ServiceLayer.safeParseDouble(request.getParameter("updateProductPrice"), 0);
                 int updateProductStock = ServiceLayer.safeParseInt(request.getParameter("updateProductStock"), 0);
+                int updateCategoryId = ServiceLayer.safeParseInt(request.getParameter("updateCategoryId"), 1);
                 String updateProductDescription = request.getParameter("updateProductDescription");
-                result = ServiceLayer.updateProduct(updateProductId, updateProductName, updateProductPrice, updateProductStock, updateProductDescription);
+                result = ServiceLayer.updateProduct(updateProductId, updateProductName, updateProductPrice, updateProductStock, updateProductDescription, updateCategoryId);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">
@@ -562,6 +623,98 @@
             <p>商品不存在</p>
             <% } %>
         </div>
+        <%
+            }
+        %>
+    </div>
+
+    <!-- 分类管理测试 -->
+    <div id="category-section" class="section">
+        <h2>4. 分类管理测试</h2>
+
+        <h3>添加分类</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="addCategory">
+            <div class="form-group">
+                <label>分类名称:</label>
+                <input type="text" name="categoryName" required>
+            </div>
+            <button type="submit" class="btn">添加分类</button>
+        </form>
+
+        <%
+            if ("addCategory".equals(action)) {
+                String name = request.getParameter("categoryName");
+                result = ServiceLayer.addCategory(name);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">添加分类结果: <%=result%></div>
+        <%
+            }
+        %>
+
+        <h3>分类列表</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="listCategory">
+            <button type="submit" class="btn">获取分类</button>
+        </form>
+        <%
+            if ("listCategory".equals(action)) {
+                List<Category> cts = ServiceLayer.getAllCategories();
+        %>
+        <div class="result info">
+            <table>
+                <tr><th>ID</th><th>名称</th></tr>
+                <% for(Category c: cts){ %>
+                <tr><td><%=c.id%></td><td><%=c.name%></td></tr>
+                <% } %>
+            </table>
+        </div>
+        <%
+            }
+        %>
+
+        <h3>更新分类</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="updateCategory">
+            <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="updateCategoryId" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>新名称:</label>
+                <input type="text" name="updateCategoryName" required>
+            </div>
+            <button type="submit" class="btn">更新分类</button>
+        </form>
+        <%
+            if ("updateCategory".equals(action)) {
+                int cid = ServiceLayer.safeParseInt(request.getParameter("updateCategoryId"), 0);
+                String cname = request.getParameter("updateCategoryName");
+                result = ServiceLayer.updateCategory(cid, cname);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">更新分类结果: <%=result%></div>
+        <%
+            }
+        %>
+
+        <h3>删除分类</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteCategory">
+            <div class="form-group">
+                <label>分类ID:</label>
+                <input type="number" name="deleteCategoryId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除分类</button>
+        </form>
+        <%
+            if ("deleteCategory".equals(action)) {
+                int cid = ServiceLayer.safeParseInt(request.getParameter("deleteCategoryId"), 0);
+                result = ServiceLayer.deleteCategory(cid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除分类结果: <%=result%></div>
         <%
             }
         %>
@@ -746,6 +899,76 @@
         <%
             }
         %>
+
+        <h3>支付订单</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="payOrder">
+            <div class="form-group">
+                <label>订单ID:</label>
+                <input type="number" name="payOrderId" min="1" required>
+            </div>
+            <button type="submit" class="btn">支付订单</button>
+        </form>
+
+        <%
+            if ("payOrder".equals(action)) {
+                int poid = ServiceLayer.safeParseInt(request.getParameter("payOrderId"), 0);
+                result = ServiceLayer.payOrder(poid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">支付订单结果: <%=result%></div>
+        <%
+            }
+        %>
+
+        <!-- 根据ID获取订单 -->
+        <h3>根据ID获取订单</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getOrderById">
+            <div class="form-group">
+                <label>订单ID:</label>
+                <input type="number" name="queryOrderId" min="1" required>
+            </div>
+            <button type="submit" class="btn">查询订单</button>
+        </form>
+
+        <%
+            if ("getOrderById".equals(action)) {
+                int qoid = ServiceLayer.safeParseInt(request.getParameter("queryOrderId"), 0);
+                Order oinfo = ServiceLayer.getOrderById(qoid);
+        %>
+        <div class="result info">
+            <% if (oinfo != null) { %>
+            <p>订单ID: <%=oinfo.id%> 用户ID: <%=oinfo.userId%> 状态: <%=oinfo.status%></p>
+            <% } else { %>
+            <p>订单不存在</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 删除订单 -->
+        <h3>删除订单</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteOrder">
+            <div class="form-group">
+                <label>订单ID:</label>
+                <input type="number" name="deleteOrderId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除订单</button>
+        </form>
+
+        <%
+            if ("deleteOrder".equals(action)) {
+                int doid = ServiceLayer.safeParseInt(request.getParameter("deleteOrderId"), 0);
+                result = ServiceLayer.deleteOrder(doid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除订单结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 售后管理测试 -->
@@ -765,8 +988,8 @@
                 <input type="number" name="bindProductId" min="1" required>
             </div>
             <div class="form-group">
-                <label>序列号:</label>
-                <input type="text" name="bindSerialNumber" placeholder="商品序列号" required>
+                <label>订单号:</label>
+                <input type="text" name="bindOrderNo" placeholder="完成订单号" required>
             </div>
             <button type="submit" class="btn">绑定商品</button>
         </form>
@@ -775,8 +998,8 @@
             if ("bindUserProduct".equals(action)) {
                 int bindUserId = ServiceLayer.safeParseInt(request.getParameter("bindUserId"), 0);
                 int bindProductId = ServiceLayer.safeParseInt(request.getParameter("bindProductId"), 0);
-                String bindSerialNumber = request.getParameter("bindSerialNumber");
-                result = ServiceLayer.bindUserProduct(bindUserId, bindProductId, bindSerialNumber);
+                String bindOrderNo = request.getParameter("bindOrderNo");
+                result = ServiceLayer.bindUserProduct(bindUserId, bindProductId, bindOrderNo);
                 resultClass = "success".equals(result) ? "success" : "error";
         %>
         <div class="result <%=resultClass%>">
@@ -809,7 +1032,7 @@
                 <tr>
                     <th>绑定ID</th>
                     <th>商品名称</th>
-                    <th>序列号</th>
+                    <th>订单号</th>
                     <th>售后状态</th>
                 </tr>
                 <% for (UserProduct up : userProducts) { %>
@@ -818,7 +1041,7 @@
                     </td>
                     <td><%=up.productName%>
                     </td>
-                    <td><%=up.sn%>
+                    <td><%=up.orderNo%>
                     </td>
                     <td><%=up.afterSaleStatus != null ? up.afterSaleStatus : "正常"%>
                     </td>
@@ -890,6 +1113,55 @@
         <%
             }
         %>
+
+        <!-- 根据ID获取绑定商品 -->
+        <h3>根据ID获取绑定商品</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getUserProductById">
+            <div class="form-group">
+                <label>绑定ID:</label>
+                <input type="number" name="queryUserProductId" min="1" required>
+            </div>
+            <button type="submit" class="btn">查询绑定商品</button>
+        </form>
+
+        <%
+            if ("getUserProductById".equals(action)) {
+                int qupid = ServiceLayer.safeParseInt(request.getParameter("queryUserProductId"), 0);
+                UserProduct upInfo = ServiceLayer.getUserProductById(qupid);
+        %>
+        <div class="result info">
+            <% if (upInfo != null) { %>
+            <p>ID:<%=upInfo.id%> 订单号:<%=upInfo.orderNo%> 状态:<%=upInfo.afterSaleStatus%></p>
+            <% } else { %>
+            <p>绑定记录不存在</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 删除绑定商品 -->
+        <h3>删除绑定商品</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="deleteUserProduct">
+            <div class="form-group">
+                <label>绑定ID:</label>
+                <input type="number" name="deleteUserProductId" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-danger">删除绑定商品</button>
+        </form>
+
+        <%
+            if ("deleteUserProduct".equals(action)) {
+                int duPid = ServiceLayer.safeParseInt(request.getParameter("deleteUserProductId"), 0);
+                result = ServiceLayer.deleteUserProduct(duPid);
+                resultClass = "success".equals(result) ? "success" : "error";
+        %>
+        <div class="result <%=resultClass%>">删除绑定商品结果: <%=result%></div>
+        <%
+            }
+        %>
     </div>
 
     <!-- 广告管理测试 -->
@@ -953,6 +1225,33 @@
             </table>
             <% } else { %>
             <p>暂无广告</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 根据ID获取广告 -->
+        <h3>根据ID获取广告</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getAdById">
+            <div class="form-group">
+                <label>广告ID:</label>
+                <input type="number" name="adId" min="1" required>
+            </div>
+            <button type="submit" class="btn">查询广告</button>
+        </form>
+
+        <%
+            if ("getAdById".equals(action)) {
+                int aid = ServiceLayer.safeParseInt(request.getParameter("adId"), 0);
+                Advertisement adv = ServiceLayer.getAdvertisementById(aid);
+        %>
+        <div class="result info">
+            <% if (adv != null) { %>
+            <p>ID:<%=adv.id%> 标题:<%=adv.title%></p>
+            <% } else { %>
+            <p>广告不存在</p>
             <% } %>
         </div>
         <%

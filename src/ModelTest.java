@@ -200,7 +200,7 @@ public class ModelTest {
             int productStock = 100;
             String productDesc = "这是一个测试商品";
             
-            int addProductResult = Model.addProduct(productName, productPrice, productStock, productDesc);
+            int addProductResult = Model.addProduct(productName, productPrice, productStock, productDesc, 1);
             if (addProductResult > 0) {
                 System.out.println("✓ 添加商品成功: " + productName);
             } else {
@@ -223,7 +223,7 @@ public class ModelTest {
                 
                 // 测试更新商品
                 String updatedName = "更新后的商品名_" + System.currentTimeMillis();
-                int updateResult = Model.updateProduct(firstProduct.id, updatedName, 199.99, 50, "更新后的描述");
+                int updateResult = Model.updateProduct(firstProduct.id, updatedName, 199.99, 50, "更新后的描述", 1);
                 if (updateResult > 0) {
                     System.out.println("✓ 更新商品成功");
                 } else {
@@ -350,9 +350,22 @@ public class ModelTest {
 
             int userId = 1; // 假设存在ID为1的用户
             int productId = products.get(0).id;
-            String sn = "SN_" + System.currentTimeMillis();
 
-            int addResult = Model.addUserProduct(userId, productId, sn);
+            // 创建并完成订单，获得8位订单号
+            List<CartItem> items = new ArrayList<>();
+            CartItem ci = new CartItem();
+            ci.productId = productId;
+            ci.quantity = 1;
+            ci.price = products.get(0).price;
+            items.add(ci);
+            Model.createOrder(userId, items);
+            Order order = Model.getOrdersByUser(userId).get(0);
+            Model.payOrder(order.id);
+            Model.updateOrderStatus(order.id, "已完成");
+
+            String orderNo = order.orderNo;
+
+            int addResult = Model.addUserProduct(userId, productId, orderNo);
             if (addResult > 0) {
                 System.out.println("✓ 添加用户商品成功");
             } else {
