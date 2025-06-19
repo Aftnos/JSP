@@ -993,6 +993,7 @@
             </div>
             <button type="submit" class="btn">绑定商品</button>
         </form>
+        <p class="info">系统会校验商品是否属于该订单，且同一订单号与商品只能绑定一次。</p>
 
         <%
             if ("bindUserProduct".equals(action)) {
@@ -1050,6 +1051,40 @@
             </table>
             <% } else { %>
             <p>该用户暂无绑定商品</p>
+            <% } %>
+        </div>
+        <%
+            }
+        %>
+
+        <!-- 获取所有绑定记录（管理员功能） -->
+        <h3>获取所有绑定记录</h3>
+        <form method="post">
+            <input type="hidden" name="action" value="getAllUserProducts">
+            <button type="submit" class="btn">获取全部绑定记录</button>
+        </form>
+
+        <%
+            if ("getAllUserProducts".equals(action)) {
+                List<UserProduct> allList = ServiceLayer.getAllUserProducts();
+        %>
+        <div class="result info">
+            <h4>全部绑定记录 (共<%=allList.size()%>条):</h4>
+            <% if (!allList.isEmpty()) { %>
+            <table>
+                <tr><th>ID</th><th>用户ID</th><th>商品</th><th>订单号</th><th>售后状态</th></tr>
+                <% for (UserProduct up : allList) { %>
+                <tr>
+                    <td><%=up.id%></td>
+                    <td><%=up.userId%></td>
+                    <td><%=up.productName%></td>
+                    <td><%=up.orderNo%></td>
+                    <td><%=up.afterSaleStatus%></td>
+                </tr>
+                <% } %>
+            </table>
+            <% } else { %>
+            <p>暂无绑定记录</p>
             <% } %>
         </div>
         <%

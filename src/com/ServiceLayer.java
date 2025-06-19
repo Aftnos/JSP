@@ -749,16 +749,31 @@ public class ServiceLayer {
         }
 
         try {
-            Order order = Model.getOrderByNo(orderNo.trim());
+            String trimmed = orderNo.trim();
+            Order order = Model.getOrderByNo(trimmed);
             if (order == null || order.userId != userId || !"已完成".equals(order.status)) {
                 return "订单不存在或未完成";
             }
-            int result = Model.addUserProduct(userId, productId, orderNo.trim());
-            if (result > 0) {
-                return "success";
-            } else {
-                return "绑定商品失败";
+
+            boolean found = false;
+            if (order.items != null) {
+                for (OrderItem item : order.items) {
+                    if (item.productId == productId) {
+                        found = true;
+                        break;
+                    }
+                }
             }
+            if (!found) {
+                return "商品不属于该订单";
+            }
+
+            if (Model.userProductExists(trimmed, productId)) {
+                return "该商品已绑定";
+            }
+
+            int result = Model.addUserProduct(userId, productId, trimmed);
+            return result > 0 ? "success" : "绑定商品失败";
         } catch (Exception e) {
             System.err.println("绑定用户商品失败: " + e.getMessage());
             return "系统错误，请稍后重试";
@@ -785,12 +800,35 @@ public class ServiceLayer {
         if (userId <= 0) {
             return new ArrayList<>();
         }
-        
+
         try {
             List<UserProduct> products = Model.getUserProducts(userId);
             return products != null ? products : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("获取用户商品失败: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 获取所有用户商品绑定记录（管理员功能）
+     *
+     * 使用方法：
+     * <%
+     *     List<com.UserProduct> list = com.ServiceLayer.getAllUserProducts();
+     *     for (com.UserProduct up : list) {
+     *         out.println(up.userId + " → " + up.productName);
+     *     }
+     * %>
+     *
+     * @return 全部用户绑定商品列表
+     */
+    public static List<UserProduct> getAllUserProducts() {
+        try {
+            List<UserProduct> list = Model.getAllUserProducts();
+            return list != null ? list : new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("获取所有绑定商品失败: " + e.getMessage());
             return new ArrayList<>();
         }
     }

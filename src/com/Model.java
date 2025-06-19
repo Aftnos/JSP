@@ -134,9 +134,25 @@ public class Model {
         return UserProductDAO.addUserProduct(userId, productId, orderNo);
     }
 
+    /**
+     * 检查指定订单号与商品ID是否已有绑定记录。
+     *
+     * @param orderNo   订单号
+     * @param productId 商品ID
+     * @return true 已存在绑定，false 不存在
+     */
+    public static boolean userProductExists(String orderNo, int productId) {
+        return UserProductDAO.existsByOrderAndProduct(orderNo, productId);
+    }
+
     /** 查询用户绑定的商品 */
     public static List<UserProduct> getUserProducts(int userId) {
         return UserProductDAO.getUserProducts(userId);
+    }
+
+    /** 获取所有用户绑定商品（管理员） */
+    public static List<UserProduct> getAllUserProducts() {
+        return UserProductDAO.getAllUserProducts();
     }
 
     /** 用户申请售后 */
