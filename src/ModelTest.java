@@ -65,20 +65,33 @@ public class ModelTest {
 
         test("获取地址", () -> com.Model.getAddresses(userId));
 
-        com.entity.Address addr = new com.entity.Address();
-        addr.setUserId(userId);
-        addr.setReceiver("张三");
-        addr.setPhone("123456");
-        addr.setDetail("addr");
-        test("添加地址", () -> com.Model.addAddress(addr));
+        // 创建第一个地址供后续订单使用
+        com.entity.Address addr1 = new com.entity.Address();
+        addr1.setUserId(userId);
+        addr1.setReceiver("张三");
+        addr1.setPhone("123456");
+        addr1.setDetail("addr");
+        test("添加地址", () -> com.Model.addAddress(addr1));
 
-        int addressId = addr.getId();
+        int addressId1 = addr1.getId();
 
         test("更新地址", () -> {
-            addr.setDetail("addr2");
-            return com.Model.updateAddress(addr);
+            addr1.setDetail("addr2");
+            return com.Model.updateAddress(addr1);
         });
-        test("设置默认地址", () -> { com.Model.setDefaultAddress(userId,addressId); return null; });
+
+        // 再创建一个地址用于删除测试，避免与订单产生外键关系
+        com.entity.Address addr2 = new com.entity.Address();
+        addr2.setUserId(userId);
+        addr2.setReceiver("李四");
+        addr2.setPhone("654321");
+        addr2.setDetail("addr3");
+        test("添加地址", () -> com.Model.addAddress(addr2));
+
+        int addressId2 = addr2.getId();
+
+        test("设置默认地址", () -> { com.Model.setDefaultAddress(userId,addressId1); return null; });
+        test("删除地址", () -> com.Model.deleteAddress(addressId2));
 
         test("列出类别", com.Model::listCategories);
 
@@ -109,7 +122,7 @@ public class ModelTest {
 
         com.entity.Order order = new com.entity.Order();
         order.setUserId(userId);
-        order.setAddressId(addressId);
+        order.setAddressId(addressId1);
         order.setStatus("NEW");
         order.setTotal(new java.math.BigDecimal("1"));
         order.setPaid(false);
@@ -160,7 +173,6 @@ public class ModelTest {
         test("标记已读", () -> com.Model.markNotificationRead(noteId));
         test("删除通知", () -> com.Model.deleteNotification(noteId));
 
-        // 最后再删除之前创建的地址
-        test("删除地址", () -> com.Model.deleteAddress(addressId));
+        // 测试流程结束
     }
 }
