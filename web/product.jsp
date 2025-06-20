@@ -36,7 +36,15 @@
     <div><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
     <div>
         <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp">退出</a>
+        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %>
+        | <a href="cart.jsp">购物车</a>
+        | <a href="orders.jsp">订单</a>
+        | <a href="categories.jsp">分类</a>
+        | <a href="addresses.jsp">地址</a>
+        | <a href="notifications.jsp">通知</a>
+        | <a href="bindings.jsp">绑定</a>
+        | <a href="aftersales.jsp">售后</a>
+        | <a href="logout.jsp">退出</a>
         <% }else{ %>
         <a href="login.jsp">登录</a> | <a href="register.jsp">注册</a>
         <% } %>
