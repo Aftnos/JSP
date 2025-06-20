@@ -37,7 +37,9 @@
 </head>
 <body>
 <div class="container">
-    <%@ include file="sidebar.jsp" %>
+    <div class="admin-wrapper">
+        <%@ include file="sidebar.jsp" %>
+        <div class="content">
     <h2>分类管理</h2>
     <% if (message != null) { %><div class="message"><%= message %></div><% } %>
     <form method="post">
@@ -66,6 +68,8 @@
         </tr>
         <% } %>
     </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

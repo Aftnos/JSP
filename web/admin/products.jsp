@@ -42,43 +42,47 @@
 </head>
 <body>
 <div class="container">
-    <%@ include file="sidebar.jsp" %>
-    <h2>商品管理</h2>
-    <% if (message != null) { %>
-        <div class="message"><%= message %></div>
-    <% } %>
-    <form method="post">
-        <input type="hidden" name="action" value="<%= (edit != null) ? "update" : "add" %>"/>
-        <% if (edit != null) { %>
-            <input type="hidden" name="id" value="<%= edit.getId() %>"/>
-        <% } %>
-        <label>名称:<input type="text" name="name" value="<%= edit!=null?edit.getName():"" %>" required/></label>
-        <label>价格:<input type="text" name="price" value="<%= edit!=null?edit.getPrice():"" %>" required/></label>
-        <label>库存:<input type="number" name="stock" value="<%= edit!=null?edit.getStock():0 %>" required/></label>
-        <label>描述:<input type="text" name="description" value="<%= edit!=null?edit.getDescription():"" %>"/></label>
-        <button type="submit"><%= (edit!=null)?"更新":"添加" %></button>
-        <% if (edit != null) { %><a href="products.jsp">取消编辑</a><% } %>
-    </form>
-    <table>
-        <tr><th>ID</th><th>名称</th><th>价格</th><th>库存</th><th>描述</th><th>操作</th></tr>
-        <% for (Product p : list) { %>
-        <tr>
-            <td><%= p.getId() %></td>
-            <td><%= p.getName() %></td>
-            <td><%= p.getPrice() %></td>
-            <td><%= p.getStock() %></td>
-            <td><%= p.getDescription() %></td>
-            <td>
-                <a href="products.jsp?editId=<%= p.getId() %>">编辑</a>
-                <form method="post" style="display:inline" onsubmit="return confirm('确定删除?');">
-                    <input type="hidden" name="action" value="delete"/>
-                    <input type="hidden" name="id" value="<%= p.getId() %>"/>
-                    <button type="submit">删除</button>
-                </form>
-            </td>
-        </tr>
-        <% } %>
-    </table>
+    <div class="admin-wrapper">
+        <%@ include file="sidebar.jsp" %>
+        <div class="content">
+            <h2>商品管理</h2>
+            <% if (message != null) { %>
+                <div class="message"><%= message %></div>
+            <% } %>
+            <form method="post">
+                <input type="hidden" name="action" value="<%= (edit != null) ? "update" : "add" %>"/>
+                <% if (edit != null) { %>
+                    <input type="hidden" name="id" value="<%= edit.getId() %>"/>
+                <% } %>
+                <label>名称:<input type="text" name="name" value="<%= edit!=null?edit.getName():"" %>" required/></label>
+                <label>价格:<input type="text" name="price" value="<%= edit!=null?edit.getPrice():"" %>" required/></label>
+                <label>库存:<input type="number" name="stock" value="<%= edit!=null?edit.getStock():0 %>" required/></label>
+                <label>描述:<input type="text" name="description" value="<%= edit!=null?edit.getDescription():"" %>"/></label>
+                <button type="submit"><%= (edit!=null)?"更新":"添加" %></button>
+                <% if (edit != null) { %><a href="products.jsp">取消编辑</a><% } %>
+            </form>
+            <table>
+                <tr><th>ID</th><th>名称</th><th>价格</th><th>库存</th><th>描述</th><th>操作</th></tr>
+                <% for (Product p : list) { %>
+                <tr>
+                    <td><%= p.getId() %></td>
+                    <td><%= p.getName() %></td>
+                    <td><%= p.getPrice() %></td>
+                    <td><%= p.getStock() %></td>
+                    <td><%= p.getDescription() %></td>
+                    <td>
+                        <a href="products.jsp?editId=<%= p.getId() %>">编辑</a>
+                        <form method="post" style="display:inline" onsubmit="return confirm('确定删除?');">
+                            <input type="hidden" name="action" value="delete"/>
+                            <input type="hidden" name="id" value="<%= p.getId() %>"/>
+                            <button type="submit">删除</button>
+                        </form>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

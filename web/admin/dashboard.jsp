@@ -7,9 +7,13 @@
 </head>
 <body>
 <div class="container">
-    <%@ include file="sidebar.jsp" %>
-    <h2>欢迎进入后台管理</h2>
-    <p>请选择左侧链接进入具体管理页面。</p>
+    <div class="admin-wrapper">
+        <%@ include file="sidebar.jsp" %>
+        <div class="content">
+            <h2>欢迎进入后台管理</h2>
+            <p>请选择左侧链接进入具体管理页面。</p>
+        </div>
+    </div>
 </div>
 </body>
 </html>

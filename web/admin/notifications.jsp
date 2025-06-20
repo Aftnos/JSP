@@ -22,14 +22,18 @@
 </head>
 <body>
 <div class="container">
-    <%@ include file="sidebar.jsp" %>
-    <h2>通知管理</h2>
-    <% if (message != null) { %><div class="message"><%= message %></div><% } %>
-    <form method="post">
-        <label>用户ID:<input type="number" name="userId" required></label>
-        <label>内容:<input type="text" name="content" required></label>
-        <button type="submit">发送通知</button>
-    </form>
+    <div class="admin-wrapper">
+        <%@ include file="sidebar.jsp" %>
+        <div class="content">
+            <h2>通知管理</h2>
+            <% if (message != null) { %><div class="message"><%= message %></div><% } %>
+            <form method="post">
+                <label>用户ID:<input type="number" name="userId" required></label>
+                <label>内容:<input type="text" name="content" required></label>
+                <button type="submit">发送通知</button>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>
