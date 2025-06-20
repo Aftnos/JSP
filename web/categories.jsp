@@ -1,14 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.ServiceLayer" %>
-<%@ page import="com.entity.Product" %>
+<%@ page import="com.entity.Category" %>
 <%
-    java.util.List<Product> list = ServiceLayer.listProducts();
+    java.util.List<Category> list = ServiceLayer.listCategories();
 %>
 <html>
 <head>
-    <title>小米商城</title>
+    <title>分类列表</title>
     <link rel="stylesheet" href="css/main.css"/>
-    <script src="js/main.js"></script>
 </head>
 <body>
 <header>
@@ -30,16 +29,12 @@
     </div>
 </header>
 <div class="container">
-    <div class="products">
-        <% for(Product p : list){ %>
-        <div class="product-card">
-            <h3><a href="product.jsp?id=<%= p.getId() %>"><%= p.getName() %></a></h3>
-            <p>￥<%= p.getPrice() %></p>
-            <button onclick="addToCart(<%= p.getId() %>)">加入购物车</button>
-        </div>
+    <h2>分类列表</h2>
+    <ul>
+        <% for(Category c : list){ %>
+        <li><%= c.getName() %> (ID:<%= c.getId() %>)</li>
         <% } %>
-    </div>
+    </ul>
 </div>
-<footer>Powered by JSP Demo</footer>
 </body>
 </html>

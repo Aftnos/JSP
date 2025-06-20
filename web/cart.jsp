@@ -15,6 +15,22 @@
     }else if("delete".equals(action)){
         int id=Integer.parseInt(request.getParameter("id"));
         if(ServiceLayer.removeCartItem(id)) message="已删除"; else message="失败";
+    }else if("order".equals(action)){
+        int addrId=Integer.parseInt(request.getParameter("addressId"));
+        java.math.BigDecimal t=new java.math.BigDecimal("0");
+        java.util.List<Product> ps=ServiceLayer.listProducts();
+        java.util.List<CartItem> its=ServiceLayer.getCartItems(u.getId());
+        for(CartItem c:its){
+            Product p=ps.stream().filter(x->x.getId()==c.getProductId()).findFirst().orElse(null);
+            if(p!=null) t=t.add(p.getPrice().multiply(new java.math.BigDecimal(c.getQuantity())));
+        }
+        Order o=new Order();
+        o.setUserId(u.getId());
+        o.setAddressId(addrId);
+        o.setStatus("NEW");
+        o.setTotal(t);
+        o.setPaid(false);
+        if(ServiceLayer.createOrder(o)) message="订单已创建"; else message="创建失败";
     }
     java.util.List<CartItem> items=ServiceLayer.getCartItems(u.getId());
     java.util.List<Product> products=ServiceLayer.listProducts();
@@ -28,7 +44,17 @@
 <body>
 <header>
     <div><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div>欢迎，<%= u.getUsername() %> | <a href="logout.jsp">退出</a></div>
+    <div>
+        欢迎，<%= u.getUsername() %>
+        | <a href="cart.jsp">购物车</a>
+        | <a href="orders.jsp">订单</a>
+        | <a href="categories.jsp">分类</a>
+        | <a href="addresses.jsp">地址</a>
+        | <a href="notifications.jsp">通知</a>
+        | <a href="bindings.jsp">绑定</a>
+        | <a href="aftersales.jsp">售后</a>
+        | <a href="logout.jsp">退出</a>
+    </div>
 </header>
 <div class="container">
     <h2>购物车</h2>
@@ -64,6 +90,18 @@
         <% } %>
     </table>
     <p>总计：￥<%= total %></p>
+    <h3>生成订单</h3>
+    <form method="post">
+        <input type="hidden" name="action" value="order"/>
+        <label>收货地址:
+            <select name="addressId">
+                <% for(Address a : ServiceLayer.getAddresses(u.getId())){ %>
+                <option value="<%= a.getId() %>"><%= a.getDetail() %></option>
+                <% } %>
+            </select>
+        </label>
+        <button type="submit">下单</button>
+    </form>
 </div>
 </body>
 </html>
