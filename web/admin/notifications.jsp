@@ -1,6 +1,7 @@
 <%@ include file="check_admin.jspf" %>
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Notification" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     request.setCharacterEncoding("UTF-8");
     String message = null;

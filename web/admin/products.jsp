@@ -2,6 +2,7 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Product" %>
 <%@ page import="java.math.BigDecimal" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     request.setCharacterEncoding("UTF-8");
     String action = request.getParameter("action");
