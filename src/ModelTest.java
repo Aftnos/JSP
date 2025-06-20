@@ -27,128 +27,140 @@ public class ModelTest {
     public static void main(String[] args) {
         System.out.println("==== Model 全量测试 ====");
 
-        test("登录", () -> com.Model.login("demo", "123"));
+        // 创建并注册一个唯一用户，随后使用其 ID 进行后续测试，避免与旧数据冲突
+        com.entity.User u = new com.entity.User();
+        String uname = "user" + System.currentTimeMillis();
+        u.setUsername(uname);
+        u.setPassword("123");
+        u.setEmail(uname + "@test.com");
+        test("注册", () -> com.Model.register(u));
 
-        test("注册", () -> {
-            com.entity.User u = new com.entity.User();
-            u.setUsername("demo");
-            u.setPassword("123");
-            u.setEmail("demo@test.com");
-            return com.Model.register(u);
-        });
+        int userId = u.getId();
 
-        test("按ID查询用户", () -> com.Model.getUserById(1));
+        test("登录", () -> com.Model.login(uname, "123"));
+
+        test("按ID查询用户", () -> com.Model.getUserById(userId));
 
         test("列出商品", com.Model::listProducts);
-        test("查询商品", () -> com.Model.getProductById(1));
-        test("添加商品", () -> {
-            com.entity.Product p = new com.entity.Product();
-            p.setName("测试商品");
-            p.setPrice(new java.math.BigDecimal("1"));
-            p.setStock(10);
-            p.setDescription("desc");
-            return com.Model.addProduct(p);
-        });
-        test("更新商品", () -> {
-            com.entity.Product p = new com.entity.Product();
-            p.setId(1);
-            p.setName("update");
-            p.setPrice(new java.math.BigDecimal("2"));
-            p.setStock(5);
-            p.setDescription("update");
-            return com.Model.updateProduct(p);
-        });
-        test("删除商品", () -> com.Model.deleteProduct(1));
 
-        test("获取地址", () -> com.Model.getAddresses(1));
-        test("添加地址", () -> {
-            com.entity.Address a = new com.entity.Address();
-            a.setUserId(1);
-            a.setReceiver("张三");
-            a.setPhone("123456");
-            a.setDetail("addr");
-            return com.Model.addAddress(a);
+        // 新建商品，用其生成的 ID 继续测试
+        com.entity.Product product = new com.entity.Product();
+        product.setName("测试商品");
+        product.setPrice(new java.math.BigDecimal("1"));
+        product.setStock(10);
+        product.setDescription("desc");
+        test("添加商品", () -> com.Model.addProduct(product));
+
+        int productId = product.getId();
+
+        test("查询商品", () -> com.Model.getProductById(productId));
+
+        test("更新商品", () -> {
+            product.setName("update");
+            product.setPrice(new java.math.BigDecimal("2"));
+            product.setStock(5);
+            product.setDescription("update");
+            return com.Model.updateProduct(product);
         });
+
+        test("获取地址", () -> com.Model.getAddresses(userId));
+
+        com.entity.Address addr = new com.entity.Address();
+        addr.setUserId(userId);
+        addr.setReceiver("张三");
+        addr.setPhone("123456");
+        addr.setDetail("addr");
+        test("添加地址", () -> com.Model.addAddress(addr));
+
+        int addressId = addr.getId();
+
         test("更新地址", () -> {
-            com.entity.Address a = new com.entity.Address();
-            a.setId(1);
-            a.setUserId(1);
-            a.setReceiver("张三");
-            a.setPhone("123456");
-            a.setDetail("addr");
-            return com.Model.updateAddress(a);
+            addr.setDetail("addr2");
+            return com.Model.updateAddress(addr);
         });
-        test("删除地址", () -> com.Model.deleteAddress(1));
-        test("设置默认地址", () -> { com.Model.setDefaultAddress(1,1); return null; });
+        test("设置默认地址", () -> { com.Model.setDefaultAddress(userId,addressId); return null; });
 
         test("列出类别", com.Model::listCategories);
-        test("添加类别", () -> {
-            com.entity.Category c = new com.entity.Category();
-            c.setName("cate");
-            return com.Model.addCategory(c);
-        });
+
+        com.entity.Category category = new com.entity.Category();
+        category.setName("cate");
+        test("添加类别", () -> com.Model.addCategory(category));
+
+        int categoryId = category.getId();
+
         test("更新类别", () -> {
-            com.entity.Category c = new com.entity.Category();
-            c.setId(1);
-            c.setName("cate2");
-            return com.Model.updateCategory(c);
+            category.setName("cate2");
+            return com.Model.updateCategory(category);
         });
-        test("删除类别", () -> com.Model.deleteCategory(1));
+        test("删除类别", () -> com.Model.deleteCategory(categoryId));
 
-        test("查看购物车", () -> com.Model.getCartItems(1));
-        test("添加购物车", () -> {
-            com.entity.CartItem item = new com.entity.CartItem();
-            item.setUserId(1);
-            item.setProductId(1);
-            item.setQuantity(1);
-            return com.Model.addToCart(item);
-        });
-        test("更新购物车", () -> com.Model.updateCartItem(1,1));
-        test("移除购物车", () -> com.Model.removeCartItem(1));
+        test("查看购物车", () -> com.Model.getCartItems(userId));
 
-        test("创建订单", () -> {
-            com.entity.Order o = new com.entity.Order();
-            o.setUserId(1);
-            o.setAddressId(1);
-            o.setStatus("NEW");
-            return com.Model.createOrder(o);
-        });
-        test("查订单", () -> com.Model.getOrderById(1));
-        test("获取用户订单", () -> com.Model.getOrdersByUser(1));
+        com.entity.CartItem cartItem = new com.entity.CartItem();
+        cartItem.setUserId(userId);
+        cartItem.setProductId(productId);
+        cartItem.setQuantity(1);
+        test("添加购物车", () -> com.Model.addToCart(cartItem));
+
+        int cartId = cartItem.getId();
+
+        test("更新购物车", () -> com.Model.updateCartItem(cartId,2));
+        test("移除购物车", () -> com.Model.removeCartItem(cartId));
+
+        com.entity.Order order = new com.entity.Order();
+        order.setUserId(userId);
+        order.setAddressId(addressId);
+        order.setStatus("NEW");
+        order.setTotal(new java.math.BigDecimal("1"));
+        order.setPaid(false);
+        test("创建订单", () -> com.Model.createOrder(order));
+
+        int orderId = order.getId();
+
+        test("查订单", () -> com.Model.getOrderById(orderId));
+        test("获取用户订单", () -> com.Model.getOrdersByUser(userId));
         test("列出所有订单", com.Model::listAllOrders);
-        test("更新订单状态", () -> com.Model.updateOrderStatus(1,"NEW"));
-        test("标记已付款", () -> com.Model.markOrderPaid(1));
+        test("更新订单状态", () -> com.Model.updateOrderStatus(orderId,"NEW"));
+        test("标记已付款", () -> com.Model.markOrderPaid(orderId));
 
-        test("生成SN码", () -> { com.Model.generateSNCodes(1,1,1); return null; });
-        test("查看SN列表", () -> com.Model.listSNCodes(1,null));
-        test("更新SN状态", () -> com.Model.updateSNStatus("code","NEW"));
-        test("删除SN码", () -> com.Model.deleteSNCodes(1));
+        int batchId = 1;
+        test("生成SN码", () -> { com.Model.generateSNCodes(productId,1,batchId); return null; });
+        java.util.List<com.entity.SNCode> codes = new java.util.ArrayList<>();
+        test("查看SN列表", () -> { codes.addAll(com.Model.listSNCodes(productId,null)); return codes; });
+        String sn = codes.isEmpty() ? "" : codes.get(0).getCode();
+        test("更新SN状态", () -> com.Model.updateSNStatus(sn,"NEW"));
+        test("删除SN码", () -> com.Model.deleteSNCodes(batchId));
 
-        test("SN绑定", () -> com.Model.bindSN(1,"code"));
-        test("查询绑定", () -> com.Model.getBindingsByUser(1));
-        test("管理员解绑", () -> com.Model.adminUnbindSN("code"));
+        test("SN绑定", () -> com.Model.bindSN(userId,sn));
+        test("查询绑定", () -> com.Model.getBindingsByUser(userId));
+        test("管理员解绑", () -> com.Model.adminUnbindSN(sn));
 
-        test("申请售后", () -> {
-            com.entity.AfterSale a = new com.entity.AfterSale();
-            a.setUserId(1);
-            a.setSnCode("code");
-            a.setType("refund");
-            a.setReason("reason");
-            return com.Model.applyAfterSale(a);
-        });
-        test("查用户售后", () -> com.Model.getAfterSalesByUser(1));
+        com.entity.AfterSale as = new com.entity.AfterSale();
+        as.setUserId(userId);
+        as.setSnCode(sn);
+        as.setType("refund");
+        as.setReason("reason");
+        test("申请售后", () -> com.Model.applyAfterSale(as));
+
+        int asId = as.getId();
+
+        test("查用户售后", () -> com.Model.getAfterSalesByUser(userId));
         test("列出所有售后", com.Model::listAllAfterSales);
-        test("更新售后状态", () -> com.Model.updateAfterSaleStatus(1,"NEW","remark"));
-        test("关闭售后", () -> com.Model.closeAfterSale(1));
+        test("更新售后状态", () -> com.Model.updateAfterSaleStatus(asId,"NEW","remark"));
+        test("关闭售后", () -> com.Model.closeAfterSale(asId));
 
-        test("发送通知", () -> {
-            com.entity.Notification n = new com.entity.Notification();
-            n.setUserId(1);
-            n.setContent("hi");
-            return com.Model.sendNotification(n);
-        });
-        test("获取通知", () -> com.Model.getNotifications(1));
-        test("标记已读", () -> com.Model.markNotificationRead(1));
-        test("删除通知", () -> com.Model.deleteNotification(1));
+        com.entity.Notification note = new com.entity.Notification();
+        note.setUserId(userId);
+        note.setContent("hi");
+        test("发送通知", () -> com.Model.sendNotification(note));
+
+        int noteId = note.getId();
+
+        test("获取通知", () -> com.Model.getNotifications(userId));
+        test("标记已读", () -> com.Model.markNotificationRead(noteId));
+        test("删除通知", () -> com.Model.deleteNotification(noteId));
+
+        // 最后再删除之前创建的地址
+        test("删除地址", () -> com.Model.deleteAddress(addressId));
     }
 }
