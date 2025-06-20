@@ -151,7 +151,6 @@ JSP/
 │   └── mysql-connector-j-8.0.33.jar
 ├── src/
 │   ├── db.properties
-│   ├── Main.java
 │   ├── ModelTest.java
 │   ├── ServiceLayerTest.java
 │   └── com/
@@ -176,11 +175,10 @@ JSP/
 
 ## 五、运行测试
 
-在 `src` 目录下执行：
+在 `src` 目录下执行编译：
 
 ```bash
 javac -d out -cp lib/mysql-connector-j-8.0.33.jar $(find src -name "*.java")
-java -cp out:lib/mysql-connector-j-8.0.33.jar ServiceLayerTest
 ```
 
-请确保 MySQL 已启动且连接配置正确。
+编译成功后即可将 `web` 目录部署到 Tomcat。请确保 MySQL 已启动且连接信息正确。
