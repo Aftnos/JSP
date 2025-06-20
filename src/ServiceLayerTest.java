@@ -27,126 +27,149 @@ public class ServiceLayerTest {
     public static void main(String[] args) {
         System.out.println("==== ServiceLayer 全量测试 ====");
 
-        test("登录", () -> com.ServiceLayer.login("demo","123"));
-        test("注册", () -> {
-            com.entity.User u = new com.entity.User();
-            u.setUsername("demo");
-            u.setPassword("123");
-            u.setEmail("demo@test.com");
-            return com.ServiceLayer.register(u);
-        });
-        test("按ID查询用户", () -> com.ServiceLayer.getUserById(1));
+        // 创建并注册一个唯一用户，随后使用其 ID 进行后续测试，避免与旧数据冲突
+        com.entity.User u = new com.entity.User();
+        String uname = "user" + System.currentTimeMillis();
+        u.setUsername(uname);
+        u.setPassword("123");
+        u.setEmail(uname + "@test.com");
+        test("注册", () -> com.ServiceLayer.register(u));
+
+        int userId = u.getId();
+
+        test("登录", () -> com.ServiceLayer.login(uname, "123"));
+        test("按ID查询用户", () -> com.ServiceLayer.getUserById(userId));
 
         test("列出商品", com.ServiceLayer::listProducts);
-        test("查询商品", () -> com.ServiceLayer.getProductById(1));
-        test("添加商品", () -> {
-            com.entity.Product p = new com.entity.Product();
-            p.setName("测试商品");
-            p.setPrice(new java.math.BigDecimal("1"));
-            p.setStock(10);
-            p.setDescription("desc");
-            return com.ServiceLayer.addProduct(p);
-        });
-        test("更新商品", () -> {
-            com.entity.Product p = new com.entity.Product();
-            p.setId(1);
-            p.setName("update");
-            p.setPrice(new java.math.BigDecimal("2"));
-            p.setStock(5);
-            p.setDescription("update");
-            return com.ServiceLayer.updateProduct(p);
-        });
-        test("删除商品", () -> com.ServiceLayer.deleteProduct(1));
 
-        test("获取地址", () -> com.ServiceLayer.getAddresses(1));
-        test("添加地址", () -> {
-            com.entity.Address a = new com.entity.Address();
-            a.setUserId(1);
-            a.setReceiver("张三");
-            a.setPhone("123456");
-            a.setDetail("addr");
-            return com.ServiceLayer.addAddress(a);
+        // 新建商品，用其生成的 ID 继续测试
+        com.entity.Product product = new com.entity.Product();
+        product.setName("测试商品");
+        product.setPrice(new java.math.BigDecimal("1"));
+        product.setStock(10);
+        product.setDescription("desc");
+        test("添加商品", () -> com.ServiceLayer.addProduct(product));
+
+        int productId = product.getId();
+
+        test("查询商品", () -> com.ServiceLayer.getProductById(productId));
+
+        test("更新商品", () -> {
+            product.setName("update");
+            product.setPrice(new java.math.BigDecimal("2"));
+            product.setStock(5);
+            product.setDescription("update");
+            return com.ServiceLayer.updateProduct(product);
         });
+
+        test("获取地址", () -> com.ServiceLayer.getAddresses(userId));
+
+        // 创建第一个地址供后续订单使用
+        com.entity.Address addr1 = new com.entity.Address();
+        addr1.setUserId(userId);
+        addr1.setReceiver("张三");
+        addr1.setPhone("123456");
+        addr1.setDetail("addr");
+        test("添加地址", () -> com.ServiceLayer.addAddress(addr1));
+
+        int addressId1 = addr1.getId();
+
         test("更新地址", () -> {
-            com.entity.Address a = new com.entity.Address();
-            a.setId(1);
-            a.setUserId(1);
-            a.setReceiver("张三");
-            a.setPhone("123456");
-            a.setDetail("addr");
-            return com.ServiceLayer.updateAddress(a);
+            addr1.setDetail("addr2");
+            return com.ServiceLayer.updateAddress(addr1);
         });
-        test("删除地址", () -> com.ServiceLayer.deleteAddress(1));
-        test("设置默认地址", () -> { com.ServiceLayer.setDefaultAddress(1,1); return null; });
+
+        // 再创建一个地址用于删除测试，避免与订单产生外键关系
+        com.entity.Address addr2 = new com.entity.Address();
+        addr2.setUserId(userId);
+        addr2.setReceiver("李四");
+        addr2.setPhone("654321");
+        addr2.setDetail("addr3");
+        test("添加地址", () -> com.ServiceLayer.addAddress(addr2));
+
+        int addressId2 = addr2.getId();
+
+        test("设置默认地址", () -> { com.ServiceLayer.setDefaultAddress(userId,addressId1); return null; });
+        test("删除地址", () -> com.ServiceLayer.deleteAddress(addressId2));
 
         test("列出类别", com.ServiceLayer::listCategories);
-        test("添加类别", () -> {
-            com.entity.Category c = new com.entity.Category();
-            c.setName("cate");
-            return com.ServiceLayer.addCategory(c);
-        });
+
+        com.entity.Category category = new com.entity.Category();
+        category.setName("cate");
+        test("添加类别", () -> com.ServiceLayer.addCategory(category));
+
+        int categoryId = category.getId();
+
         test("更新类别", () -> {
-            com.entity.Category c = new com.entity.Category();
-            c.setId(1);
-            c.setName("cate2");
-            return com.ServiceLayer.updateCategory(c);
+            category.setName("cate2");
+            return com.ServiceLayer.updateCategory(category);
         });
-        test("删除类别", () -> com.ServiceLayer.deleteCategory(1));
+        test("删除类别", () -> com.ServiceLayer.deleteCategory(categoryId));
 
-        test("查看购物车", () -> com.ServiceLayer.getCartItems(1));
-        test("添加购物车", () -> {
-            com.entity.CartItem item = new com.entity.CartItem();
-            item.setUserId(1);
-            item.setProductId(1);
-            item.setQuantity(1);
-            return com.ServiceLayer.addToCart(item);
-        });
-        test("更新购物车", () -> com.ServiceLayer.updateCartItem(1,1));
-        test("移除购物车", () -> com.ServiceLayer.removeCartItem(1));
+        test("查看购物车", () -> com.ServiceLayer.getCartItems(userId));
 
-        test("创建订单", () -> {
-            com.entity.Order o = new com.entity.Order();
-            o.setUserId(1);
-            o.setAddressId(1);
-            o.setStatus("NEW");
-            return com.ServiceLayer.createOrder(o);
-        });
-        test("查订单", () -> com.ServiceLayer.getOrderById(1));
-        test("获取用户订单", () -> com.ServiceLayer.getOrdersByUser(1));
+        com.entity.CartItem cartItem = new com.entity.CartItem();
+        cartItem.setUserId(userId);
+        cartItem.setProductId(productId);
+        cartItem.setQuantity(1);
+        test("添加购物车", () -> com.ServiceLayer.addToCart(cartItem));
+
+        int cartId = cartItem.getId();
+
+        test("更新购物车", () -> com.ServiceLayer.updateCartItem(cartId,2));
+        test("移除购物车", () -> com.ServiceLayer.removeCartItem(cartId));
+
+        com.entity.Order order = new com.entity.Order();
+        order.setUserId(userId);
+        order.setAddressId(addressId1);
+        order.setStatus("NEW");
+        order.setTotal(new java.math.BigDecimal("1"));
+        order.setPaid(false);
+        test("创建订单", () -> com.ServiceLayer.createOrder(order));
+
+        int orderId = order.getId();
+
+        test("查订单", () -> com.ServiceLayer.getOrderById(orderId));
+        test("获取用户订单", () -> com.ServiceLayer.getOrdersByUser(userId));
         test("列出所有订单", com.ServiceLayer::listAllOrders);
-        test("更新订单状态", () -> com.ServiceLayer.updateOrderStatus(1,"NEW"));
-        test("标记已付款", () -> com.ServiceLayer.markOrderPaid(1));
+        test("更新订单状态", () -> com.ServiceLayer.updateOrderStatus(orderId,"NEW"));
+        test("标记已付款", () -> com.ServiceLayer.markOrderPaid(orderId));
 
-        test("生成SN码", () -> { com.ServiceLayer.generateSNCodes(1,1,1); return null; });
-        test("查看SN列表", () -> com.ServiceLayer.listSNCodes(1,null));
-        test("更新SN状态", () -> com.ServiceLayer.updateSNStatus("code","NEW"));
-        test("删除SN码", () -> com.ServiceLayer.deleteSNCodes(1));
+        int batchId = 1;
+        test("生成SN码", () -> { com.ServiceLayer.generateSNCodes(productId,1,batchId); return null; });
+        java.util.List<com.entity.SNCode> codes = new java.util.ArrayList<>();
+        test("查看SN列表", () -> { codes.addAll(com.ServiceLayer.listSNCodes(productId,null)); return codes; });
+        String sn = codes.isEmpty() ? "" : codes.get(0).getCode();
+        test("更新SN状态", () -> com.ServiceLayer.updateSNStatus(sn,"NEW"));
+        test("删除SN码", () -> com.ServiceLayer.deleteSNCodes(batchId));
 
-        test("SN绑定", () -> com.ServiceLayer.bindSN(1,"code"));
-        test("查询绑定", () -> com.ServiceLayer.getBindingsByUser(1));
-        test("管理员解绑", () -> com.ServiceLayer.adminUnbindSN("code"));
+        test("SN绑定", () -> com.ServiceLayer.bindSN(userId,sn));
+        test("查询绑定", () -> com.ServiceLayer.getBindingsByUser(userId));
+        test("管理员解绑", () -> com.ServiceLayer.adminUnbindSN(sn));
 
-        test("申请售后", () -> {
-            com.entity.AfterSale a = new com.entity.AfterSale();
-            a.setUserId(1);
-            a.setSnCode("code");
-            a.setType("refund");
-            a.setReason("reason");
-            return com.ServiceLayer.applyAfterSale(a);
-        });
-        test("查用户售后", () -> com.ServiceLayer.getAfterSalesByUser(1));
+        com.entity.AfterSale as = new com.entity.AfterSale();
+        as.setUserId(userId);
+        as.setSnCode(sn);
+        as.setType("refund");
+        as.setReason("reason");
+        test("申请售后", () -> com.ServiceLayer.applyAfterSale(as));
+
+        int asId = as.getId();
+
+        test("查用户售后", () -> com.ServiceLayer.getAfterSalesByUser(userId));
         test("列出所有售后", com.ServiceLayer::listAllAfterSales);
-        test("更新售后状态", () -> com.ServiceLayer.updateAfterSaleStatus(1,"NEW","remark"));
-        test("关闭售后", () -> com.ServiceLayer.closeAfterSale(1));
+        test("更新售后状态", () -> com.ServiceLayer.updateAfterSaleStatus(asId,"NEW","remark"));
+        test("关闭售后", () -> com.ServiceLayer.closeAfterSale(asId));
 
-        test("发送通知", () -> {
-            com.entity.Notification n = new com.entity.Notification();
-            n.setUserId(1);
-            n.setContent("hi");
-            return com.ServiceLayer.sendNotification(n);
-        });
-        test("获取通知", () -> com.ServiceLayer.getNotifications(1));
-        test("标记已读", () -> com.ServiceLayer.markNotificationRead(1));
-        test("删除通知", () -> com.ServiceLayer.deleteNotification(1));
+        com.entity.Notification n = new com.entity.Notification();
+        n.setUserId(userId);
+        n.setContent("hi");
+        test("发送通知", () -> com.ServiceLayer.sendNotification(n));
+
+        int noteId = n.getId();
+
+        test("获取通知", () -> com.ServiceLayer.getNotifications(userId));
+        test("标记已读", () -> com.ServiceLayer.markNotificationRead(noteId));
+        test("删除通知", () -> com.ServiceLayer.deleteNotification(noteId));
     }
 }
