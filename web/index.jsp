@@ -16,3 +16,11 @@
   <a href="admin/login.jsp">进入后台管理</a>
   </body>
 </html>
+<%
+  // 统一设置请求字符编码，解决POST提交中文乱码问题
+  request.setCharacterEncoding("UTF-8");
+
+  String action = request.getParameter("action");
+  String result = "";
+  String resultClass = "info";
+%>
