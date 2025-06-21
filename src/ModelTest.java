@@ -53,6 +53,16 @@ public class ModelTest {
 
         int productId = product.getId();
 
+        com.entity.ProductImage img = new com.entity.ProductImage();
+        img.setProductId(productId);
+        img.setUrl("url1.jpg");
+        test("添加商品图片", () -> com.Model.addProductImage(img));
+        int imgId = img.getId();
+        test("查询商品图片", () -> com.Model.getProductImageById(imgId));
+        test("商品图片列表", () -> com.Model.listProductImages(productId));
+        test("更新商品图片", () -> { img.setUrl("url2.jpg"); return com.Model.updateProductImage(img); });
+        test("删除商品图片", () -> com.Model.deleteProductImage(imgId));
+
         test("查询商品", () -> com.Model.getProductById(productId));
 
         test("更新商品", () -> {

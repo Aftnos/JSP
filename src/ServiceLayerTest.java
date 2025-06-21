@@ -52,6 +52,19 @@ public class ServiceLayerTest {
 
         int productId = product.getId();
 
+        com.entity.ProductImage img = new com.entity.ProductImage();
+        img.setProductId(productId);
+        img.setUrl("url1.jpg");
+        test("添加商品图片", () -> com.ServiceLayer.addProductImage(img));
+        int imgId = img.getId();
+        test("查询商品图片", () -> com.ServiceLayer.getProductImageById(imgId));
+        test("商品图片列表", () -> com.ServiceLayer.listProductImages(productId));
+        test("更新商品图片", () -> {
+            img.setUrl("url2.jpg");
+            return com.ServiceLayer.updateProductImage(img);
+        });
+        test("删除商品图片", () -> com.ServiceLayer.deleteProductImage(imgId));
+
         test("查询商品", () -> com.ServiceLayer.getProductById(productId));
 
         test("更新商品", () -> {
