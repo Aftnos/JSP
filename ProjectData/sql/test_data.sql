@@ -18,3 +18,9 @@ INSERT INTO categories (name, parent_id) VALUES
 ('手机', NULL),
 ('平板', NULL),
 ('智能穿戴', NULL);
+
+-- 插入商品图片数据
+INSERT INTO product_images (product_id, url) VALUES
+(1, 'images/mi14-1.jpg'),
+(2, 'images/pad6-1.jpg'),
+(3, 'images/band8-1.jpg')

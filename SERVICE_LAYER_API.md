@@ -15,6 +15,11 @@
 - **`boolean addProduct(Product p)`**：新增商品。
 - **`boolean updateProduct(Product p)`**：更新商品信息。
 - **`boolean deleteProduct(int id)`**：删除指定商品。
+- **`List<ProductImage> listProductImages(int productId)`**：获取商品的图片列表。
+- **`ProductImage getProductImageById(int id)`**：按 ID 查询商品图片。
+- **`boolean addProductImage(ProductImage img)`**：新增商品图片。
+- **`boolean updateProductImage(ProductImage img)`**：更新商品图片信息。
+- **`boolean deleteProductImage(int id)`**：删除指定商品图片。
 
 ## 收货地址相关
 - **`List<Address> getAddresses(int userId)`**：列出用户的全部地址。

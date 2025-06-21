@@ -12,6 +12,7 @@ import java.util.List;
 public class Model {
     private static final UserDAO userDAO = new UserDAO();
     private static final ProductDAO productDAO = new ProductDAO();
+    private static final ProductImageDAO productImageDAO = new ProductImageDAO();
     private static final AddressDAO addressDAO = new AddressDAO();
     private static final CategoryDAO categoryDAO = new CategoryDAO();
     private static final CartDAO cartDAO = new CartDAO();
@@ -73,6 +74,27 @@ public class Model {
 
     public static int deleteProduct(int id) throws SQLException {
         return productDAO.delete(id);
+    }
+
+    // Product image operations
+    public static List<ProductImage> listProductImages(int productId) throws SQLException {
+        return productImageDAO.listByProduct(productId);
+    }
+
+    public static ProductImage getProductImageById(int id) throws SQLException {
+        return productImageDAO.findById(id);
+    }
+
+    public static int addProductImage(ProductImage img) throws SQLException {
+        return productImageDAO.insert(img);
+    }
+
+    public static int updateProductImage(ProductImage img) throws SQLException {
+        return productImageDAO.update(img);
+    }
+
+    public static int deleteProductImage(int id) throws SQLException {
+        return productImageDAO.delete(id);
     }
 
     // Address operations
