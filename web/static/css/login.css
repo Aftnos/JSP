@@ -1,0 +1,243 @@
+/* 登录页面样式 */
+
+/* 全局重置和基础设置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #F9FAFC;
+    color: #666666;
+    font-size: 14px;
+    line-height: 1.5;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 登录容器 */
+.login-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* 左侧图片区域 */
+.login-image {
+    flex: 0 0 60%;
+    background-image: url('../image/login/login.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* 右侧表单区域 */
+.login-form-section {
+    flex: 0 0 40%;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+/* 表单容器 */
+.login-form-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* 标题 */
+.login-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2E384D;
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 36px;
+}
+
+/* 表单组 */
+.form-group {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+/* 输入框标签 */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}
+
+/* 输入框容器 */
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* 输入框图标 */
+.input-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 16px;
+    color: #999999;
+    z-index: 1;
+}
+
+/* 密码显示/隐藏图标 */
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #999999;
+    cursor: pointer;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #2F80ED;
+}
+
+/* 输入框 */
+.form-input {
+    width: 100%;
+    height: 48px;
+    padding: 12px 16px 12px 44px;
+    border: 2px solid #E3F2FD;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #666666;
+    background-color: #FFFFFF;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* 有密码切换图标的输入框需要额外的右内边距 */
+.form-input.has-toggle {
+    padding-right: 44px;
+}
+
+.form-input:focus {
+    border-color: #2F80ED;
+    box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+    color: #CCCCCC;
+}
+
+/* 忘记密码链接 */
+.forgot-password {
+    text-align: right;
+    margin-top: 8px;
+}
+
+.forgot-password a {
+    color: #999999;
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #2F80ED;
+}
+
+/* 登录按钮 */
+.login-btn {
+    width: 100%;
+    height: 48px;
+    background-color: #2F80ED;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 16px;
+    outline: none;
+}
+
+.login-btn:hover {
+    background-color: #1976D2;
+    box-shadow: 0 4px 12px rgba(47, 128, 237, 0.3);
+    transform: translateY(-1px);
+}
+
+.login-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(47, 128, 237, 0.2);
+}
+
+/* 注册链接 */
+.register-link {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.register-link a {
+    color: #2F80ED;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #1976D2;
+    text-decoration: underline;
+}
+
+/* 错误消息 */
+.error-message {
+    color: #F56565;
+    font-size: 12px;
+    margin-top: 8px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-image {
+        flex: 0 0 40%;
+    }
+
+    .login-form-section {
+        flex: 0 0 60%;
+        padding: 20px;
+    }
+
+    .login-title {
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-form-section {
+        padding: 16px;
+    }
+
+    .login-form-container {
+        max-width: 100%;
+    }
+}
