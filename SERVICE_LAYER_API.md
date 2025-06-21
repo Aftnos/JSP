@@ -6,6 +6,8 @@
 - **`User login(String username, String password)`**：根据用户名和密码登录，成功返回 `User` 对象，失败返回 `null`。
 - **`boolean register(User user)`**：注册新用户，成功返回 `true`。
 - **`User getUserById(int id)`**：按 ID 查询用户信息。
+- **`List<User> getAllUsers()`**：获取所有用户列表。
+- **`boolean deleteUserById(int id)`**：删除指定 ID 的用户。
 
 ## 商品相关
 - **`List<Product> listProducts()`**：获取所有商品列表。

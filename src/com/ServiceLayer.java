@@ -50,6 +50,11 @@ public class ServiceLayer {
         }
     }
 
+    // 新增：返回所有用户列表的别名方法，供 JSP 调用
+    public static List<User> getAllUsers() {
+        return listAllUsers();
+    }
+
     public static List<User> searchUsers(String keyword) {
         try {
             return Model.searchUsers(keyword);
@@ -75,6 +80,11 @@ public class ServiceLayer {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // 新增：根据 ID 删除用户的别名方法，供 JSP 调用
+    public static boolean deleteUserById(int id) {
+        return deleteUser(id);
     }
 
     public static boolean batchDeleteUsers(int[] ids) {
