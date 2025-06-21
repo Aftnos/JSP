@@ -4,6 +4,8 @@ import com.db.DBUtil;
 import com.entity.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
     public User findByUsername(String username) throws SQLException {
@@ -67,6 +69,79 @@ public class UserDAO {
                 }
             }
             return affected;
+        }
+    }
+
+    public List<User> findAll() throws SQLException {
+        String sql = "SELECT * FROM users ORDER BY id DESC";
+        List<User> users = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                users.add(mapRow(rs));
+            }
+        }
+        return users;
+    }
+
+    public List<User> searchUsers(String keyword) throws SQLException {
+        String sql = "SELECT * FROM users WHERE username LIKE ? OR phone LIKE ? ORDER BY id DESC";
+        List<User> users = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            String searchPattern = "%" + keyword + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapRow(rs));
+                }
+            }
+        }
+        return users;
+    }
+
+    public int update(User user) throws SQLException {
+        String sql = "UPDATE users SET username=?, password=?, email=?, phone=?, is_admin=? WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getPhone());
+            ps.setBoolean(5, user.isAdmin());
+            ps.setInt(6, user.getId());
+            return ps.executeUpdate();
+        }
+    }
+
+    public int deleteById(int id) throws SQLException {
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        }
+    }
+
+    public int batchDelete(int[] ids) throws SQLException {
+        if (ids == null || ids.length == 0) {
+            return 0;
+        }
+        StringBuilder sql = new StringBuilder("DELETE FROM users WHERE id IN (");
+        for (int i = 0; i < ids.length; i++) {
+            if (i > 0) sql.append(",");
+            sql.append("?");
+        }
+        sql.append(")");
+        
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < ids.length; i++) {
+                ps.setInt(i + 1, ids[i]);
+            }
+            return ps.executeUpdate();
         }
     }
 

@@ -40,6 +40,52 @@ public class ServiceLayer {
         }
     }
 
+    // 用户管理相关
+    public static List<User> listAllUsers() {
+        try {
+            return Model.listAllUsers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public static List<User> searchUsers(String keyword) {
+        try {
+            return Model.searchUsers(keyword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public static boolean updateUser(User user) {
+        try {
+            return Model.updateUser(user) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean deleteUser(int id) {
+        try {
+            return Model.deleteUser(id) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean batchDeleteUsers(int[] ids) {
+        try {
+            return Model.batchDeleteUsers(ids) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // 商品相关
     public static List<Product> listProducts() {
         try {

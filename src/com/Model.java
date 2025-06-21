@@ -34,6 +34,26 @@ public class Model {
         return userDAO.findById(id);
     }
 
+    public static List<User> listAllUsers() throws SQLException {
+        return userDAO.findAll();
+    }
+
+    public static List<User> searchUsers(String keyword) throws SQLException {
+        return userDAO.searchUsers(keyword);
+    }
+
+    public static int updateUser(User user) throws SQLException {
+        return userDAO.update(user);
+    }
+
+    public static int deleteUser(int id) throws SQLException {
+        return userDAO.deleteById(id);
+    }
+
+    public static int batchDeleteUsers(int[] ids) throws SQLException {
+        return userDAO.batchDelete(ids);
+    }
+
     // Product operations
     public static List<Product> listProducts() throws SQLException {
         return productDAO.listAll();
