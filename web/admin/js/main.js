@@ -98,294 +98,63 @@ function navigateTo(page) {
         event.currentTarget.classList.add('active');
     }
     
-    // 根据不同页面进行跳转或加载内容
+    // 根据不同页面进行跳转
     console.log('导航到:', page);
     
-    // 动态加载页面内容
-    loadPageContent(page);
+    // 根据页面类型跳转到对应的JSP页面
+    switch(page) {
+        case 'user-profile-management':
+            window.location.href = 'user/user-manage.jsp';
+            break;
+        case 'address-management':
+            window.location.href = 'pages/user/address-manage.jsp';
+            break;
+        case 'category-management':
+            window.location.href = 'pages/category-manage.jsp';
+            break;
+        case 'product-management':
+            window.location.href = 'pages/product-manage.jsp';
+            break;
+        case 'order-global-query':
+            window.location.href = 'pages/order/order-query.jsp';
+            break;
+        case 'order-status-control':
+            window.location.href = 'pages/order/order-status.jsp';
+            break;
+        case 'sn-batch-generation':
+            window.location.href = 'pages/sn/sn-generation.jsp';
+            break;
+        case 'sn-global-query':
+            window.location.href = 'pages/sn/sn-query.jsp';
+            break;
+        case 'sn-status-change':
+            window.location.href = 'pages/sn/sn-status.jsp';
+            break;
+        case 'sn-unsold-cleanup':
+            window.location.href = 'pages/sn/sn-cleanup.jsp';
+            break;
+        case 'sn-forced-unbinding':
+            window.location.href = 'pages/sn/sn-unbinding.jsp';
+            break;
+        case 'sn-binding-audit':
+            window.location.href = 'pages/sn/sn-audit.jsp';
+            break;
+        case 'aftersales-workflow-control':
+            window.location.href = 'pages/aftersales/workflow-control.jsp';
+            break;
+        case 'notification-resend':
+            window.location.href = 'pages/notification/notification-resend.jsp';
+            break;
+        case 'message-center-maintenance':
+            window.location.href = 'pages/message-center.jsp';
+            break;
+        default:
+            // 对于未知页面，保持在当前页面或跳转到首页
+            console.log('未知页面:', page);
+    }
 }
 
-// 动态加载页面内容
-function loadPageContent(page) {
-    const pageContent = document.getElementById('pageContent');
-    
-    // 显示加载状态
-    pageContent.innerHTML = '<div class="loading">加载中...</div>';
-    
-    // 根据页面类型加载不同内容
-    setTimeout(() => {
-        switch(page) {
-            case 'user-profile-management':
-                pageContent.innerHTML = generateUserManagementPage();
-                break;
-            case 'address-management':
-                pageContent.innerHTML = generateAddressManagementPage();
-                break;
-            case 'category-management':
-                pageContent.innerHTML = generateCategoryManagementPage();
-                break;
-            case 'product-management':
-                pageContent.innerHTML = generateProductManagementPage();
-                break;
-            case 'order-global-query':
-                pageContent.innerHTML = generateOrderQueryPage();
-                break;
-            case 'order-status-control':
-                pageContent.innerHTML = generateOrderStatusPage();
-                break;
-            case 'sn-batch-generation':
-                pageContent.innerHTML = generateSNGenerationPage();
-                break;
-            case 'sn-global-query':
-                pageContent.innerHTML = generateSNQueryPage();
-                break;
-            case 'sn-status-change':
-                pageContent.innerHTML = generateSNStatusPage();
-                break;
-            case 'sn-unsold-cleanup':
-                pageContent.innerHTML = generateSNCleanupPage();
-                break;
-            case 'sn-forced-unbinding':
-                pageContent.innerHTML = generateSNUnbindingPage();
-                break;
-            case 'sn-binding-audit':
-                pageContent.innerHTML = generateSNAuditPage();
-                break;
-            case 'aftersales-workflow-control':
-                pageContent.innerHTML = generateAftersalesPage();
-                break;
-            case 'notification-resend':
-                pageContent.innerHTML = generateNotificationPage();
-                break;
-            case 'message-center-maintenance':
-                pageContent.innerHTML = generateMessageCenterPage();
-                break;
-            default:
-                pageContent.innerHTML = generateDefaultPage();
-        }
-    }, 500);
-}
 
-// ==================== 页面内容生成函数 ====================
-
-function generateUserManagementPage() {
-    return `
-        <div class="page-header">
-            <h1>用户资料管理</h1>
-            <p>管理系统中的用户基本信息和账户状态</p>
-        </div>
-        <div class="content-section">
-            <div class="search-bar">
-                <input type="text" placeholder="搜索用户..." class="search-input">
-                <button class="search-btn">搜索</button>
-            </div>
-            <div class="table-container">
-                <p>用户管理功能正在开发中...</p>
-            </div>
-        </div>
-    `;
-}
-
-function generateAddressManagementPage() {
-    return `
-        <div class="page-header">
-            <h1>收货地址管理</h1>
-            <p>管理用户的收货地址信息</p>
-        </div>
-        <div class="content-section">
-            <p>地址管理功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateCategoryManagementPage() {
-    return `
-        <div class="page-header">
-            <h1>分类管理</h1>
-            <p>管理商品分类和层级结构</p>
-        </div>
-        <div class="content-section">
-            <p>分类管理功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateProductManagementPage() {
-    return `
-        <div class="page-header">
-            <h1>商品管理</h1>
-            <p>管理商品信息、库存和状态</p>
-        </div>
-        <div class="content-section">
-            <p>商品管理功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateOrderQueryPage() {
-    return `
-        <div class="page-header">
-            <h1>订单全局查询</h1>
-            <p>查询和管理所有订单信息</p>
-        </div>
-        <div class="content-section">
-            <p>订单查询功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateOrderStatusPage() {
-    return `
-        <div class="page-header">
-            <h1>订单状态控制</h1>
-            <p>管理订单状态和流程控制</p>
-        </div>
-        <div class="content-section">
-            <p>订单状态控制功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateSNGenerationPage() {
-    return `
-        <div class="page-header">
-            <h1>SN码批量生成</h1>
-            <p>批量生成产品序列号</p>
-        </div>
-        <div class="content-section">
-            <p>SN码生成功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateSNQueryPage() {
-    return `
-        <div class="page-header">
-            <h1>SN码全局查询</h1>
-            <p>查询SN码状态和绑定信息</p>
-        </div>
-        <div class="content-section">
-            <p>SN码查询功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateSNStatusPage() {
-    return `
-        <div class="page-header">
-            <h1>SN码状态变更</h1>
-            <p>管理SN码的状态变更</p>
-        </div>
-        <div class="content-section">
-            <p>SN码状态变更功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateSNCleanupPage() {
-    return `
-        <div class="page-header">
-            <h1>未售SN清理</h1>
-            <p>清理未售出的SN码</p>
-        </div>
-        <div class="content-section">
-            <p>SN清理功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateSNUnbindingPage() {
-    return `
-        <div class="page-header">
-            <h1>SN强制解绑</h1>
-            <p>强制解除SN码绑定关系</p>
-        </div>
-        <div class="content-section">
-            <p>SN解绑功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateSNAuditPage() {
-    return `
-        <div class="page-header">
-            <h1>SN绑定记录审计</h1>
-            <p>审计SN码绑定记录</p>
-        </div>
-        <div class="content-section">
-            <p>绑定审计功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateAftersalesPage() {
-    return `
-        <div class="page-header">
-            <h1>售后工单全流程控制</h1>
-            <p>管理售后服务工单流程</p>
-        </div>
-        <div class="content-section">
-            <p>售后管理功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateNotificationPage() {
-    return `
-        <div class="page-header">
-            <h1>通知重发</h1>
-            <p>重新发送系统通知</p>
-        </div>
-        <div class="content-section">
-            <p>通知重发功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateMessageCenterPage() {
-    return `
-        <div class="page-header">
-            <h1>消息中心维护</h1>
-            <p>维护系统消息中心</p>
-        </div>
-        <div class="content-section">
-            <p>消息中心维护功能正在开发中...</p>
-        </div>
-    `;
-}
-
-function generateDefaultPage() {
-    return `
-        <div class="welcome-section">
-            <h1>欢迎使用小米商城管理系统</h1>
-            <p>请从左侧菜单选择功能模块进行操作。</p>
-            
-            <!-- 快捷操作卡片 -->
-            <div class="quick-actions">
-                <div class="action-card" onclick="navigateTo('user-profile-management')">
-                    <div class="card-icon">👥</div>
-                    <div class="card-title">用户管理</div>
-                    <div class="card-desc">管理用户资料和地址信息</div>
-                </div>
-                <div class="action-card" onclick="navigateTo('product-management')">
-                    <div class="card-icon">📦</div>
-                    <div class="card-title">商品管理</div>
-                    <div class="card-desc">管理商品分类和商品信息</div>
-                </div>
-                <div class="action-card" onclick="navigateTo('order-global-query')">
-                    <div class="card-icon">📋</div>
-                    <div class="card-title">订单管理</div>
-                    <div class="card-desc">查询和管理订单状态</div>
-                </div>
-                <div class="action-card" onclick="navigateTo('sn-batch-generation')">
-                    <div class="card-icon">🔢</div>
-                    <div class="card-title">SN码管理</div>
-                    <div class="card-desc">批量生成和管理SN码</div>
-                </div>
-            </div>
-        </div>
-    `;
-}
 
 // ==================== 事件监听器 ====================
 
