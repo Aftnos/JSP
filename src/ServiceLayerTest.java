@@ -171,5 +171,9 @@ public class ServiceLayerTest {
         test("获取通知", () -> com.ServiceLayer.getNotifications(userId));
         test("标记已读", () -> com.ServiceLayer.markNotificationRead(noteId));
         test("删除通知", () -> com.ServiceLayer.deleteNotification(noteId));
+
+        // 新增测试：查询所有用户并删除测试用户
+        test("查询所有用户", com.ServiceLayer::getAllUsers);
+        test("删除用户", () -> com.ServiceLayer.deleteUserById(userId));
     }
 }
