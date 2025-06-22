@@ -20,10 +20,20 @@
 <html>
 <head>
     <title>登录</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
-<header><div>小米商城</div></header>
+<header>
+    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
+    <div class="user">
+        <% if(session.getAttribute("user")!=null){ %>
+        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
+        <% }else{ %>
+        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
+        <% } %>
+    </div>
+</header>
 <div class="container">
     <h2>用户登录</h2>
     <% if(message!=null){ %><div class="message"><%= message %></div><% } %>
@@ -33,6 +43,13 @@
         <button type="submit">登录</button>
     </form>
     <p>没有账号？<a href="register.jsp">立即注册</a></p>
+</div>
+<div class="bottom-nav">
+    <a href="index.jsp">首页</a>
+    <a href="categories.jsp">分类</a>
+    <a href="service.jsp">服务</a>
+    <a href="cart.jsp">购物车</a>
+    <a href="my.jsp">我的</a>
 </div>
 </body>
 </html>
