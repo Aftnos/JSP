@@ -46,143 +46,7 @@
     <title><%= p.getName() %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="stylesheet" href="css/main.css"/>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #f5f5f5;
-            padding-bottom: 140px; /* 为底部导航和按钮留出空间 */
-        }
-        .product-container {
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-        .product-header {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            background: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-        .back-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: #333;
-            cursor: pointer;
-            margin-right: 12px;
-            font-weight: bold;
-        }
-        .product-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            flex: 1;
-            text-align: center;
-            margin-right: 32px; /* 平衡返回按钮的空间 */
-        }
-        .product-image-container {
-            background: #fff;
-            position: relative;
-            margin-bottom: 8px;
-        }
-        .product-image {
-            width: 100%;
-            height: 400px;
-            object-fit: contain;
-            background: #fff;
-            display: block;
-        }
-        .product-info {
-            background: #fff;
-            padding: 20px 16px;
-            margin-bottom: 8px;
-        }
-        .product-name {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-        .product-subtitle {
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 16px;
-            line-height: 1.4;
-        }
-        .product-price {
-            font-size: 28px;
-            font-weight: 600;
-            color: #ff6700;
-            margin-bottom: 0;
-        }
-        .product-price::before {
-            content: '¥';
-            font-size: 18px;
-        }
-        .product-actions {
-            position: fixed;
-            bottom: 70px; /* 在底部导航上方 */
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-top: 1px solid #e0e0e0;
-            padding: 12px 16px;
-            display: flex;
-            gap: 12px;
-            z-index: 100;
-        }
-        .btn-cart {
-            flex: 1;
-            background: #ffa500;
-            color: #fff;
-            border: none;
-            border-radius: 22px;
-            padding: 14px 0;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .btn-buy {
-            flex: 1;
-            background: #ff6700;
-            color: #fff;
-            border: none;
-            border-radius: 22px;
-            padding: 14px 0;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .message {
-            background: #4CAF50;
-            color: white;
-            padding: 10px 16px;
-            text-align: center;
-            font-size: 14px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 200;
-        }
-        .page-indicator {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-    </style>
+    <link rel="stylesheet" href="css/product.css"/>
 </head>
 <body>
 <div class="product-container">
@@ -217,20 +81,9 @@
     </div>
 </div>
 
-<script>
-function buyNow(productId) {
-    // 检查用户是否登录
-    <% if(session.getAttribute("user") == null) { %>
-        window.location.href = 'login.jsp';
-        return;
-    <% } %>
-    
-    // 这里可以跳转到订单页面或支付页面
-    alert('立即购买功能待实现');
-}
-</script>
 
 <!-- 底部导航 -->
 <jsp:include page="footer.jsp" />
+<script src="js/product.js"></script>
 </body>
 </html>

@@ -1,0 +1,113 @@
+        .device-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .device-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        .add-device-btn {
+            background: #ff6700;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .device-notice {
+            background: #fff5e6;
+            border-left: 4px solid #ff6700;
+            padding: 12px 16px;
+            margin: 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+        .device-section {
+            margin: 16px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        .device-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .device-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .device-image {
+            width: 60px;
+            height: 60px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .device-info {
+            flex: 1;
+        }
+        .device-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .device-model {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .device-sn {
+            font-size: 12px;
+            color: #999;
+        }
+        .device-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .action-btn {
+            background: #ff6700;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .action-btn.secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 16px;
+            color: #999;
+        }
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
