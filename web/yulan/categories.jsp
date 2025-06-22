@@ -7,7 +7,12 @@
     String selectedCategory = request.getParameter("category");
     
     java.util.List<Category> categories = ServiceLayer.listCategories();
-    java.util.List<Product> products = ServiceLayer.listProducts();
+    java.util.List<Product> products;
+    if(selectedCategory!=null){
+        products = ServiceLayer.listProductsByCategory(Integer.parseInt(selectedCategory));
+    } else {
+        products = ServiceLayer.listProducts();
+    }
     
     // 获取通知数量
     int unread = 0;

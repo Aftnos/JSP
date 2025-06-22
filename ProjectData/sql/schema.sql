@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     stock INT DEFAULT 0,
-    description TEXT
+    category_id INT,
+    description TEXT,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS product_images (

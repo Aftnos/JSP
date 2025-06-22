@@ -106,6 +106,15 @@ public class ServiceLayer {
         }
     }
 
+    public static List<Product> listProductsByCategory(int categoryId) {
+        try {
+            return Model.listProductsByCategory(categoryId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
     public static Product getProductById(int id) {
         try {
             return Model.getProductById(id);
