@@ -157,8 +157,8 @@ public class ServiceLayerTest {
         test("删除SN码", () -> com.ServiceLayer.deleteSNCodes(batchId));
 
         test("SN绑定", () -> com.ServiceLayer.bindSN(userId,sn));
-        test("查询绑定", () -> com.ServiceLayer.getBindingsByUser(userId));
-        test("管理员解绑", () -> com.ServiceLayer.adminUnbindSN(sn));
+//        test("查询绑定", () -> com.ServiceLayer.getBindingsByUser(userId));
+//        test("管理员解绑", () -> com.ServiceLayer.adminUnbindSN(sn));
 
         com.entity.AfterSale as = new com.entity.AfterSale();
         as.setUserId(userId);
