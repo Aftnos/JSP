@@ -43,7 +43,7 @@
             <% for(Binding binding : bindings) {
                 Integer pid = ServiceLayer.getProductIdBySN(binding.getSnCode());
                 String productName = "未知商品";
-                String imgUrl = "static/image/default-product.jpg";
+                String imgUrl = "images/default.png";
                 if(pid != null){
                     com.entity.Product pr = ServiceLayer.getProductById(pid);
                     if(pr != null) productName = pr.getName();

@@ -160,7 +160,7 @@
             for(Product rp : recommendedProducts){
                 if(count >= 4) break;
                 count++;
-                String rImg = "static/image/default-product.jpg";
+                String rImg = "images/default.png";
                 java.util.List<com.entity.ProductImage> rImgs = ServiceLayer.listProductImages(rp.getId());
                 if(rImgs != null && !rImgs.isEmpty()) rImg = rImgs.get(0).getUrl();
             %>

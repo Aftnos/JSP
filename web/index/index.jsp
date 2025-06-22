@@ -131,7 +131,7 @@
                 <div class="product-item">
                     <div class="product-image">
                         <%
-                            String imgUrl = "static/image/default-product.jpg";
+                            String imgUrl = "images/default.png";
                             java.util.List<com.entity.ProductImage> imgs = ServiceLayer.listProductImages(p.getId());
                             if(imgs != null && !imgs.isEmpty()) {
                                 imgUrl = imgs.get(0).getUrl();
