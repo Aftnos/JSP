@@ -242,6 +242,16 @@ public class ServiceLayer {
         }
     }
 
+    // 新增：获取所有地址的方法，供订单查询页面使用
+    public static List<Address> getAllAddresses() {
+        try {
+            return Model.getAllAddresses();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
     // Categories
     public static List<Category> listCategories() {
         try {
@@ -516,5 +526,155 @@ public class ServiceLayer {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // ========== 测试方法 ==========
+    
+    /**
+     * 测试单个用户删除功能
+     * @param userId 要删除的用户ID
+     * @return 测试结果信息
+     */
+    public static String testDeleteUser(int userId) {
+        StringBuilder result = new StringBuilder();
+        result.append("=== 测试删除用户功能 ===").append("\n");
+        result.append("用户ID: ").append(userId).append("\n");
+        
+        try {
+            // 1. 检查用户是否存在
+            User user = getUserById(userId);
+            if (user == null) {
+                result.append("错误: 用户不存在\n");
+                return result.toString();
+            }
+            
+            result.append("用户信息: ").append(user.getUsername()).append(" (").append(user.getEmail()).append(")\n");
+            
+            // 2. 执行删除操作
+            result.append("正在执行删除操作...\n");
+            boolean deleteResult = deleteUser(userId);
+            
+            if (deleteResult) {
+                result.append("删除成功!\n");
+                
+                // 3. 验证删除结果
+                User deletedUser = getUserById(userId);
+                if (deletedUser == null) {
+                    result.append("验证通过: 用户已被成功删除\n");
+                } else {
+                    result.append("警告: 删除操作返回成功，但用户仍然存在\n");
+                }
+            } else {
+                result.append("删除失败!\n");
+            }
+            
+        } catch (Exception e) {
+            result.append("异常: ").append(e.getMessage()).append("\n");
+            e.printStackTrace();
+        }
+        
+        return result.toString();
+    }
+    
+    /**
+     * 测试批量用户删除功能
+     * @param userIds 要删除的用户ID数组
+     * @return 测试结果信息
+     */
+    public static String testBatchDeleteUsers(int[] userIds) {
+        StringBuilder result = new StringBuilder();
+        result.append("=== 测试批量删除用户功能 ===").append("\n");
+        result.append("用户ID数组: ");
+        for (int i = 0; i < userIds.length; i++) {
+            result.append(userIds[i]);
+            if (i < userIds.length - 1) result.append(", ");
+        }
+        result.append("\n");
+        
+        try {
+            // 1. 检查所有用户是否存在
+            result.append("检查用户存在性:\n");
+            for (int userId : userIds) {
+                User user = getUserById(userId);
+                if (user != null) {
+                    result.append("  用户 ").append(userId).append(": ").append(user.getUsername()).append(" 存在\n");
+                } else {
+                    result.append("  用户 ").append(userId).append(": 不存在\n");
+                }
+            }
+            
+            // 2. 执行批量删除操作
+            result.append("正在执行批量删除操作...\n");
+            boolean deleteResult = batchDeleteUsers(userIds);
+            
+            if (deleteResult) {
+                result.append("批量删除成功!\n");
+                
+                // 3. 验证删除结果
+                result.append("验证删除结果:\n");
+                int deletedCount = 0;
+                for (int userId : userIds) {
+                    User deletedUser = getUserById(userId);
+                    if (deletedUser == null) {
+                        result.append("  用户 ").append(userId).append(": 已删除\n");
+                        deletedCount++;
+                    } else {
+                        result.append("  用户 ").append(userId).append(": 仍然存在\n");
+                    }
+                }
+                result.append("成功删除 ").append(deletedCount).append("/").append(userIds.length).append(" 个用户\n");
+            } else {
+                result.append("批量删除失败!\n");
+            }
+            
+        } catch (Exception e) {
+            result.append("异常: ").append(e.getMessage()).append("\n");
+            e.printStackTrace();
+        }
+        
+        return result.toString();
+    }
+    
+    /**
+     * 测试用户管理相关功能的完整性
+     * @return 测试结果信息
+     */
+    public static String testUserManagementIntegrity() {
+        StringBuilder result = new StringBuilder();
+        result.append("=== 用户管理功能完整性测试 ===").append("\n");
+        
+        try {
+            // 1. 测试获取所有用户
+            result.append("1. 测试获取所有用户:\n");
+            List<User> allUsers = getAllUsers();
+            result.append("   当前用户总数: ").append(allUsers.size()).append("\n");
+            
+            // 2. 测试搜索功能
+            result.append("2. 测试搜索功能:\n");
+            List<User> searchResults = searchUsers("admin");
+            result.append("   搜索'admin'结果数: ").append(searchResults.size()).append("\n");
+            
+            // 3. 测试获取单个用户
+            result.append("3. 测试获取单个用户:\n");
+            if (!allUsers.isEmpty()) {
+                User firstUser = allUsers.get(0);
+                User retrievedUser = getUserById(firstUser.getId());
+                if (retrievedUser != null) {
+                    result.append("   成功获取用户: ").append(retrievedUser.getUsername()).append("\n");
+                } else {
+                    result.append("   获取用户失败\n");
+                }
+            } else {
+                result.append("   没有用户可供测试\n");
+            }
+            
+            result.append("用户管理功能基本正常\n");
+            
+        } catch (Exception e) {
+            result.append("测试过程中发生异常: ").append(e.getMessage()).append("\n");
+            e.printStackTrace();
+        }
+        
+        return result.toString();
     }
 }

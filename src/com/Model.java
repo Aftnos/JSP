@@ -122,6 +122,11 @@ public class Model {
         addressDAO.setDefault(userId, addressId);
     }
 
+    // 新增：获取所有地址的方法
+    public static List<Address> getAllAddresses() throws SQLException {
+        return addressDAO.listAll();
+    }
+
     // Category operations
     public static List<Category> listCategories() throws SQLException {
         return categoryDAO.listAll();

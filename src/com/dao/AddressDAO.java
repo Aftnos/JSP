@@ -79,6 +79,20 @@ public class AddressDAO {
         }
     }
 
+    // 新增：获取所有地址的方法
+    public List<Address> listAll() throws SQLException {
+        List<Address> list = new ArrayList<>();
+        String sql = "SELECT * FROM addresses";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+        }
+        return list;
+    }
+
     private Address map(ResultSet rs) throws SQLException {
         Address a = new Address();
         a.setId(rs.getInt("id"));
