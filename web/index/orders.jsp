@@ -100,6 +100,7 @@
             <div class="order-total">¥<%= o.getTotal() %></div>
             <div style="font-size: 12px; color: #999; margin: 5px 0;">状态：<%= o.getStatus() %></div>
             <div class="order-actions">
+                <a href="order-detail.jsp?id=<%= o.getId() %>" class="btn-detail">查看详情</a>
                 <% if(!o.isPaid()){ %>
                 <a href="payment.jsp?orderId=<%= o.getId() %>" class="btn-pay">立即支付</a>
                 <% } %>

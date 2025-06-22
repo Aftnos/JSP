@@ -105,3 +105,19 @@
             background: #ccc;
             cursor: not-allowed;
         }
+        .btn-detail {
+            background: #fff;
+            border: 1px solid #ff6b35;
+            color: #ff6b35;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-detail:hover {
+            background: #ff6b35;
+            color: #fff;
+            text-decoration: none;
+        }
