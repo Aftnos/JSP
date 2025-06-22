@@ -58,6 +58,12 @@
             align-items: center;
             justify-content: space-between;
         }
+        .location-select {
+            border: 1px solid #ddd;
+            padding: 4px;
+            font-size: 14px;
+            margin-right: 4px;
+        }
         .location-btn {
             background: none;
             border: none;

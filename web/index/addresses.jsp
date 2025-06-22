@@ -13,7 +13,10 @@
         a.setUserId(u.getId());
         a.setReceiver(request.getParameter("receiver"));
         a.setPhone(request.getParameter("phone"));
-        a.setDetail(request.getParameter("detail"));
+        String region = request.getParameter("region");
+        String detail = request.getParameter("detail");
+        if(region!=null && !region.isEmpty()) detail = region + " " + detail;
+        a.setDetail(detail);
         if(ServiceLayer.addAddress(a)) message="添加成功"; else message="添加失败";
     }else if("update".equals(action)){
         Address a = new Address();
@@ -21,7 +24,10 @@
         a.setUserId(u.getId());
         a.setReceiver(request.getParameter("receiver"));
         a.setPhone(request.getParameter("phone"));
-        a.setDetail(request.getParameter("detail"));
+        String region = request.getParameter("region");
+        String detail = request.getParameter("detail");
+        if(region!=null && !region.isEmpty()) detail = region + " " + detail;
+        a.setDetail(detail);
         if(ServiceLayer.updateAddress(a)) message="已更新"; else message="更新失败";
     }else if("delete".equals(action)){
         int id = Integer.parseInt(request.getParameter("id"));
@@ -77,9 +83,12 @@
             <div class="form-group">
                 <label class="form-label">收货地区</label>
                 <div class="location-group">
-                    <span style="color: #999;">省市区县、乡镇</span>
+                    <select id="province" class="location-select"></select>
+                    <select id="city" class="location-select"></select>
+                    <select id="district" class="location-select"></select>
                     <button type="button" class="location-btn">定位 📍</button>
                 </div>
+                <input type="hidden" name="region" id="regionField"/>
             </div>
             
             <div class="form-group">
@@ -152,8 +161,50 @@
         <button class="add-address-btn" onclick="window.location.href='addresses.jsp?showForm=true'">
             ➕ 添加新地址
         </button>
+</div>
     <% } %>
-    
+
+    <script>
+        const regions = {
+            "北京": {"北京市": ["东城区","西城区","海淀区"]},
+            "上海": {"上海市": ["黄浦区","浦东新区"]},
+            "广东": {"广州市": ["天河区","番禺区"], "深圳市": ["南山区","福田区"]}
+        };
+        const provinceSel = document.getElementById('province');
+        const citySel = document.getElementById('city');
+        const distSel = document.getElementById('district');
+        const regionField = document.getElementById('regionField');
+        function fill(sel, opts){
+            sel.innerHTML='';
+            const df=document.createDocumentFragment();
+            for(const k in opts){
+                const o=document.createElement('option');
+                o.value=k; o.textContent=k; df.appendChild(o);
+            }
+            sel.appendChild(df);
+        }
+        function updateRegion(){
+            regionField.value=[provinceSel.value, citySel.value, distSel.value].filter(Boolean).join(' ');
+        }
+        if(provinceSel){
+            fill(provinceSel, regions);
+            provinceSel.addEventListener('change', ()=>{
+                fill(citySel, regions[provinceSel.value]||{});
+                fill(distSel, {}); updateRegion();
+            });
+            citySel.addEventListener('change', ()=>{
+                fill(distSel, (regions[provinceSel.value]||{})[citySel.value]||{});
+                updateRegion();
+            });
+            distSel.addEventListener('change', updateRegion);
+            provinceSel.dispatchEvent(new Event('change'));
+        }
+        document.querySelector('.location-btn')?.addEventListener('click', ()=>{
+            if(!navigator.geolocation){alert('浏览器不支持定位');return;}
+            navigator.geolocation.getCurrentPosition(()=>alert('已获取位置,请手动选择省市区'), ()=>alert('定位失败'));
+        });
+    </script>
+
     <!-- 底部导航 -->
     <jsp:include page="footer.jsp" />
 </body>
