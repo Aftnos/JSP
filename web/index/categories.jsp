@@ -129,7 +129,14 @@
                 <% for(Product p : products) { %>
                 <a href="product.jsp?id=<%= p.getId() %>" class="product-card">
                     <div class="product-image">
-                        📱
+                        <%
+                            String imgUrl = "static/image/default-product.jpg";
+                            java.util.List<com.entity.ProductImage> imgs = ServiceLayer.listProductImages(p.getId());
+                            if(imgs != null && !imgs.isEmpty()) {
+                                imgUrl = imgs.get(0).getUrl();
+                            }
+                        %>
+                        <img src="<%= imgUrl %>" alt="<%= p.getName() %>" style="max-width:100%;height:auto;"/>
                     </div>
                     <div class="product-info">
                         <div class="product-name"><%= p.getName() %></div>
