@@ -21,7 +21,7 @@
 <html>
 <head>
     <title>注册</title>
-    <link rel="stylesheet" href="../css/main.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
 <header><div>小米商城</div></header>
