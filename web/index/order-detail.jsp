@@ -14,6 +14,7 @@
     if(order == null || order.getUserId() != u.getId()){ response.sendRedirect("orders.jsp"); return; }
 
     java.util.List<OrderItem> items = order.getItems();
+    java.util.List<SNCode> snList = ServiceLayer.getSNCodesByOrder(orderId);
     Address address = null;
     java.util.List<Address> adds = ServiceLayer.getAddresses(u.getId());
     if(adds != null){
@@ -52,6 +53,9 @@
             <div class="item-qty">x<%= item.getQuantity() %></div>
             <div class="item-price">¥<%= item.getPrice() %></div>
         </div>
+        <% for(SNCode sn : snList){ if(sn.getProductId()==item.getProductId()){ %>
+        <div class="sn-row">SN: <%= sn.getCode() %></div>
+        <% }} %>
         <% } %>
     </div>
 </div>

@@ -374,7 +374,16 @@ public class ServiceLayer {
 
     public static boolean markOrderPaid(int id) {
         try {
-            return Model.markOrderPaid(id) > 0;
+            boolean ok = Model.markOrderPaid(id) > 0;
+            if (ok) {
+                Order o = Model.getOrderById(id);
+                if (o != null && o.getItems() != null) {
+                    for (OrderItem item : o.getItems()) {
+                        Model.generateSNCodes(item.getProductId(), item.getQuantity(), id, "sold");
+                    }
+                }
+            }
+            return ok;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -412,6 +421,15 @@ public class ServiceLayer {
     public static List<SNCode> listSNCodes(int productId, String status) {
         try {
             return Model.listSNCodes(productId, status);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public static List<SNCode> getSNCodesByOrder(int orderId) {
+        try {
+            return Model.listSNCodesByBatch(orderId);
         } catch (SQLException e) {
             e.printStackTrace();
             return Collections.emptyList();

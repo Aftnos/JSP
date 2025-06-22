@@ -26,7 +26,7 @@
 3. **购物车 & 订单模块**  
    - 购物车操作：添加、修改数量、删除、查看列表  
    - 下单流程：选择地址、生成订单、锁定库存  
-   - 支付回调：标记已支付，触发 SN 分配  
+   - 支付回调：标记已支付，触发 SN 分配（为每件商品生成 SN 并记录到 `sn_codes`，批次号为订单ID）
    - 订单查询：用户查看自有订单，管理员分页／筛选查看全部  
    - 订单状态管理：用户取消、管理员发货／关闭等
 
@@ -93,7 +93,7 @@
 - **管理员**：`generateSNCodes(productId, batchSize)`  
 - **管理员**：`listSNCodes(productId, status, page, pageSize)`  
 - **管理员**：`updateSNStatus(snCode, newStatus)`  
-- **管理员**：`deleteSNCodes(batchId)`  
+- **管理员**：`deleteSNCodes(batchId)`
 - `getSNCodesByOrder(orderId)`
 
 ### 5. SN 绑定模块  
