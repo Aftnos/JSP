@@ -1,32 +1,47 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.ServiceLayer" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %><%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Product" %>
 <%
+    request.setCharacterEncoding("UTF-8");
+    String q = request.getParameter("q");
     java.util.List<Product> list = ServiceLayer.listProducts();
+    if(q!=null && q.trim().length()>0){
+        java.util.List<Product> filtered = new java.util.ArrayList<>();
+        for(Product p : list){
+            if(p.getName().contains(q)) filtered.add(p);
+        }
+        list = filtered;
+    }
+    int unread = 0;
+    if(session.getAttribute("user")!=null){
+        com.entity.User u=(com.entity.User)session.getAttribute("user");
+        java.util.List<com.entity.Notification> notes = ServiceLayer.getNotifications(u.getId());
+        for(com.entity.Notification n:notes){ if(!n.isRead()) unread++; }
+    }
 %>
 <html>
 <head>
     <title>小米商城</title>
-    <link rel="stylesheet" href="../css/main.css"/>
-    <script src="../js/main.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="js/main.js"></script>
 </head>
 <body>
 <header>
-    <div><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div>
-        <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %>
-        | <a href="cart.jsp">购物车</a>
-        | <a href="orders.jsp">订单</a>
-        | <a href="categories.jsp">分类</a>
-        | <a href="addresses.jsp">地址</a>
-        | <a href="notifications.jsp">通知</a>
-        | <a href="bindings.jsp">绑定</a>
-        | <a href="aftersales.jsp">售后</a>
-        | <a href="logout.jsp">退出</a>
-        <% }else{ %>
-        <a href="login.jsp">登录</a> | <a href="register.jsp">注册</a>
-        <% } %>
+    <div class="top-row">
+        <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
+        <div class="user">
+            <% if(session.getAttribute("user")!=null){ %>
+            欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
+            <% }else{ %>
+            <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
+            <% } %>
+        </div>
+    </div>
+    <div class="search-row">
+        <form action="index.jsp" method="get" class="search-form">
+            <input type="text" name="q" placeholder="搜索产品" value="<%= q==null?"":q %>"/>
+        </form>
+        <a href="notifications.jsp" class="notify-link">通知<% if(unread>0){ %><span class="badge"><%= unread %></span><% } %></a>
     </div>
 </header>
 <div class="container">
@@ -41,5 +56,12 @@
     </div>
 </div>
 <footer>Powered by JSP Demo</footer>
+<div class="bottom-nav">
+    <a href="index.jsp">首页</a>
+    <a href="categories.jsp">分类</a>
+    <a href="service.jsp">服务</a>
+    <a href="cart.jsp">购物车</a>
+    <a href="my.jsp">我的</a>
+</div>
 </body>
 </html>

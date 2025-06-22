@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.ServiceLayer" %>
-<%@ page import="com.entity.Category" %>
 <%
-    java.util.List<Category> list = ServiceLayer.listCategories();
+    Object obj=session.getAttribute("user");
+    if(obj==null){ response.sendRedirect("login.jsp"); return; }
+    com.entity.User u=(com.entity.User)obj;
 %>
 <html>
 <head>
-    <title>分类列表</title>
+    <title>服务中心</title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="stylesheet" href="css/main.css"/>
 </head>
@@ -22,12 +22,9 @@
     </div>
 </header>
 <div class="container">
-    <h2>分类列表</h2>
-    <ul>
-        <% for(Category c : list){ %>
-        <li><%= c.getName() %> (ID:<%= c.getId() %>)</li>
-        <% } %>
-    </ul>
+    <h2>服务中心</h2>
+    <p><a href="bindings.jsp">SN绑定</a></p>
+    <p><a href="aftersales.jsp">售后申请</a></p>
 </div>
 <div class="bottom-nav">
     <a href="index.jsp">首页</a>
