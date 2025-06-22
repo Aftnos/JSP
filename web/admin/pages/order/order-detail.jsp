@@ -173,6 +173,19 @@
     %>
 </div>
 
+<!-- SN码列表 -->
+<div class="order-detail-section">
+    <h4>SN码列表</h4>
+    <ul>
+        <%
+            java.util.List<com.entity.SNCode> snList = com.ServiceLayer.getSNCodesByOrder(order.getId());
+            for(com.entity.SNCode sn : snList){
+        %>
+        <li><%= sn.getCode() %></li>
+        <% } %>
+    </ul>
+</div>
+
 <%
     } catch (NumberFormatException e) {
         out.println("<div style='text-align: center; padding: 50px; color: red;'>订单ID格式错误</div>");

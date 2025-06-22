@@ -212,6 +212,18 @@ public class Model {
         return snCodeDAO.deleteByBatch(batchId);
     }
 
+    public static List<SNCode> getAvailableSNCodes(int productId, int limit) throws SQLException {
+        return snCodeDAO.listAvailable(productId, limit);
+    }
+
+    public static void assignSNCodes(int orderId, List<SNCode> codes) throws SQLException {
+        snCodeDAO.assignToOrder(orderId, codes);
+    }
+
+    public static List<SNCode> getSNCodesByOrder(int orderId) throws SQLException {
+        return snCodeDAO.listByOrder(orderId);
+    }
+
     // Bindings
     public static int bindSN(int userId, String code) throws SQLException {
         return bindingDAO.bind(userId, code);

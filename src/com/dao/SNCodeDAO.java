@@ -36,6 +36,21 @@ public class SNCodeDAO {
         return list;
     }
 
+    /** Fetch unsold codes for a product with limit */
+    public List<SNCode> listAvailable(int productId, int limit) throws SQLException {
+        List<SNCode> list = new ArrayList<>();
+        String sql = "SELECT * FROM sn_codes WHERE product_id=? AND status='unsold' LIMIT ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
+    }
+
     public int updateStatus(String code, String status) throws SQLException {
         String sql = "UPDATE sn_codes SET status=? WHERE code=?";
         try (Connection conn = DBUtil.getConnection();
@@ -53,6 +68,49 @@ public class SNCodeDAO {
             ps.setInt(1, batchId);
             return ps.executeUpdate();
         }
+    }
+
+    /** Mark codes as sold and associate with order */
+    public void assignToOrder(int orderId, List<SNCode> codes) throws SQLException {
+        if (codes == null || codes.isEmpty()) return;
+        String updateSql = "UPDATE sn_codes SET status='sold' WHERE code=?";
+        String insertSql = "INSERT INTO order_sn_codes(order_id,sn_code) VALUES(?,?)";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement up = conn.prepareStatement(updateSql);
+             PreparedStatement ins = conn.prepareStatement(insertSql)) {
+            conn.setAutoCommit(false);
+            try {
+                for (SNCode c : codes) {
+                    up.setString(1, c.getCode());
+                    up.addBatch();
+                    ins.setInt(1, orderId);
+                    ins.setString(2, c.getCode());
+                    ins.addBatch();
+                }
+                up.executeBatch();
+                ins.executeBatch();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
+    /** List SN codes assigned to an order */
+    public List<SNCode> listByOrder(int orderId) throws SQLException {
+        List<SNCode> list = new ArrayList<>();
+        String sql = "SELECT s.* FROM sn_codes s JOIN order_sn_codes o ON s.code=o.sn_code WHERE o.order_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
     }
 
     private SNCode map(ResultSet rs) throws SQLException {

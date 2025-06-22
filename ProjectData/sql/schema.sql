@@ -110,3 +110,11 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS order_sn_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    sn_code VARCHAR(100) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    UNIQUE KEY (sn_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

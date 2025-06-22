@@ -63,6 +63,17 @@
         <h3>✓ 订单已支付</h3>
         <p>订单号：<%= order.getId() %></p>
         <p>支付金额：¥<%= order.getTotal() %></p>
+        <div class="sn-list">
+            <h4>SN码列表</h4>
+            <ul>
+                <%
+                    java.util.List<com.entity.SNCode> snList = com.ServiceLayer.getSNCodesByOrder(order.getId());
+                    for(com.entity.SNCode sn : snList){
+                %>
+                <li><%= sn.getCode() %></li>
+                <% } %>
+            </ul>
+        </div>
         <a href="orders.jsp" class="back-link">← 返回订单列表</a>
     </div>
     <% }else{ %>
