@@ -18,10 +18,14 @@
         list = filtered;
     }
     
-    // 分类过滤 - 推荐显示全部商品，其他分类可以根据需要扩展过滤逻辑
+    // 分类过滤
     if(categoryFilter!=null && !categoryFilter.equals("all")){
-        // 这里可以根据实际的Product实体结构添加分类过滤逻辑
-        // 目前推荐标签显示全部商品
+        try {
+            int cid = Integer.parseInt(categoryFilter);
+            list = ServiceLayer.listProductsByCategory(cid);
+        } catch(NumberFormatException e) {
+            // ignore invalid id
+        }
     }
     
     int unread = 0;
@@ -126,11 +130,14 @@
                 <% for(Product p : list){ %>
                 <div class="product-item">
                     <div class="product-image">
-                        <!-- 产品图片占位符 -->
-                        <svg width="120" height="120" viewBox="0 0 120 120">
-                            <rect width="120" height="120" fill="#f5f5f5" stroke="#ddd"/>
-                            <text x="60" y="65" text-anchor="middle" font-size="12" fill="#999">产品图片</text>
-                        </svg>
+                        <%
+                            String imgUrl = "static/image/default-product.jpg";
+                            java.util.List<com.entity.ProductImage> imgs = ServiceLayer.listProductImages(p.getId());
+                            if(imgs != null && !imgs.isEmpty()) {
+                                imgUrl = imgs.get(0).getUrl();
+                            }
+                        %>
+                        <img src="<%= imgUrl %>" alt="<%= p.getName() %>" style="max-width:100%;height:auto;"/>
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">
