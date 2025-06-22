@@ -52,15 +52,15 @@
                 <%= u.getUsername().substring(0,1).toUpperCase() %>
             </div>
             <div class="user-details">
-                <h2><%= u.getEmail() == null ? "用户名" : u.getEmail() %></h2>
+                <h2><%= u.getUsername() %></h2>
                 <div class="contact-info">
                     <div class="contact-row">
                         <span>邮箱：</span>
-                        <span><%= u.getEmail() == null ? "用户邮箱" : u.getEmail() %></span>
+                        <span><%= u.getEmail() == null ? "未绑定" : u.getEmail() %></span>
                     </div>
                     <div class="contact-row">
                         <span>电话：</span>
-                        <span><%= u.getPhone() == null ? "用户电话" : u.getPhone() %></span>
+                        <span><%= u.getPhone() == null ? "未绑定" : u.getPhone() %></span>
                     </div>
                 </div>
             </div>
