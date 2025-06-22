@@ -5,6 +5,8 @@
     Object obj = session.getAttribute("user");
     if(obj == null){ response.sendRedirect("login.jsp"); return; }
     com.entity.User u = (com.entity.User)obj;
+    u = ServiceLayer.getUserById(u.getId());
+    if(u!=null) session.setAttribute("user", u);
     java.util.List<Address> addresses = ServiceLayer.getAddresses(u.getId());
     java.util.List<Order> orders = ServiceLayer.getOrdersByUser(u.getId());
     java.util.List<Notification> notifications = ServiceLayer.getNotifications(u.getId());
@@ -34,7 +36,7 @@
         <div class="logo"><a href="index.jsp" style="color:#ff6700;text-decoration:none;">小米商城</a></div>
         <div class="user-info">
             <% if(session.getAttribute("user")!=null){ %>
-            欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" class="logout-btn">退出</a>
+            欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %>
             <% }else{ %>
             <a href="login.jsp" class="login-btn">登录</a> | <a href="register.jsp" class="login-btn">注册</a>
             <% } %>
@@ -50,15 +52,15 @@
                 <%= u.getUsername().substring(0,1).toUpperCase() %>
             </div>
             <div class="user-details">
-                <h2><%= u.getEmail() == null ? "用户名" : u.getEmail() %></h2>
+                <h2><%= u.getUsername() %></h2>
                 <div class="contact-info">
                     <div class="contact-row">
                         <span>邮箱：</span>
-                        <span><%= u.getEmail() == null ? "用户邮箱" : u.getEmail() %></span>
+                        <span><%= u.getEmail() == null ? "未绑定" : u.getEmail() %></span>
                     </div>
                     <div class="contact-row">
                         <span>电话：</span>
-                        <span><%= u.getPhone() == null ? "用户电话" : u.getPhone() %></span>
+                        <span><%= u.getPhone() == null ? "未绑定" : u.getPhone() %></span>
                     </div>
                 </div>
             </div>
@@ -106,7 +108,7 @@
             </div>
             <div class="menu-arrow">></div>
         </a>
-        <a href="#" class="menu-item">
+        <a href="settings.jsp" class="menu-item">
             <div class="menu-icon">⚙️</div>
             <div class="menu-content">
                 <div class="menu-title">设置</div>

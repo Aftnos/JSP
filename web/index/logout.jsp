@@ -1,4 +1,6 @@
 <%
+    String redirect = request.getParameter("redirect");
     session.invalidate();
-    response.sendRedirect("index.jsp");
+    if(redirect==null || redirect.isEmpty()) redirect = "index.jsp";
+    response.sendRedirect(redirect);
 %>

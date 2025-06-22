@@ -13,7 +13,10 @@
         a.setUserId(u.getId());
         a.setReceiver(request.getParameter("receiver"));
         a.setPhone(request.getParameter("phone"));
-        a.setDetail(request.getParameter("detail"));
+        String region = request.getParameter("region");
+        String detail = request.getParameter("detail");
+        if(region!=null && !region.isEmpty()) detail = region + " " + detail;
+        a.setDetail(detail);
         if(ServiceLayer.addAddress(a)) message="添加成功"; else message="添加失败";
     }else if("update".equals(action)){
         Address a = new Address();
@@ -21,7 +24,10 @@
         a.setUserId(u.getId());
         a.setReceiver(request.getParameter("receiver"));
         a.setPhone(request.getParameter("phone"));
-        a.setDetail(request.getParameter("detail"));
+        String region = request.getParameter("region");
+        String detail = request.getParameter("detail");
+        if(region!=null && !region.isEmpty()) detail = region + " " + detail;
+        a.setDetail(detail);
         if(ServiceLayer.updateAddress(a)) message="已更新"; else message="更新失败";
     }else if("delete".equals(action)){
         int id = Integer.parseInt(request.getParameter("id"));
@@ -77,9 +83,12 @@
             <div class="form-group">
                 <label class="form-label">收货地区</label>
                 <div class="location-group">
-                    <span style="color: #999;">省市区县、乡镇</span>
+                    <select id="province" class="location-select"></select>
+                    <select id="city" class="location-select"></select>
+                    <select id="district" class="location-select"></select>
                     <button type="button" class="location-btn">定位 📍</button>
                 </div>
+                <input type="hidden" name="region" id="regionField"/>
             </div>
             
             <div class="form-group">
@@ -152,9 +161,10 @@
         <button class="add-address-btn" onclick="window.location.href='addresses.jsp?showForm=true'">
             ➕ 添加新地址
         </button>
+</div>
     <% } %>
-    
     <!-- 底部导航 -->
     <jsp:include page="footer.jsp" />
+    <script src="js/pcas.js"></script>
 </body>
 </html>
