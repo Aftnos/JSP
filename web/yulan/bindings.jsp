@@ -16,7 +16,7 @@
 <html>
 <head>
     <title>SN绑定</title>
-    <link rel="stylesheet" href="../css/main.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
 <header>
@@ -26,10 +26,9 @@
         | <a href="cart.jsp">购物车</a>
         | <a href="orders.jsp">订单</a>
         | <a href="categories.jsp">分类</a>
-        | <a href="addresses.jsp">地址</a>
+        | <a href="my.jsp">我的</a>
         | <a href="notifications.jsp">通知</a>
-        | <a href="bindings.jsp">绑定</a>
-        | <a href="aftersales.jsp">售后</a>
+        | <a href="service.jsp">服务</a>
         | <a href="logout.jsp">退出</a>
     </div>
 </header>
