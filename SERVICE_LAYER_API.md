@@ -72,4 +72,3 @@
 - **`boolean markNotificationRead(int id)`**：标记通知为已读。
 - **`boolean deleteNotification(int id)`**：删除通知。
 
-以上即为 `ServiceLayer` 暴露的全部 43 个方法，可在 JSP 中直接调用。

@@ -6,5 +6,6 @@
   <body>
   <a href="./admin/index.jsp">小米商城管理系统</a>
   <a href="./login.jsp">登录</a>
+  <a href="./yulan/login.jsp">前台测试</a>
   </body>
 </html>
