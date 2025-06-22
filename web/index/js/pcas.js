@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const distSel     = document.getElementById('district');
     const regionField = document.getElementById('regionField');
 
+    // 当页面仅显示地址列表时，这些元素不存在
+    if (!provinceSel || !citySel || !distSel || !regionField) {
+        return;
+    }
+
     let data = null;
 
     function fillSelect(sel, items, placeholder) {
