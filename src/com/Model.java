@@ -60,6 +60,10 @@ public class Model {
         return productDAO.listAll();
     }
 
+    public static List<Product> listProductsByCategory(int categoryId) throws SQLException {
+        return productDAO.listByCategory(categoryId);
+    }
+
     public static Product getProductById(int id) throws SQLException {
         return productDAO.findById(id);
     }
