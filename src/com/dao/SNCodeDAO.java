@@ -65,6 +65,23 @@ public class SNCodeDAO {
     }
 
     /**
+     * Find a single SN code record by its code value.
+     */
+    public SNCode findByCode(String code) throws SQLException {
+        String sql = "SELECT * FROM sn_codes WHERE code=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return map(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * List SN codes by batch id (used here to associate codes with an order).
      */
     public List<SNCode> listByBatch(int batchId) throws SQLException {
