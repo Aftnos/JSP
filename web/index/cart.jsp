@@ -94,7 +94,16 @@
         %>
         <div class="cart-item">
             <input type="checkbox" class="item-checkbox" checked>
-            <div class="item-image">商品图片</div>
+            <div class="item-image">
+                <%
+                    String imgUrl = "static/image/default-product.jpg";
+                    java.util.List<ProductImage> imgs = ServiceLayer.listProductImages(p.getId());
+                    if(imgs != null && !imgs.isEmpty()) {
+                        imgUrl = imgs.get(0).getUrl();
+                    }
+                %>
+                <img src="<%= imgUrl %>" alt="<%= p.getName() %>" style="max-width:100%;height:auto;"/>
+            </div>
             <div class="item-info">
                 <a href="product.jsp?id=<%=p.getId()%>" class="item-name"><%=p.getName()%></a>
                 <div class="item-spec">白色</div>
@@ -159,7 +168,16 @@
                 count++;
             %>
             <div class="recommended-item">
-                <div class="recommended-image">商品图片</div>
+                <div class="recommended-image">
+                    <%
+                        String recImg = "static/image/default-product.jpg";
+                        java.util.List<ProductImage> rpImgs = ServiceLayer.listProductImages(rp.getId());
+                        if(rpImgs != null && !rpImgs.isEmpty()) {
+                            recImg = rpImgs.get(0).getUrl();
+                        }
+                    %>
+                    <img src="<%= recImg %>" alt="<%= rp.getName() %>" style="max-width:100%;height:auto;"/>
+                </div>
                 <div class="recommended-info">
                     <a href="product.jsp?id=<%=rp.getId()%>" class="recommended-name"><%=rp.getName()%></a>
                     <div class="recommended-price">

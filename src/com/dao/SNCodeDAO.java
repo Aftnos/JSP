@@ -45,6 +45,23 @@ public class SNCodeDAO {
         return list;
     }
 
+    /**
+     * Find SN code by exact code string.
+     */
+    public SNCode findByCode(String code) throws SQLException {
+        String sql = "SELECT * FROM sn_codes WHERE code=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return map(rs);
+                }
+            }
+        }
+        return null;
+    }
+
     public int updateStatus(String code, String status) throws SQLException {
         String sql = "UPDATE sn_codes SET status=? WHERE code=?";
         try (Connection conn = DBUtil.getConnection();

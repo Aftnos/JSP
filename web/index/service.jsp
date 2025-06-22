@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Binding" %>
+<%@ page import="com.entity.SNCode" %>
+<%@ page import="com.entity.ProductImage" %>
 <%
     Object obj=session.getAttribute("user");
     if(obj==null){ response.sendRedirect("login.jsp"); return; }
@@ -43,7 +45,17 @@
             <% for(Binding binding : bindings) { %>
                 <div class="device-card">
                     <div class="device-image">
-                        📱
+                        <%
+                            String imgUrl = "static/image/default-product.jpg";
+                            SNCode sn = ServiceLayer.getSNCodeByCode(binding.getSnCode());
+                            if(sn != null){
+                                java.util.List<ProductImage> imgs = ServiceLayer.listProductImages(sn.getProductId());
+                                if(imgs != null && !imgs.isEmpty()){
+                                    imgUrl = imgs.get(0).getUrl();
+                                }
+                            }
+                        %>
+                        <img src="<%= imgUrl %>" alt="设备图片" style="max-width:100%;height:auto;"/>
                     </div>
                     <div class="device-info">
                         <div class="device-name">小米设备</div>
