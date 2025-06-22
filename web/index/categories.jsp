@@ -79,10 +79,19 @@
     <div class="main-content">
         <!-- 左侧分类导航 -->
         <div class="sidebar">
-            <div class="sidebar-title">Xiaomi手机</div>
+            <div class="sidebar-title">
+                <% if(selectedCategoryId == 0) { %>
+                全部
+                <% } else { %>
+                <% for(Category c : categories) {
+                    if(c.getId() == selectedCategoryId) { %>
+                <%= c.getName() %>
+                <% break; } } %>
+                <% } %>
+            </div>
             <ul class="category-list">
                 <li class="category-item">
-                    <a href="categories.jsp" class="category-link <%= selectedCategoryId == 0 ? "active" : "" %>">REDMI手机</a>
+                    <a href="categories.jsp" class="category-link <%= selectedCategoryId == 0 ? "active" : "" %>">全部</a>
                 </li>
                 <% for(Category c : categories) { %>
                 <li class="category-item">
@@ -98,7 +107,7 @@
             <div class="section-header">
                 <div class="section-title">
                     <% if(selectedCategoryId == 0) { %>
-                    Xiaomi 数字旗舰
+                    全部
                     <% } else { %>
                     <% for(Category c : categories) { 
                         if(c.getId() == selectedCategoryId) { %>
