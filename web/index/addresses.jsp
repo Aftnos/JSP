@@ -163,49 +163,8 @@
         </button>
 </div>
     <% } %>
-
-    <script>
-        const regions = {
-            "北京": {"北京市": ["东城区","西城区","海淀区"]},
-            "上海": {"上海市": ["黄浦区","浦东新区"]},
-            "广东": {"广州市": ["天河区","番禺区"], "深圳市": ["南山区","福田区"]}
-        };
-        const provinceSel = document.getElementById('province');
-        const citySel = document.getElementById('city');
-        const distSel = document.getElementById('district');
-        const regionField = document.getElementById('regionField');
-        function fill(sel, opts){
-            sel.innerHTML='';
-            const df=document.createDocumentFragment();
-            for(const k in opts){
-                const o=document.createElement('option');
-                o.value=k; o.textContent=k; df.appendChild(o);
-            }
-            sel.appendChild(df);
-        }
-        function updateRegion(){
-            regionField.value=[provinceSel.value, citySel.value, distSel.value].filter(Boolean).join(' ');
-        }
-        if(provinceSel){
-            fill(provinceSel, regions);
-            provinceSel.addEventListener('change', ()=>{
-                fill(citySel, regions[provinceSel.value]||{});
-                fill(distSel, {}); updateRegion();
-            });
-            citySel.addEventListener('change', ()=>{
-                fill(distSel, (regions[provinceSel.value]||{})[citySel.value]||{});
-                updateRegion();
-            });
-            distSel.addEventListener('change', updateRegion);
-            provinceSel.dispatchEvent(new Event('change'));
-        }
-        document.querySelector('.location-btn')?.addEventListener('click', ()=>{
-            if(!navigator.geolocation){alert('浏览器不支持定位');return;}
-            navigator.geolocation.getCurrentPosition(()=>alert('已获取位置,请手动选择省市区'), ()=>alert('定位失败'));
-        });
-    </script>
-
     <!-- 底部导航 -->
     <jsp:include page="footer.jsp" />
+    <script src="js/pcas.js"></script>
 </body>
 </html>
