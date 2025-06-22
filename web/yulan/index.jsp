@@ -6,24 +6,18 @@
 <html>
 <head>
     <title>小米商城</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="stylesheet" href="css/main.css"/>
     <script src="js/main.js"></script>
 </head>
 <body>
 <header>
-    <div><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div>
+    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
+    <div class="user">
         <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %>
-        | <a href="cart.jsp">购物车</a>
-        | <a href="orders.jsp">订单</a>
-        | <a href="categories.jsp">分类</a>
-        | <a href="my.jsp">我的</a>
-        | <a href="notifications.jsp">通知</a>
-        | <a href="service.jsp">服务</a>
-        | <a href="logout.jsp">退出</a>
+        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
         <% }else{ %>
-        <a href="login.jsp">登录</a> | <a href="register.jsp">注册</a>
+        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
         <% } %>
     </div>
 </header>
@@ -39,5 +33,12 @@
     </div>
 </div>
 <footer>Powered by JSP Demo</footer>
+<div class="bottom-nav">
+    <a href="index.jsp">首页</a>
+    <a href="categories.jsp">分类</a>
+    <a href="service.jsp">服务</a>
+    <a href="cart.jsp">购物车</a>
+    <a href="my.jsp">我的</a>
+</div>
 </body>
 </html>

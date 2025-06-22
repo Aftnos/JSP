@@ -9,3 +9,12 @@ function addToCart(pid){
   document.body.appendChild(form);
   form.submit();
 }
+
+document.addEventListener('DOMContentLoaded',function(){
+  var page=location.pathname.split('/').pop();
+  document.querySelectorAll('.bottom-nav a').forEach(function(a){
+    if(a.getAttribute('href')===page){
+      a.classList.add('active');
+    }
+  });
+});
