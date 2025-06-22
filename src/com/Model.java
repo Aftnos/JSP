@@ -17,6 +17,7 @@ public class Model {
     private static final CategoryDAO categoryDAO = new CategoryDAO();
     private static final CartDAO cartDAO = new CartDAO();
     private static final OrderDAO orderDAO = new OrderDAO();
+    private static final OrderItemDAO orderItemDAO = new OrderItemDAO();
     private static final SNCodeDAO snCodeDAO = new SNCodeDAO();
     private static final BindingDAO bindingDAO = new BindingDAO();
     private static final AfterSaleDAO afterSaleDAO = new AfterSaleDAO();
@@ -184,6 +185,14 @@ public class Model {
 
     public static int markOrderPaid(int id) throws SQLException {
         return orderDAO.markPaid(id);
+    }
+
+    public static int addOrderItems(int orderId, List<OrderItem> items) throws SQLException {
+        return orderItemDAO.insertBatch(orderId, items);
+    }
+
+    public static List<OrderItem> getOrderItems(int orderId) throws SQLException {
+        return orderItemDAO.listByOrder(orderId);
     }
 
     // SN code operations
