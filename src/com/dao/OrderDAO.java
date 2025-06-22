@@ -4,11 +4,14 @@ import com.db.DBUtil;
 import com.entity.Order;
 import com.entity.OrderItem;
 
+/** DAO for orders. Uses OrderItemDAO for item operations. */
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
+    private final OrderItemDAO itemDAO = new OrderItemDAO();
     public int insert(Order o) throws SQLException {
         String sql = "INSERT INTO orders(user_id,address_id,status,total,paid) VALUES(?,?,?,?,?)";
         try (Connection conn = DBUtil.getConnection();
@@ -23,17 +26,7 @@ public class OrderDAO {
                 try (ResultSet rs = ps.getGeneratedKeys()) { if (rs.next()) o.setId(rs.getInt(1)); }
             }
             if (o.getItems() != null) {
-                String itemSql = "INSERT INTO order_items(order_id,product_id,quantity,price) VALUES(?,?,?,?)";
-                try (PreparedStatement psItem = conn.prepareStatement(itemSql)) {
-                    for (OrderItem item : o.getItems()) {
-                        psItem.setInt(1, o.getId());
-                        psItem.setInt(2, item.getProductId());
-                        psItem.setInt(3, item.getQuantity());
-                        psItem.setBigDecimal(4, item.getPrice());
-                        psItem.addBatch();
-                    }
-                    psItem.executeBatch();
-                }
+                itemDAO.insertBatch(o.getId(), o.getItems());
             }
             return affected;
         }
@@ -45,7 +38,11 @@ public class OrderDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return map(rs);
+                if (rs.next()) {
+                    Order o = map(rs);
+                    o.setItems(itemDAO.listByOrder(o.getId()));
+                    return o;
+                }
             }
         }
         return null;
@@ -58,7 +55,11 @@ public class OrderDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
+                while (rs.next()) {
+                    Order o = map(rs);
+                    o.setItems(itemDAO.listByOrder(o.getId()));
+                    list.add(o);
+                }
             }
         }
         return list;
@@ -70,7 +71,11 @@ public class OrderDAO {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(map(rs));
+            while (rs.next()) {
+                Order o = map(rs);
+                o.setItems(itemDAO.listByOrder(o.getId()));
+                list.add(o);
+            }
         }
         return list;
     }

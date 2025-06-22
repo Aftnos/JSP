@@ -47,6 +47,8 @@
 - **`List<Order> listAllOrders()`**：获取全部订单（管理员）。
 - **`boolean updateOrderStatus(int id, String status)`**：更新订单状态。
 - **`boolean markOrderPaid(int id)`**：标记订单已付款。
+- **`boolean addOrderItems(int orderId, List<OrderItem> items)`**：为指定订单批量添加条目。
+- **`List<OrderItem> getOrderItems(int orderId)`**：获取订单的商品明细列表。
 
 ## SN 码相关
 - **`void generateSNCodes(int productId, int size, int batchId)`**：批量生成 SN 码。

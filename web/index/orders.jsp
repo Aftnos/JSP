@@ -15,10 +15,16 @@
         java.util.List<CartItem> items = ServiceLayer.getCartItems(u.getId());
         java.util.List<Product> products = ServiceLayer.listProducts();
         java.math.BigDecimal total = new java.math.BigDecimal("0");
+        java.util.List<OrderItem> ois = new java.util.ArrayList<>();
         for(CartItem c:items){
             Product p = products.stream().filter(x->x.getId()==c.getProductId()).findFirst().orElse(null);
             if(p!=null){
                 total = total.add(p.getPrice().multiply(new java.math.BigDecimal(c.getQuantity())));
+                OrderItem oi = new OrderItem();
+                oi.setProductId(p.getId());
+                oi.setQuantity(c.getQuantity());
+                oi.setPrice(p.getPrice());
+                ois.add(oi);
             }
         }
         Order o = new Order();
@@ -27,7 +33,9 @@
         o.setStatus("NEW");
         o.setTotal(total);
         o.setPaid(false);
+        o.setItems(ois);
         if(ServiceLayer.createOrder(o)){
+            for(CartItem c:items){ ServiceLayer.removeCartItem(c.getId()); }
             message = "订单创建成功，ID="+o.getId();
         }else{
             message = "创建失败";

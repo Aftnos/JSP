@@ -381,6 +381,25 @@ public class ServiceLayer {
         }
     }
 
+    // Order items
+    public static boolean addOrderItems(int orderId, List<OrderItem> items) {
+        try {
+            return Model.addOrderItems(orderId, items) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static List<OrderItem> getOrderItems(int orderId) {
+        try {
+            return Model.getOrderItems(orderId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
     // SN codes
     public static void generateSNCodes(int productId, int size, int batchId) {
         try {
