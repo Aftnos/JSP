@@ -8,6 +8,8 @@
     request.setCharacterEncoding("UTF-8");
     String message = null;
     java.util.List<Address> addresses = ServiceLayer.getAddresses(u.getId());
+    
+    // 创建订单
     if("create".equals(request.getParameter("action"))){
         int addrId = Integer.parseInt(request.getParameter("addressId"));
         java.util.List<CartItem> items = ServiceLayer.getCartItems(u.getId());
@@ -31,13 +33,124 @@
             message = "创建失败";
         }
     }
+    
     java.util.List<Order> orders = ServiceLayer.getOrdersByUser(u.getId());
+    java.util.List<CartItem> cartItems = ServiceLayer.getCartItems(u.getId());
 %>
 <html>
 <head>
     <title>我的订单</title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="stylesheet" href="css/main.css"/>
+    <style>
+        .create-order-section {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .cart-summary {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b35;
+        }
+        .create-order-btn {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .create-order-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-1px);
+        }
+        .message {
+            margin: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .message.success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+        .message.error {
+            background: #fff2f0;
+            color: #ff4d4f;
+            border: 1px solid #ffccc7;
+        }
+        .order-list {
+            margin-top: 20px;
+        }
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .order-id {
+            font-size: 14px;
+            color: #666;
+        }
+        .order-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #f0f0f0;
+            color: #666;
+        }
+        .order-status.paid {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        .order-total {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin: 8px 0;
+        }
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-pay {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-pay:hover {
+            background: #e55a2b;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+        .btn-pay:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -50,35 +163,54 @@
         <% } %>
     </div>
 </header>
+
 <div class="container">
-    <h2>我的订单</h2>
-    <% if(message!=null){ %><div class="message"><%= message %></div><% } %>
-    <h3>创建订单</h3>
-    <form method="post">
-        <input type="hidden" name="action" value="create"/>
-        <label>收货地址:
-            <select name="addressId">
-                <% for(Address a:addresses){ %>
-                <option value="<%= a.getId() %>"><%= a.getDetail() %></option>
-                <% } %>
-            </select>
-        </label>
-        <button type="submit">提交订单</button>
-    </form>
-    <h3>订单列表</h3>
-    <table class="cart-table">
-        <tr><th>ID</th><th>地址ID</th><th>状态</th><th>金额</th><th>已付款</th></tr>
+    <% if(message!=null){ %>
+    <div class="message success"><%= message %></div>
+    <% } %>
+    
+    <!-- 创建订单区域 -->
+    <% if(cartItems.size() > 0){ %>
+    <div class="create-order-section">
+        <h3 style="margin: 20px 0; color: #333;">从购物车创建订单</h3>
+        <div class="cart-summary">
+            <p>购物车中有 <%= cartItems.size() %> 件商品</p>
+            <% if(addresses.size() > 0){ %>
+            <form method="post" style="margin-top: 15px;">
+                <input type="hidden" name="action" value="create"/>
+                <input type="hidden" name="addressId" value="<%= addresses.get(0).getId() %>"/>
+                <button type="submit" class="create-order-btn">创建订单</button>
+            </form>
+            <% }else{ %>
+            <p style="color: #ff4d4f;">请先添加收货地址</p>
+            <% } %>
+        </div>
+    </div>
+    <% } %>
+    
+    <!-- 订单列表 -->
+    <div class="order-list">
+        <h3 style="margin: 20px 0; color: #333;">我的订单</h3>
         <% for(Order o:orders){ %>
-        <tr>
-            <td><%= o.getId() %></td>
-            <td><%= o.getAddressId() %></td>
-            <td><%= o.getStatus() %></td>
-            <td><%= o.getTotal() %></td>
-            <td><%= o.isPaid() %></td>
-        </tr>
+        <div class="order-card">
+            <div class="order-card-header">
+                <div class="order-id">订单号：<%= o.getId() %></div>
+                <div class="order-status <%= o.isPaid() ? "paid" : "" %>"><%= o.isPaid() ? "已付款" : "待付款" %></div>
+            </div>
+            <div class="order-total">¥<%= o.getTotal() %></div>
+            <div style="font-size: 12px; color: #999; margin: 5px 0;">状态：<%= o.getStatus() %></div>
+            <div class="order-actions">
+                <% if(!o.isPaid()){ %>
+                <a href="payment.jsp?orderId=<%= o.getId() %>" class="btn-pay">立即支付</a>
+                <% } %>
+            </div>
+        </div>
         <% } %>
-    </table>
+    </div>
 </div>
+
+
+
 <!-- 底部导航 -->
 <jsp:include page="footer.jsp" />
 </body>
