@@ -1,0 +1,186 @@
+        .address-header {
+            background: #fff;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            margin-right: 12px;
+            padding: 4px;
+        }
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            flex: 1;
+            text-align: center;
+            margin-right: 30px;
+        }
+        .address-form {
+            background: #fff;
+            margin: 8px 0;
+        }
+        .form-group {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .form-group:last-child {
+            border-bottom: none;
+        }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            background: transparent;
+        }
+        .form-input::placeholder {
+            color: #999;
+        }
+        .location-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .location-btn {
+            background: none;
+            border: none;
+            color: #ff6700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .save-btn {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            background: #ff6700;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .save-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .address-list {
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        .address-item {
+            background: #fff;
+            margin: 8px 16px;
+            border-radius: 8px;
+            padding: 16px;
+            position: relative;
+        }
+        .address-item.default {
+            border: 1px solid #ff6700;
+        }
+        .address-info {
+            margin-bottom: 12px;
+        }
+        .receiver-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .receiver-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        .receiver-phone {
+            font-size: 14px;
+            color: #666;
+        }
+        .address-detail {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .default-tag {
+            background: #ff6700;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        .address-actions {
+            display: flex;
+            gap: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .action-btn.primary {
+            color: #ff6700;
+        }
+        .add-address-btn {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            background: #ff6700;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .message {
+            background: #fff2e8;
+            color: #ff6700;
+            padding: 12px 16px;
+            margin: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
