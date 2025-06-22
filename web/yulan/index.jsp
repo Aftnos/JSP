@@ -1,7 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %><%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Product" %>
 <%
+    request.setCharacterEncoding("UTF-8");
+    String q = request.getParameter("q");
     java.util.List<Product> list = ServiceLayer.listProducts();
+    if(q!=null && q.trim().length()>0){
+        java.util.List<Product> filtered = new java.util.ArrayList<>();
+        for(Product p : list){
+            if(p.getName().contains(q)) filtered.add(p);
+        }
+        list = filtered;
+    }
+    int unread = 0;
+    if(session.getAttribute("user")!=null){
+        com.entity.User u=(com.entity.User)session.getAttribute("user");
+        java.util.List<com.entity.Notification> notes = ServiceLayer.getNotifications(u.getId());
+        for(com.entity.Notification n:notes){ if(!n.isRead()) unread++; }
+    }
 %>
 <html>
 <head>
@@ -12,13 +27,21 @@
 </head>
 <body>
 <header>
-    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div class="user">
-        <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
-        <% }else{ %>
-        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
-        <% } %>
+    <div class="top-row">
+        <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
+        <div class="user">
+            <% if(session.getAttribute("user")!=null){ %>
+            欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
+            <% }else{ %>
+            <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
+            <% } %>
+        </div>
+    </div>
+    <div class="search-row">
+        <form action="index.jsp" method="get" class="search-form">
+            <input type="text" name="q" placeholder="搜索产品" value="<%= q==null?"":q %>"/>
+        </form>
+        <a href="notifications.jsp" class="notify-link">通知<% if(unread>0){ %><span class="badge"><%= unread %></span><% } %></a>
     </div>
 </header>
 <div class="container">
