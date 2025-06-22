@@ -200,8 +200,16 @@ public class Model {
         snCodeDAO.generate(productId, size, batchId);
     }
 
+    public static void generateSNCodes(int productId, int size, int batchId, String status) throws SQLException {
+        snCodeDAO.generate(productId, size, batchId, status);
+    }
+
     public static List<SNCode> listSNCodes(int productId, String status) throws SQLException {
         return snCodeDAO.list(productId, status);
+    }
+
+    public static List<SNCode> listSNCodesByBatch(int batchId) throws SQLException {
+        return snCodeDAO.listByBatch(batchId);
     }
 
     public static int updateSNStatus(String code, String status) throws SQLException {

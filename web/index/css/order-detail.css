@@ -55,3 +55,10 @@
 .item-name { flex: 1; }
 .item-qty { width: 40px; text-align: center; }
 .item-price { width: 60px; text-align: right; }
+
+.sn-row {
+    padding: 4px 0;
+    font-size: 12px;
+    color: #666;
+    border-bottom: 1px dashed #eee;
+}

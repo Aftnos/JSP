@@ -53,6 +53,7 @@
 ## SN 码相关
 - **`void generateSNCodes(int productId, int size, int batchId)`**：批量生成 SN 码。
 - **`List<SNCode> listSNCodes(int productId, String status)`**：按商品和状态查询 SN 列表。
+- **`List<SNCode> getSNCodesByOrder(int orderId)`**：获取指定订单生成的 SN 列表。
 - **`boolean updateSNStatus(String code, String status)`**：更新单个 SN 的状态。
 - **`boolean deleteSNCodes(int batchId)`**：按批次删除 SN 码。
 

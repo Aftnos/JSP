@@ -8,19 +8,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SNCodeDAO {
-    public void generate(int productId, int batchSize, int batchId) throws SQLException {
+    /**
+     * Generate SN codes with custom status. Existing public API defaults to
+     * generating codes in {@code unsold} status.
+     */
+    public void generate(int productId, int batchSize, int batchId, String status) throws SQLException {
         String sql = "INSERT INTO sn_codes(product_id,code,status,batch_id) VALUES(?,?,?,?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             for (int i = 0; i < batchSize; i++) {
                 ps.setInt(1, productId);
                 ps.setString(2, "SN" + System.currentTimeMillis() + i);
-                ps.setString(3, "unsold");
+                ps.setString(3, status);
                 ps.setInt(4, batchId);
                 ps.addBatch();
             }
             ps.executeBatch();
         }
+    }
+
+    /** Convenience method keeping backwards compatibility */
+    public void generate(int productId, int batchSize, int batchId) throws SQLException {
+        generate(productId, batchSize, batchId, "unsold");
     }
 
     public List<SNCode> list(int productId, String status) throws SQLException {
@@ -53,6 +62,22 @@ public class SNCodeDAO {
             ps.setInt(1, batchId);
             return ps.executeUpdate();
         }
+    }
+
+    /**
+     * List SN codes by batch id (used here to associate codes with an order).
+     */
+    public List<SNCode> listByBatch(int batchId) throws SQLException {
+        List<SNCode> list = new ArrayList<>();
+        String sql = "SELECT * FROM sn_codes WHERE batch_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, batchId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
     }
 
     private SNCode map(ResultSet rs) throws SQLException {
