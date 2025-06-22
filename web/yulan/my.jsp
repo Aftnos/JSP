@@ -37,12 +37,7 @@
     </ul>
     <p><a href="addresses.jsp">管理地址</a></p>
 </div>
-<div class="bottom-nav">
-    <a href="index.jsp">首页</a>
-    <a href="categories.jsp">分类</a>
-    <a href="service.jsp">服务</a>
-    <a href="cart.jsp">购物车</a>
-    <a href="my.jsp">我的</a>
-</div>
+<!-- 底部导航 -->
+<jsp:include page="footer.jsp" />
 </body>
 </html>
