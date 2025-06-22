@@ -1,11 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>Title</title>
+    <title>临时页</title>
   </head>
   <body>
-  <a href="./admin/index.jsp">小米商城管理系统</a>
-  <a href="./login.jsp">登录</a>
-  <a href="./yulan/login.jsp">前台测试</a>
+  <a href="./index/index.jsp">前台全部界面</a>
+  <a href="./admin/index.jsp">后台管理系统</a>
   </body>
 </html>
