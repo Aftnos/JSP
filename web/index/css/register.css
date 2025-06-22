@@ -1,0 +1,63 @@
+.register-container {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.auth-form .form-group {
+    margin-bottom: 16px;
+}
+.auth-form .form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #333;
+}
+.auth-form .form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.auth-form .submit-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #ff6700;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.auth-form .submit-btn:hover {
+    background: #e55a00;
+}
+.register-link {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+}
+.auth-header {
+    background: #fff;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+.auth-header .back-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    margin-right: 12px;
+}
+.auth-header .header-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
