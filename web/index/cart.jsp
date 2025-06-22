@@ -89,12 +89,15 @@
         <% for(CartItem c:items){
             Product p=products.stream().filter(x->x.getId()==c.getProductId()).findFirst().orElse(null);
             if(p==null) continue;
+            java.util.List<com.entity.ProductImage> imgs = ServiceLayer.listProductImages(p.getId());
+            String imgUrl = "static/image/default-product.jpg";
+            if(imgs != null && !imgs.isEmpty()) imgUrl = imgs.get(0).getUrl();
             java.math.BigDecimal sub=p.getPrice().multiply(new java.math.BigDecimal(c.getQuantity()));
             total=total.add(sub);
         %>
         <div class="cart-item">
             <input type="checkbox" class="item-checkbox" checked>
-            <div class="item-image">商品图片</div>
+            <div class="item-image"><img src="<%=imgUrl%>" alt="<%=p.getName()%>" style="width:60px;height:auto;"/></div>
             <div class="item-info">
                 <a href="product.jsp?id=<%=p.getId()%>" class="item-name"><%=p.getName()%></a>
                 <div class="item-spec">白色</div>
@@ -157,9 +160,12 @@
             for(Product rp : recommendedProducts){
                 if(count >= 4) break;
                 count++;
+                String rImg = "static/image/default-product.jpg";
+                java.util.List<com.entity.ProductImage> rImgs = ServiceLayer.listProductImages(rp.getId());
+                if(rImgs != null && !rImgs.isEmpty()) rImg = rImgs.get(0).getUrl();
             %>
             <div class="recommended-item">
-                <div class="recommended-image">商品图片</div>
+                <div class="recommended-image"><img src="<%=rImg%>" alt="<%=rp.getName()%>" style="width:80px;height:auto;"/></div>
                 <div class="recommended-info">
                     <a href="product.jsp?id=<%=rp.getId()%>" class="recommended-name"><%=rp.getName()%></a>
                     <div class="recommended-price">

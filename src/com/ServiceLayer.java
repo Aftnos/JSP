@@ -427,6 +427,20 @@ public class ServiceLayer {
         }
     }
 
+    public static SNCode getSNCodeByCode(String code) {
+        try {
+            return Model.getSNCodeByCode(code);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Integer getProductIdBySN(String code) {
+        SNCode sn = getSNCodeByCode(code);
+        return sn != null ? sn.getProductId() : null;
+    }
+
     public static List<SNCode> getSNCodesByOrder(int orderId) {
         try {
             return Model.listSNCodesByBatch(orderId);

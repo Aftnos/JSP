@@ -208,6 +208,10 @@ public class Model {
         return snCodeDAO.list(productId, status);
     }
 
+    public static SNCode getSNCodeByCode(String code) throws SQLException {
+        return snCodeDAO.findByCode(code);
+    }
+
     public static List<SNCode> listSNCodesByBatch(int batchId) throws SQLException {
         return snCodeDAO.listByBatch(batchId);
     }

@@ -40,13 +40,23 @@
     <div class="section-title">本机设备</div>
     <div class="device-grid">
         <% if(bindings != null && !bindings.isEmpty()) { %>
-            <% for(Binding binding : bindings) { %>
+            <% for(Binding binding : bindings) {
+                Integer pid = ServiceLayer.getProductIdBySN(binding.getSnCode());
+                String productName = "未知商品";
+                String imgUrl = "static/image/default-product.jpg";
+                if(pid != null){
+                    com.entity.Product pr = ServiceLayer.getProductById(pid);
+                    if(pr != null) productName = pr.getName();
+                    java.util.List<com.entity.ProductImage> imgs = ServiceLayer.listProductImages(pid);
+                    if(imgs != null && !imgs.isEmpty()) imgUrl = imgs.get(0).getUrl();
+                }
+            %>
                 <div class="device-card">
                     <div class="device-image">
-                        📱
+                        <img src="<%= imgUrl %>" alt="<%= productName %>" style="max-width:100%;height:auto;"/>
                     </div>
                     <div class="device-info">
-                        <div class="device-name">小米设备</div>
+                        <div class="device-name"><%= productName %></div>
                         <div class="device-model">已绑定设备</div>
                         <div class="device-sn">SN: <%= binding.getSnCode() %></div>
                     </div>
