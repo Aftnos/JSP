@@ -6,9 +6,14 @@
     String q = request.getParameter("q");
     String categoryFilter = request.getParameter("category");
     
-    java.util.List<Product> list = ServiceLayer.listProducts();
     java.util.List<Category> categories = ServiceLayer.listCategories();
-    
+    java.util.List<Product> list;
+    if(categoryFilter!=null && !categoryFilter.equals("all")){
+        list = ServiceLayer.listProductsByCategory(Integer.parseInt(categoryFilter));
+    } else {
+        list = ServiceLayer.listProducts();
+    }
+
     // 搜索过滤
     if(q!=null && q.trim().length()>0){
         java.util.List<Product> filtered = new java.util.ArrayList<>();
@@ -16,12 +21,6 @@
             if(p.getName().contains(q)) filtered.add(p);
         }
         list = filtered;
-    }
-    
-    // 分类过滤 - 推荐显示全部商品，其他分类可以根据需要扩展过滤逻辑
-    if(categoryFilter!=null && !categoryFilter.equals("all")){
-        // 这里可以根据实际的Product实体结构添加分类过滤逻辑
-        // 目前推荐标签显示全部商品
     }
     
     int unread = 0;

@@ -7,15 +7,17 @@ public class Product {
     private String name;
     private BigDecimal price;
     private int stock;
+    private Integer categoryId;
     private String description;
 
     public Product() {}
 
-    public Product(int id, String name, BigDecimal price, int stock, String description) {
+    public Product(int id, String name, BigDecimal price, int stock, Integer categoryId, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
+        this.categoryId = categoryId;
         this.description = description;
     }
 
@@ -49,6 +51,14 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getDescription() {
