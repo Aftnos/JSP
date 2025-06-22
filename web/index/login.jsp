@@ -22,27 +22,28 @@
     <title>登录</title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
 </head>
 <body>
-<header>
-    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div class="user">
-        <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
-        <% }else{ %>
-        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
-        <% } %>
-    </div>
-</header>
-<div class="container">
-    <h2>用户登录</h2>
+<div class="auth-header">
+    <button class="back-btn" onclick="history.back();">←</button>
+    <div class="header-title">登录</div>
+</div>
+<div class="login-container">
+    <h2 style="text-align:center;margin-bottom:16px;">用户登录</h2>
     <% if(message!=null){ %><div class="message"><%= message %></div><% } %>
-    <form method="post">
-        <label>用户名:<input type="text" name="username" required/></label>
-        <label>密码:<input type="password" name="password" required/></label>
-        <button type="submit">登录</button>
+    <form method="post" class="auth-form">
+        <div class="form-group">
+            <label class="form-label">用户名</label>
+            <input type="text" name="username" class="form-input" required/>
+        </div>
+        <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" name="password" class="form-input" required/>
+        </div>
+        <button type="submit" class="submit-btn">登录</button>
     </form>
-    <p>没有账号？<a href="register.jsp">立即注册</a></p>
+    <p class="register-link">没有账号？<a href="register.jsp">立即注册</a></p>
 </div>
 <!-- 底部导航 -->
 <jsp:include page="footer.jsp" />
