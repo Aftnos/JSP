@@ -26,8 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('./js/pcas.json')
         .then(res => res.json())
         .then(json => {
-            data = json;
-            fillSelect(provinceSel, data['省'] || {}, '请选择省');
+            // 将原始四级数据转换为三级结构：省-市-区
+            data = { '省': {}, '市': {}, '区': {} };
+            for (const [prov, cities] of Object.entries(json)) {
+                data['省'][prov] = true;
+                data['市'][prov] = {};
+                for (const [city, dists] of Object.entries(cities)) {
+                    data['市'][prov][city] = true;
+                    data['区'][city] = {};
+                    for (const dist of Object.keys(dists)) {
+                        data['区'][city][dist] = true;
+                    }
+                }
+            }
+            fillSelect(provinceSel, data['省'], '请选择省');
         })
         .catch(err => {
             console.error('加载省市区数据失败：', err);
@@ -58,45 +70,30 @@ document.addEventListener('DOMContentLoaded', () => {
         regionField.value = region;
     });
 
-    // 定位按钮
-    document.querySelector('.location-btn')?.addEventListener('click', () => {
-        if (!navigator.geolocation) {
-            return alert('浏览器不支持定位');
-        }
-        navigator.geolocation.getCurrentPosition(position => {
-            const { latitude, longitude } = position.coords;
-            // 这里用高德逆地理（需先在 <head> 引入 amap js API）
-            const geocoder = new AMap.Geocoder({ city: '' });
-            geocoder.getAddress([longitude, latitude], (status, result) => {
-                if (status === 'complete' && result.regeocode) {
-                    const comp = result.regeocode.addressComponent;
-                    // 依次选中：省
-                    for (let o of provinceSel.options) {
-                        if (o.text === comp.province) { o.selected = true; break; }
-                    }
-                    provinceSel.dispatchEvent(new Event('change'));
+    // 定位按钮改为通过 IP 地址获取大致省市
+    document.querySelector('.location-btn')?.addEventListener('click', attemptIPLocation);
 
-                    // 选中市
+    function selectOption(sel, name) {
+        for (let o of sel.options) {
+            if (name.startsWith(o.text) || o.text.startsWith(name)) { o.selected = true; return true; }
+        }
+        return false;
+    }
+
+    function attemptIPLocation() {
+        fetch('https://api.vore.top/api/IPdata')
+            .then(res => res.json())
+            .then(res => {
+                const prov = res.ipdata?.info1 || '';
+                const city = res.ipdata?.info2 || '';
+                if (selectOption(provinceSel, prov)) {
+                    provinceSel.dispatchEvent(new Event('change'));
                     setTimeout(() => {
-                        for (let o of citySel.options) {
-                            if (o.text === (comp.city || comp.province)) { o.selected = true; break; }
-                        }
+                        selectOption(citySel, city) || selectOption(citySel, prov);
                         citySel.dispatchEvent(new Event('change'));
                     }, 200);
-
-                    // 选中区
-                    setTimeout(() => {
-                        for (let o of distSel.options) {
-                            if (o.text === comp.district) { o.selected = true; break; }
-                        }
-                        distSel.dispatchEvent(new Event('change'));
-                    }, 400);
-                } else {
-                    alert('逆地理编码失败，请稍后重试');
                 }
-            });
-        }, err => {
-            alert('定位失败：' + err.message);
-        }, { enableHighAccuracy: true, timeout: 5000 });
-    });
+            })
+            .catch(err => console.warn('IP定位失败', err));
+    }
 });
