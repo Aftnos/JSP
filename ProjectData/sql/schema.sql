@@ -32,6 +32,15 @@ CREATE TABLE IF NOT EXISTS product_images (
     url VARCHAR(255) NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 商品附加图片表：用于存储副展示图和介绍图
+CREATE TABLE IF NOT EXISTS product_extra_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS addresses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,

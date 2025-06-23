@@ -13,6 +13,7 @@ public class Model {
     private static final UserDAO userDAO = new UserDAO();
     private static final ProductDAO productDAO = new ProductDAO();
     private static final ProductImageDAO productImageDAO = new ProductImageDAO();
+    private static final ProductExtraImageDAO productExtraImageDAO = new ProductExtraImageDAO();
     private static final AddressDAO addressDAO = new AddressDAO();
     private static final CategoryDAO categoryDAO = new CategoryDAO();
     private static final CartDAO cartDAO = new CartDAO();
@@ -100,6 +101,27 @@ public class Model {
 
     public static int deleteProductImage(int id) throws SQLException {
         return productImageDAO.delete(id);
+    }
+
+    // Product extra image operations
+    public static List<ProductExtraImage> listProductExtraImages(int productId, String type) throws SQLException {
+        return productExtraImageDAO.listByProductAndType(productId, type);
+    }
+
+    public static ProductExtraImage getProductExtraImageById(int id) throws SQLException {
+        return productExtraImageDAO.findById(id);
+    }
+
+    public static int addProductExtraImage(ProductExtraImage img) throws SQLException {
+        return productExtraImageDAO.insert(img);
+    }
+
+    public static int updateProductExtraImage(ProductExtraImage img) throws SQLException {
+        return productExtraImageDAO.update(img);
+    }
+
+    public static int deleteProductExtraImage(int id) throws SQLException {
+        return productExtraImageDAO.delete(id);
     }
 
     // Address operations
