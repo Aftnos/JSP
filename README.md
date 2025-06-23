@@ -1,184 +1,92 @@
-# 小米商城 JSP 项目
+# 小米商城 JSP 示例
 
-这是一个使用 **JSP + JDBC** 构建的简单商城示例，主要用于学习如何在不依赖框架的情况下搭建 Web 应用。本项目模仿小米商城的基本功能，推荐在如下环境下运行：
+本仓库提供了一个使用 **JSP + JDBC** 编写的简单电商项目，以小米商城的业务为蓝本，旨在展示在无框架的情况下如何组织 Java Web 应用、数据库访问以及 JSP 页面。项目包含完整的数据库脚本和示例页面，适合作为学习或实验之用。
 
-- **JDK 1.8_202**  
-- **Tomcat 9.0.106**  
+## 环境要求
+
+- **JDK 1.8_202**（或兼容版本）
+- **Tomcat 9.0.106**
 - **MySQL 8.x**
 
-项目目录中提供了数据库建表脚本以及 Windows 版 Tomcat 压缩包，可直接用于本地开发。
+`ProjectData/sql` 目录中提供建表脚本和测试数据，`ProjectData/tomcat` 提供用于开发的 Windows 版 Tomcat 压缩包。
 
----
+## 功能模块概览
 
-## 一、功能结构设计
+1. **用户管理**：注册 / 登录、个人资料维护、收货地址管理、权限区分（普通用户/管理员）。
+2. **商品管理**：商品及分类的增删改查，商品图片及附加图片管理，前台商品浏览与搜索。
+3. **购物车与订单**：加入购物车、下单、修改订单状态、支付回调及订单查询。
+4. **SN 码管理**：为商品生成唯一 SN，支持批次操作、状态更新和删除。
+5. **SN 绑定**：购买后绑定 SN，查看绑定记录，管理员可解除绑定。
+6. **售后 / 客服**：基于 SN 的售后申请、审核、关闭流程。
+7. **通知中心**：系统事件产生通知，用户可查看和标记已读。
 
-1. **用户模块**  
-   - 注册／登录（手机号／邮箱／第三方）  
-   - 用户资料管理（查看／修改用户名、头像、联系方式、密码）  
-   - 收货地址管理（增／删／改／查，设置默认）  
-   - 权限管理（普通用户 vs 管理员）
+## 功能结构设计
 
-2. **商品模块**  
-   - 分类管理（增／删／改／查分类树）  
-   - 商品管理（增／删／改／查商品信息：名称、SKU、价格、库存、上下架、图片、描述）  
-   - 商品浏览（分页／筛选／搜索列表，查看详情及可用 SN 数量）
+整体采用 **JSP → ServiceLayer → Model/DAO → 数据库** 的分层方式。JSP 页面只负责展示
+和简单的表单收集，所有业务逻辑都封装在 `ServiceLayer` 内。`Model` 与各 `DAO` 完成
+数据库访问，DAO 层对表结构做最基本的增删改查封装。主要模块及其关系如下：
 
-3. **购物车 & 订单模块**  
-   - 购物车操作：添加、修改数量、删除、查看列表  
-   - 下单流程：选择地址、生成订单、锁定库存  
-   - 支付回调：标记已支付，触发 SN 分配（为每件商品生成 SN 并记录到 `sn_codes`，批次号为订单ID）
-   - 订单查询：用户查看自有订单，管理员分页／筛选查看全部  
-   - 订单状态管理：用户取消、管理员发货／关闭等
+```
+用户 → 购物车 → 订单 → SN码 → 绑定/售后
+              ↘ 通知中心
+```
 
-4. **SN 码管理模块**  
-   - 批量生成 SN（唯一、定长）  
-   - SN 查询：按商品、状态、批次、日期筛选、分页  
-   - SN 状态更新：批量或单条改为“已售出”“已绑定”“回收”  
-   - SN 删除：仅限“未售出”状态可删
+每个模块都对应一组实体类与表结构，并在 ServiceLayer 中暴露统一的静态方法供 JSP 调用，
+便于页面之间复用逻辑。
 
-5. **SN 绑定模块**  
-   - 查询订单 SN：支付后查看本单分配的 SN 列表  
-   - 绑定 SN：扫码／输入，校验“已售出未绑定”后，新建 binding 并改“已绑定”  
-   - 查询绑定记录：查看用户所有已绑定 SN 及绑定时间、商品信息  
-   - 管理员强制解绑：特殊场景下恢复 SN 状态并记录日志
+## 快速开始
 
-6. **售后／客服模块**  
-   - 发起售后（退货/保修）：前提 SN 已绑定，填写原因、可上传图片，生成工单  
-   - 用户查询与补充：按状态分页查看工单，审核中可补充资料  
-   - 管理员工单管理：分页／筛选查看、审核（同意/拒绝/完成）、填写意见、关闭/删除
-
-7. **通知模块**  
-   - 系统自动：订单支付、发货、完成，SN 绑定成功，售后状态变更等  
-   - 用户消息中心：查看列表、标记已读/未读、删除、看详情  
-   - 管理员重发／批量清理通知
-
----
-
-## 二、ServiceLayer.java 方法概览
-
-所有方法均为 `public static`，JSP 中可直接通过 `ServiceLayer.method(...)` 调用。
-
-### 1. 用户模块  
-- `login(username, password)`  
-- `register(user)`  
-- `getUserById(userId)`  
-- `updateUserProfile(user)`  
-- `changePassword(userId, oldPwd, newPwd)`  
-- `getAddresses(userId)`  
-- `addAddress(address)`  
-- `updateAddress(address)`  
-- `deleteAddress(addressId)`  
-- `setDefaultAddress(userId, addressId)`
-
-### 2. 商品模块  
-- `listProducts(page, pageSize, category, keyword)`  
-- `getProductById(productId)`  
-- `listCategories()`  
-- **管理员**：`addProduct(product)`、`updateProduct(product)`、`deleteProduct(productId)`  
-- **管理员**：`addCategory(category)`、`updateCategory(category)`、`deleteCategory(categoryId)`
-
-### 3. 购物车 & 订单模块  
-- `addToCart(userId, productId, quantity)`  
-- `getCartItems(userId)`  
-- `updateCartItem(cartItemId, quantity)`  
-- `removeCartItem(cartItemId)`  
-- `createOrder(userId, cartItems, addressId)`  
-- `markOrderPaid(orderId)`  
-- `getOrdersByUser(userId, status, page, pageSize)`  
-- `getOrderById(orderId)`  
-- **管理员**：`listAllOrders(page, pageSize, statusFilter)`  
-- **管理员**：`updateOrderStatus(orderId, newStatus)`
-
-### 4. SN 码管理模块  
-- **管理员**：`generateSNCodes(productId, batchSize)`  
-- **管理员**：`listSNCodes(productId, status, page, pageSize)`  
-- **管理员**：`updateSNStatus(snCode, newStatus)`  
-- **管理员**：`deleteSNCodes(batchId)`
-- `getSNCodesByOrder(orderId)`
-
-### 5. SN 绑定模块  
-- `bindSN(userId, snCode)`  
-- `getBindingsByUser(userId)`  
-- **管理员**：`adminUnbindSN(snCode, reason)`
-
-### 6. 售后／客服模块  
-- `applyAfterSale(userId, snCode, type, reason)`  
-- `getAfterSalesByUser(userId, status, page, pageSize)`  
-- `getAfterSaleDetail(afterSaleId)`  
-- `supplementAfterSale(afterSaleId, content)`  
-- **管理员**：`listAllAfterSales(page, pageSize, filters)`  
-- **管理员**：`updateAfterSaleStatus(afterSaleId, newStatus, remark)`  
-- **管理员**：`closeAfterSale(afterSaleId)`
-
-### 7. 通知模块  
-- `getNotifications(userId, readStatus, page, pageSize)`  
-- `markNotificationRead(notificationId)`  
-- `deleteNotification(notificationId)`  
-- **（内部，不供 JSP 调用）**：  
-  - `sendOrderNotification(userId, orderId, status)`  
-  - `sendSNBindNotification(userId, snCode)`  
-  - `sendAfterSaleNotification(userId, afterSaleId, newStatus)`
-
----
-
-## 三、快速开始
-
-1. **导入数据库**  
+1. **初始化数据库**
    ```bash
    mysql -u root -p < ProjectData/sql/schema.sql
-````
+   mysql -u root -p xiaomi_mall < ProjectData/sql/test_data.sql # 可选，导入示例数据
+   ```
+   完成后根据实际数据库连接信息修改 `src/db.properties`。
 
-修改 `src/db.properties` 中的数据库连接信息。
-
-2. **构建与部署**
-
-    * 将 `web` 目录部署到 Tomcat 的 `webapps` 下，或在 IDE 中配置。
-    * 确保 `web/WEB-INF/lib/mysql-connector-j-8.0.33.jar` 可被加载。
+2. **编译与部署**
+   - 在 `src` 目录下编译所有 Java 文件：
+     ```bash
+     javac -d out -cp lib/mysql-connector-j-8.0.33.jar $(find src -name "*.java")
+     ```
+   - 将 `web` 目录作为 Web 应用部署到 Tomcat 的 `webapps` 目录，或在 IDE 中创建相应的运行配置。
+   - 确保 `web/WEB-INF/lib/mysql-connector-j-8.0.33.jar` 能被加载。
 
 3. **访问应用**
-   启动 Tomcat 后，访问 `http://localhost:8080/`；`test_all_functions.jsp` 中可快速验证各项功能。
+   启动 Tomcat 后访问 `http://localhost:8080/`，页面 `test_all_functions.jsp` 可以快速验证各项功能是否正常。
 
----
-
-## 四、项目结构
+## 目录结构
 
 ```
 JSP/
-├── ProjectData/
-│   ├── sql/schema.sql
-│   └── tomcat/
-├── lib/
+├── ProjectData/           # 数据库脚本及打包的 Tomcat
+│   ├── sql/               # schema.sql、test_data.sql、SQLdoc.md
+│   └── tomcat/            # 预置的 Tomcat 压缩包
+├── lib/                   # 第三方依赖
 │   └── mysql-connector-j-8.0.33.jar
-├── src/
-│   ├── db.properties
+├── src/                   # Java 源码
+│   ├── com/               # 实体、DAO、ServiceLayer 等
 │   ├── ModelTest.java
 │   ├── ServiceLayerTest.java
-│   └── com/
-│       ├── db/DBUtil.java
-│       ├── dao/
-│       ├── entity/
-│       ├── Model.java
-│       └── ServiceLayer.java
-├── web/
-│   ├── index.jsp
-│   ├── test_all_functions.jsp
-│   ├── admin/
-│   │   ├── sidebar.jsp
-│   │   └── css/admin-layout.css
-│   └── WEB-INF/
-│       ├── web.xml
-│       └── lib/
-└── .idea/
+│   └── db.properties      # 数据库配置
+└── web/                   # JSP 页面及静态资源
+    ├── WEB-INF/
+    ├── admin/
+    ├── css/
+    ├── images/
+    └── ...
 ```
 
----
+## 运行测试
 
-## 五、运行测试
-
-在 `src` 目录下执行编译：
+`src` 目录下提供了 `ModelTest` 和 `ServiceLayerTest` 两个测试类，可在命令行执行：
 
 ```bash
-javac -d out -cp lib/mysql-connector-j-8.0.33.jar $(find src -name "*.java")
+java -cp out:lib/mysql-connector-j-8.0.33.jar ServiceLayerTest
 ```
 
-编译成功后即可将 `web` 目录部署到 Tomcat。请确保 MySQL 已启动且连接信息正确。
+测试会按照固定流程调用所有 ServiceLayer 方法并输出结果，方便验证数据库和环境配置是否正确。
+
+## 许可证
+
+项目代码基于 MIT License 发布，详见仓库中的 `LICENSE` 文件。
+
