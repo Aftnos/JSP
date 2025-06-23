@@ -2,6 +2,7 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Product" %>
 <%@ page import="com.entity.ProductImage" %>
+<%@ page import="com.entity.ProductExtraImage" %>
 <%@ page import="com.entity.CartItem" %>
 <%@ page import="java.util.List" %>
 <%
@@ -14,6 +15,8 @@
     
     // 获取商品图片
     List<ProductImage> images = ServiceLayer.listProductImages(pid);
+    List<ProductExtraImage> secondaryImages = ServiceLayer.listProductExtraImages(pid, "secondary");
+    List<ProductExtraImage> introImages = ServiceLayer.listProductExtraImages(pid, "intro");
     String mainImageUrl = "static/image/default-product.jpg"; // 默认图片
     if(images != null && !images.isEmpty()) {
         mainImageUrl = images.get(0).getUrl();
@@ -59,9 +62,15 @@
     </div>
     
     <!-- 产品图片 -->
-    <div class="product-image-container">
-        <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="product-image">
-        <div class="page-indicator">2/8</div>
+    <div class="product-image-container product-image-gallery">
+        <% if(images!=null && !images.isEmpty()){ for(ProductImage img : images){ %>
+            <img src="<%= img.getUrl() %>" alt="<%= p.getName() %>" class="product-image"/>
+        <% } } else { %>
+            <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="product-image"/>
+        <% } %>
+        <% if(secondaryImages!=null){ for(ProductExtraImage s : secondaryImages){ %>
+            <img src="<%= s.getUrl() %>" alt="<%= p.getName() %>" class="product-image"/>
+        <% } } %>
     </div>
     
     <!-- 产品信息 -->
@@ -70,7 +79,14 @@
         <div class="product-subtitle"><%= shortDesc %></div>
         <div class="product-price"><%= p.getPrice() %></div>
     </div>
-    
+
+    <!-- 商品介绍图 -->
+    <div class="product-intro-images">
+        <% if(introImages!=null){ for(ProductExtraImage d : introImages){ %>
+            <img src="<%= d.getUrl() %>" alt="介绍图" class="intro-image"/>
+        <% } } %>
+    </div>
+
     <!-- 底部操作按钮 -->
     <div class="product-actions">
         <form method="post" style="flex: 1; margin: 0;">

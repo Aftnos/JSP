@@ -197,6 +197,52 @@ public class ServiceLayer {
         }
     }
 
+    // Product extra images
+    public static List<ProductExtraImage> listProductExtraImages(int productId, String type) {
+        try {
+            return Model.listProductExtraImages(productId, type);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public static ProductExtraImage getProductExtraImageById(int id) {
+        try {
+            return Model.getProductExtraImageById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static boolean addProductExtraImage(ProductExtraImage img) {
+        try {
+            return Model.addProductExtraImage(img) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateProductExtraImage(ProductExtraImage img) {
+        try {
+            return Model.updateProductExtraImage(img) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean deleteProductExtraImage(int id) {
+        try {
+            return Model.deleteProductExtraImage(id) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Address
     public static List<Address> getAddresses(int userId) {
         try {
