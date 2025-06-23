@@ -383,9 +383,7 @@ function toggleUserMenu() {
 
 // 重新登录
 function reLogin() {
-    if (confirm('确定要重新登录吗？')) {
-        window.location.href = '../../index.jsp';
-    }
+    window.location.href = '../../index.jsp';
 }
 
 // 退出登录

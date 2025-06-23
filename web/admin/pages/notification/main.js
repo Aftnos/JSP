@@ -325,9 +325,7 @@ function toggleUserMenu() {
 }
 
 function reLogin() {
-    console.log('重新登录');
-    // TODO: 实现重新登录逻辑
-    alert('重新登录功能待实现');
+    window.location.href = '../../index.jsp';
 }
 
 function logout() {
