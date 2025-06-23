@@ -1,9 +1,8 @@
 function buyNow(productId) {
-    // 检查用户是否登录
-    <% if(session.getAttribute("user") == null) { %>
-    window.location.href = 'login.jsp';
-    return;
-    <% } %>
+    if (typeof userLogged !== 'undefined' && !userLogged) {
+        window.location.href = 'login.jsp';
+        return;
+    }
 
     // 构造并提交隐藏表单
     const form = document.createElement('form');

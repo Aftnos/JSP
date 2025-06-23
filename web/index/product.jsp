@@ -119,6 +119,9 @@
 
 <!-- 底部导航 -->
 <jsp:include page="footer.jsp" />
+<script>
+    var userLogged = <%= session.getAttribute("user") != null ? "true" : "false" %>;
+</script>
 <script src="js/product.js"></script>
 </body>
 </html>

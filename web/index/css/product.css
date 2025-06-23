@@ -104,6 +104,7 @@
         }
         .btn-buy {
             flex: 1;
+            width: 100%;
             background: #ff6700;
             color: #fff;
             border: none;
