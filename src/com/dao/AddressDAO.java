@@ -64,6 +64,18 @@ public class AddressDAO {
         }
     }
 
+    /**
+     * Delete all addresses for a specific user.
+     */
+    public int deleteByUserId(int userId) throws SQLException {
+        String sql = "DELETE FROM addresses WHERE user_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        }
+    }
+
     public void setDefault(int userId, int addressId) throws SQLException {
         String unset = "UPDATE addresses SET is_default=0 WHERE user_id=?";
         String set = "UPDATE addresses SET is_default=1 WHERE id=?";

@@ -70,6 +70,18 @@ public class AfterSaleDAO {
         }
     }
 
+    /**
+     * Delete all after-sale records for the specified user.
+     */
+    public int deleteByUserId(int userId) throws SQLException {
+        String sql = "DELETE FROM after_sales WHERE user_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        }
+    }
+
     private AfterSale map(ResultSet rs) throws SQLException {
         AfterSale a = new AfterSale();
         a.setId(rs.getInt("id"));
