@@ -5,6 +5,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     // 获取搜索参数
     String searchKeyword = request.getParameter("searchKeyword");

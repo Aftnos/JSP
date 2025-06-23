@@ -7,6 +7,7 @@
 <%@ page import="com.entity.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     String orderIdStr = request.getParameter("orderId");
     if (orderIdStr == null || orderIdStr.trim().isEmpty()) {
