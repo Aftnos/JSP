@@ -275,6 +275,27 @@ public class Model {
         return bindingDAO.deleteByUserId(userId);
     }
 
+    // Additional helpers for deleting data related to a user
+    public static int deleteCartItemsByUser(int userId) throws SQLException {
+        return cartDAO.deleteByUserId(userId);
+    }
+
+    public static int deleteAfterSalesByUser(int userId) throws SQLException {
+        return afterSaleDAO.deleteByUserId(userId);
+    }
+
+    public static int deleteNotificationsByUser(int userId) throws SQLException {
+        return notificationDAO.deleteByUserId(userId);
+    }
+
+    public static int deleteOrdersByUser(int userId) throws SQLException {
+        return orderDAO.deleteByUser(userId);
+    }
+
+    public static int deleteAddressesByUser(int userId) throws SQLException {
+        return addressDAO.deleteByUserId(userId);
+    }
+
     // After sale
     public static int applyAfterSale(AfterSale a) throws SQLException {
         return afterSaleDAO.insert(a);

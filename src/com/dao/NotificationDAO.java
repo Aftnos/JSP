@@ -54,6 +54,18 @@ public class NotificationDAO {
         }
     }
 
+    /**
+     * Delete all notifications for a specific user.
+     */
+    public int deleteByUserId(int userId) throws SQLException {
+        String sql = "DELETE FROM notifications WHERE user_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        }
+    }
+
     private Notification map(ResultSet rs) throws SQLException {
         Notification n = new Notification();
         n.setId(rs.getInt("id"));

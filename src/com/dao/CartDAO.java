@@ -55,6 +55,18 @@ public class CartDAO {
         }
     }
 
+    /**
+     * Delete all cart items for the specified user.
+     */
+    public int deleteByUserId(int userId) throws SQLException {
+        String sql = "DELETE FROM cart_items WHERE user_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        }
+    }
+
     private CartItem map(ResultSet rs) throws SQLException {
         CartItem c = new CartItem();
         c.setId(rs.getInt("id"));
