@@ -227,7 +227,24 @@ public class ServiceLayer {
 
     public static boolean deleteAddress(int id) {
         try {
+            // If the address is used by any order, do not attempt deletion
+            if (Model.addressHasOrders(id)) {
+                return false;
+            }
             return Model.deleteAddress(id) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Determine whether an address can be safely deleted.
+     * Returns true if any order references this address.
+     */
+    public static boolean addressHasOrders(int addressId) {
+        try {
+            return Model.addressHasOrders(addressId);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

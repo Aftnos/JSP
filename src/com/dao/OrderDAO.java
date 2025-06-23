@@ -99,6 +99,21 @@ public class OrderDAO {
         }
     }
 
+    /**
+     * Check whether there are any orders using the specified address.
+     * This is used before deleting an address to prevent foreign key violations.
+     */
+    public boolean existsByAddressId(int addressId) throws SQLException {
+        String sql = "SELECT 1 FROM orders WHERE address_id=? LIMIT 1";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, addressId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
     private Order map(ResultSet rs) throws SQLException {
         Order o = new Order();
         o.setId(rs.getInt("id"));
