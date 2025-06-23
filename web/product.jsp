@@ -24,8 +24,8 @@
     
     // 截取商品描述前20字
     String shortDesc = p.getDescription();
-    if(shortDesc != null && shortDesc.length() > 20) {
-        shortDesc = shortDesc.substring(0, 20) + "...";
+    if(shortDesc != null && shortDesc.length() > 50) {
+        shortDesc = shortDesc.substring(0, 50) + "...";
     }
     
     String msg=null;
