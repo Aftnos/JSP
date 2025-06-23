@@ -31,7 +31,13 @@
         if(ServiceLayer.updateAddress(a)) message="已更新"; else message="更新失败";
     }else if("delete".equals(action)){
         int id = Integer.parseInt(request.getParameter("id"));
-        if(ServiceLayer.deleteAddress(id)) message="已删除"; else message="删除失败";
+        if(ServiceLayer.addressHasOrders(id)){
+            message = "删除失败：该地址已在订单中使用";
+        }else if(ServiceLayer.deleteAddress(id)){
+            message = "已删除";
+        }else{
+            message = "删除失败";
+        }
     }else if("default".equals(action)){
         int id = Integer.parseInt(request.getParameter("id"));
         ServiceLayer.setDefaultAddress(u.getId(), id);

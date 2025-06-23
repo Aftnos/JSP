@@ -128,6 +128,11 @@ public class Model {
         return addressDAO.listAll();
     }
 
+    // Check if an address is referenced by any order
+    public static boolean addressHasOrders(int addressId) throws SQLException {
+        return orderDAO.existsByAddressId(addressId);
+    }
+
     // Category operations
     public static List<Category> listCategories() throws SQLException {
         return categoryDAO.listAll();
