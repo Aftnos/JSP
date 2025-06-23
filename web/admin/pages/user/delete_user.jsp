@@ -7,7 +7,7 @@
     response.setCharacterEncoding("UTF-8");
     
     String action = request.getParameter("action");
-    PrintWriter out = response.getWriter();
+    PrintWriter writer = response.getWriter();
     
     try {
         if ("single".equals(action)) {
@@ -18,12 +18,12 @@
                 boolean success = ServiceLayer.deleteUserById(userId);
                 
                 if (success) {
-                    out.print("{\"success\": true, \"message\": \"用户删除成功\"}");
+                    writer.print("{\"success\": true, \"message\": \"用户删除成功\"}");
                 } else {
-                    out.print("{\"success\": false, \"message\": \"用户删除失败\"}");
+                    writer.print("{\"success\": false, \"message\": \"用户删除失败\"}");
                 }
             } else {
-                out.print("{\"success\": false, \"message\": \"用户ID不能为空\"}");
+                writer.print("{\"success\": false, \"message\": \"用户ID不能为空\"}");
             }
         } else if ("batch".equals(action)) {
             // 批量删除
@@ -37,19 +37,22 @@
                 boolean success = ServiceLayer.batchDeleteUsers(userIds);
                 
                 if (success) {
-                    out.print("{\"success\": true, \"message\": \"批量删除成功，共删除 " + userIds.length + " 个用户\"}");
+                    writer.print("{\"success\": true, \"message\": \"批量删除成功，共删除 " + userIds.length + " 个用户\"}");
                 } else {
-                    out.print("{\"success\": false, \"message\": \"批量删除失败\"}");
+                    writer.print("{\"success\": false, \"message\": \"批量删除失败\"}");
                 }
             } else {
-                out.print("{\"success\": false, \"message\": \"请选择要删除的用户\"}");
+                writer.print("{\"success\": false, \"message\": \"请选择要删除的用户\"}");
             }
         } else {
-            out.print("{\"success\": false, \"message\": \"无效的操作类型\"}");
+            writer.print("{\"success\": false, \"message\": \"无效的操作类型\"}");
         }
     } catch (NumberFormatException e) {
-        out.print("{\"success\": false, \"message\": \"用户ID格式错误\"}");
+        writer.print("{\"success\": false, \"message\": \"用户ID格式错误\"}");
     } catch (Exception e) {
-        out.print("{\"success\": false, \"message\": \"删除操作失败: " + e.getMessage() + "\"}");
+        writer.print("{\"success\": false, \"message\": \"删除操作失败: " + e.getMessage() + "\"}");
+    } finally {
+        writer.flush();
+        writer.close();
     }
 %>
