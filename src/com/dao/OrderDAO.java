@@ -114,6 +114,32 @@ public class OrderDAO {
         }
     }
 
+    /**
+     * Delete an order along with its items.
+     */
+    public int delete(int id) throws SQLException {
+        // Remove order items first to satisfy foreign key constraints
+        itemDAO.deleteByOrder(id);
+        String sql = "DELETE FROM orders WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Delete all orders (and their items) for a specific user.
+     */
+    public int deleteByUser(int userId) throws SQLException {
+        List<Order> list = listByUser(userId);
+        int total = 0;
+        for (Order o : list) {
+            total += delete(o.getId());
+        }
+        return total;
+    }
+
     private Order map(ResultSet rs) throws SQLException {
         Order o = new Order();
         o.setId(rs.getInt("id"));

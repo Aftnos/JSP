@@ -38,6 +38,18 @@ public class OrderItemDAO {
         return list;
     }
 
+    /**
+     * Delete order items for a specific order.
+     */
+    public int deleteByOrder(int orderId) throws SQLException {
+        String sql = "DELETE FROM order_items WHERE order_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            return ps.executeUpdate();
+        }
+    }
+
     private OrderItem map(ResultSet rs) throws SQLException {
         OrderItem oi = new OrderItem();
         oi.setId(rs.getInt("id"));

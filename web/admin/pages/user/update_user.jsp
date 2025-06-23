@@ -13,7 +13,7 @@
     String email = request.getParameter("email");
     String phone = request.getParameter("phone");
 
-    PrintWriter out = response.getWriter();
+    PrintWriter writer = response.getWriter();
     try {
         if (userIdStr != null && !userIdStr.trim().isEmpty() && username != null && !username.trim().isEmpty()) {
             int userId = Integer.parseInt(userIdStr);
@@ -27,20 +27,20 @@
                 user.setPhone(phone);
                 boolean success = ServiceLayer.updateUser(user);
                 if (success) {
-                    out.print("{\"success\": true, \"message\": \"用户更新成功\"}");
+                    writer.print("{\"success\": true, \"message\": \"用户更新成功\"}");
                 } else {
-                    out.print("{\"success\": false, \"message\": \"用户更新失败\"}");
+                    writer.print("{\"success\": false, \"message\": \"用户更新失败\"}");
                 }
             } else {
-                out.print("{\"success\": false, \"message\": \"用户不存在\"}");
+                writer.print("{\"success\": false, \"message\": \"用户不存在\"}");
             }
         } else {
-            out.print("{\"success\": false, \"message\": \"参数不完整\"}");
+            writer.print("{\"success\": false, \"message\": \"参数不完整\"}");
         }
     } catch (Exception e) {
-        out.print("{\"success\": false, \"message\": \"更新用户时发生错误: " + e.getMessage() + "\"}");
+        writer.print("{\"success\": false, \"message\": \"更新用户时发生错误: " + e.getMessage() + "\"}");
     } finally {
-        out.flush();
-        out.close();
+        writer.flush();
+        writer.close();
     }
 %>
