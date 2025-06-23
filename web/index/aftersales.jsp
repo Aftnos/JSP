@@ -56,10 +56,17 @@
             <select name="sn" class="form-select" required>
                 <option value="">请选择要申请售后的设备</option>
                 <% if(bindings != null && !bindings.isEmpty()) { %>
-                    <% for(Binding binding : bindings) { %>
-                        <option value="<%= binding.getSnCode() %>" 
+                    <% for(Binding binding : bindings) {
+                        Integer pid = ServiceLayer.getProductIdBySN(binding.getSnCode());
+                        String productName = "未知商品";
+                        if(pid != null){
+                            com.entity.Product pr = ServiceLayer.getProductById(pid);
+                            if(pr != null) productName = pr.getName();
+                        }
+                    %>
+                        <option value="<%= binding.getSnCode() %>"
                             <%= (prefilledSN != null && prefilledSN.equals(binding.getSnCode())) ? "selected" : "" %>>
-                            SN: <%= binding.getSnCode() %>
+                            <%= productName %> (SN: <%= binding.getSnCode() %>)
                         </option>
                     <% } %>
                 <% } %>
@@ -86,14 +93,22 @@
 <div class="service-list">
     <div class="list-title">我的售后记录</div>
     <% if(list != null && !list.isEmpty()) { %>
-        <% for(AfterSale a : list){ %>
+        <% for(AfterSale a : list){
+               Integer pid = ServiceLayer.getProductIdBySN(a.getSnCode());
+               String productName = "未知商品";
+               if(pid != null){
+                   com.entity.Product pr = ServiceLayer.getProductById(pid);
+                   if(pr != null) productName = pr.getName();
+               }
+               String status = (a.getStatus() == null || a.getStatus().trim().isEmpty()) ? "待处理" : a.getStatus();
+        %>
             <div class="service-item">
                 <div class="service-header-info">
-                    <div class="service-sn">SN: <%= a.getSnCode() %></div>
-                    <div class="service-status 
-                        <%= "待处理".equals(a.getStatus()) ? "status-pending" : 
-                            "处理中".equals(a.getStatus()) ? "status-processing" : "status-completed" %>">
-                        <%= a.getStatus() %>
+                    <div class="service-sn"><%= productName %> (SN: <%= a.getSnCode() %>)</div>
+                    <div class="service-status
+                        <%= "待处理".equals(status) ? "status-pending" :
+                            "处理中".equals(status) ? "status-processing" : "status-completed" %>">
+                        <%= status %>
                     </div>
                 </div>
                 <div class="service-details">
