@@ -40,15 +40,38 @@
             background: #fff;
             position: relative;
             margin-bottom: 8px;
+            overflow: hidden;
         }
-        .product-image-gallery img {
+        .product-carousel {
+            position: relative;
+        }
+        .carousel-images {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+        .carousel-images img {
             width: 100%;
             height: 400px;
             object-fit: contain;
             background: #fff;
-            display: block;
-            margin-bottom: 8px;
+            flex-shrink: 0;
         }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            user-select: none;
+        }
+        .carousel-arrow.prev { left: 10px; }
+        .carousel-arrow.next { right: 10px; }
         .product-info {
             background: #fff;
             padding: 20px 16px;
@@ -126,7 +149,8 @@
         .page-indicator {
             position: absolute;
             bottom: 16px;
-            right: 16px;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0,0,0,0.6);
             color: white;
             padding: 6px 10px;
