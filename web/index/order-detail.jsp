@@ -7,17 +7,63 @@
     User u = (User)obj;
     request.setCharacterEncoding("UTF-8");
 
+    String action = request.getParameter("action");
     String idStr = request.getParameter("id");
-    if(idStr == null){ response.sendRedirect("orders.jsp"); return; }
-    int orderId = Integer.parseInt(idStr);
-    Order order = ServiceLayer.getOrderById(orderId);
-    if(order == null || order.getUserId() != u.getId()){ response.sendRedirect("orders.jsp"); return; }
-
-    java.util.List<OrderItem> items = order.getItems();
-    java.util.List<SNCode> snList = ServiceLayer.getSNCodesByOrder(orderId);
-    Address address = null;
+    Order order = null;
     java.util.List<Address> adds = ServiceLayer.getAddresses(u.getId());
-    if(adds != null){
+    java.util.List<OrderItem> items = null;
+    java.util.List<Product> products = ServiceLayer.listProducts();
+    java.math.BigDecimal total = new java.math.BigDecimal("0");
+    String message = null;
+    java.util.List<SNCode> snList = null;
+
+    if(idStr == null){
+        // 从购物车创建订单
+        java.util.List<CartItem> cartItems = ServiceLayer.getCartItems(u.getId());
+        items = new java.util.ArrayList<>();
+        for(CartItem c : cartItems){
+            Product p = products.stream().filter(x->x.getId()==c.getProductId()).findFirst().orElse(null);
+            if(p!=null){
+                OrderItem oi = new OrderItem();
+                oi.setProductId(p.getId());
+                oi.setQuantity(c.getQuantity());
+                oi.setPrice(p.getPrice());
+                items.add(oi);
+                total = total.add(p.getPrice().multiply(new java.math.BigDecimal(c.getQuantity())));
+            }
+        }
+        if("create".equals(action)){
+            int addrId = Integer.parseInt(request.getParameter("addressId"));
+            Order o = new Order();
+            o.setUserId(u.getId());
+            o.setAddressId(addrId);
+            o.setStatus("NEW");
+            o.setTotal(total);
+            o.setPaid(false);
+            o.setItems(items);
+            if(ServiceLayer.createOrder(o)){
+                for(CartItem c:cartItems){ ServiceLayer.removeCartItem(c.getId()); }
+                response.sendRedirect("payment.jsp?orderId="+o.getId());
+                return;
+            }else{
+                message = "创建订单失败";
+            }
+        }
+    }else{
+        int orderId = Integer.parseInt(idStr);
+        order = ServiceLayer.getOrderById(orderId);
+        if(order == null || order.getUserId() != u.getId()){ response.sendRedirect("orders.jsp"); return; }
+        if("cancel".equals(action) && !order.isPaid()){
+            ServiceLayer.cancelOrder(orderId);
+            order = ServiceLayer.getOrderById(orderId);
+        }
+        items = order.getItems();
+        total = order.getTotal();
+        snList = ServiceLayer.getSNCodesByOrder(orderId);
+    }
+
+    Address address = null;
+    if(order != null && adds != null){
         for(Address a : adds){ if(a.getId() == order.getAddressId()){ address = a; break; } }
     }
 %>
@@ -35,6 +81,32 @@
 </div>
 
 <div class="detail-container">
+<% if(idStr == null){ %>
+    <% if(message!=null){ %><div class="message"><%=message%></div><% } %>
+    <form method="post">
+        <input type="hidden" name="action" value="create"/>
+        <div class="order-info">
+            <div>总金额：¥<%= total %></div>
+        </div>
+        <div class="address-info">
+            <select name="addressId" class="address-select" required>
+                <% for(Address a:adds){ %>
+                <option value="<%=a.getId()%>"><%=a.getDetail()%></option>
+                <% } %>
+            </select>
+        </div>
+        <div class="items-section">
+            <% for(OrderItem item : items){ Product p = products.stream().filter(x->x.getId()==item.getProductId()).findFirst().orElse(null); %>
+            <div class="item-row">
+                <div class="item-name"><%= p!=null ? p.getName() : ("商品"+item.getProductId()) %></div>
+                <div class="item-qty">x<%= item.getQuantity() %></div>
+                <div class="item-price">¥<%= item.getPrice() %></div>
+            </div>
+            <% } %>
+        </div>
+        <button type="submit" class="pay-btn">立即支付</button>
+    </form>
+<% }else{ %>
     <div class="order-info">
         <div>订单号：<%= order.getId() %></div>
         <div>状态：<%= order.getStatus() %></div>
@@ -53,11 +125,22 @@
             <div class="item-qty">x<%= item.getQuantity() %></div>
             <div class="item-price">¥<%= item.getPrice() %></div>
         </div>
-        <% for(SNCode sn : snList){ if(sn.getProductId()==item.getProductId()){ %>
+        <% if(snList!=null){ for(SNCode sn : snList){ if(sn.getProductId()==item.getProductId()){ %>
         <div class="sn-row">SN: <%= sn.getCode() %></div>
-        <% }} %>
+        <% }} } %>
         <% } %>
     </div>
+    <% if(!order.isPaid()){ %>
+    <div class="order-actions" style="margin-top:15px;">
+        <a href="payment.jsp?orderId=<%=order.getId()%>" class="pay-btn">立即支付</a>
+        <form method="post" style="display:inline;" onsubmit="return confirm('确定取消订单?');">
+            <input type="hidden" name="action" value="cancel"/>
+            <input type="hidden" name="id" value="<%=order.getId()%>"/>
+            <button type="submit" class="cancel-btn">取消订单</button>
+        </form>
+    </div>
+    <% } %>
+<% } %>
 </div>
 
 <!-- 底部导航 -->

@@ -187,6 +187,10 @@ public class Model {
         return orderDAO.markPaid(id);
     }
 
+    public static int cancelOrder(int id) throws SQLException {
+        return orderDAO.updateStatus(id, "CANCELLED");
+    }
+
     public static int addOrderItems(int orderId, List<OrderItem> items) throws SQLException {
         return orderItemDAO.insertBatch(orderId, items);
     }

@@ -47,6 +47,7 @@
 - **`List<Order> listAllOrders()`**：获取全部订单（管理员）。
 - **`boolean updateOrderStatus(int id, String status)`**：更新订单状态。
 - **`boolean markOrderPaid(int id)`**：标记订单已付款。
+- **`boolean cancelOrder(int id)`**：取消订单（将状态设为CANCELLED）。
 - **`boolean addOrderItems(int orderId, List<OrderItem> items)`**：为指定订单批量添加条目。
 - **`List<OrderItem> getOrderItems(int orderId)`**：获取订单的商品明细列表。
 
