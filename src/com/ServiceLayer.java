@@ -75,6 +75,8 @@ public class ServiceLayer {
 
     public static boolean deleteUser(int id) {
         try {
+            // Remove related bindings first to avoid foreign key violations
+            Model.deleteBindingsByUser(id);
             return Model.deleteUser(id) > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,6 +91,11 @@ public class ServiceLayer {
 
     public static boolean batchDeleteUsers(int[] ids) {
         try {
+            if (ids != null) {
+                for (int id : ids) {
+                    Model.deleteBindingsByUser(id);
+                }
+            }
             return Model.batchDeleteUsers(ids) > 0;
         } catch (SQLException e) {
             e.printStackTrace();

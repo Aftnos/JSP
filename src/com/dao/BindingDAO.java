@@ -40,6 +40,19 @@ public class BindingDAO {
         }
     }
 
+    /**
+     * Delete all binding records for a given user id. Used when deleting a user
+     * to avoid foreign key constraint violations.
+     */
+    public int deleteByUserId(int userId) throws SQLException {
+        String sql = "DELETE FROM bindings WHERE user_id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        }
+    }
+
     private Binding map(ResultSet rs) throws SQLException {
         Binding b = new Binding();
         b.setId(rs.getInt("id"));
