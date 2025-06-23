@@ -16,17 +16,6 @@
     <link rel="stylesheet" href="css/service.css"/>
 </head>
 <body>
-<header>
-    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div class="user">
-        <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
-        <% }else{ %>
-        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
-        <% } %>
-    </div>
-</header>
-
 <div class="device-header">
     <div class="device-title">设备列表</div>
     <a href="bindings.jsp" class="add-device-btn">+ 添加设备</a>

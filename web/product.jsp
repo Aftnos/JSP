@@ -2,6 +2,7 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Product" %>
 <%@ page import="com.entity.ProductImage" %>
+<%@ page import="com.entity.ProductExtraImage" %>
 <%@ page import="com.entity.CartItem" %>
 <%@ page import="java.util.List" %>
 <%
@@ -14,6 +15,8 @@
     
     // 获取商品图片
     List<ProductImage> images = ServiceLayer.listProductImages(pid);
+    List<ProductExtraImage> secondaryImages = ServiceLayer.listProductExtraImages(pid, "secondary");
+    List<ProductExtraImage> introImages = ServiceLayer.listProductExtraImages(pid, "intro");
     String mainImageUrl = "static/image/default-product.jpg"; // 默认图片
     if(images != null && !images.isEmpty()) {
         mainImageUrl = images.get(0).getUrl();
@@ -60,8 +63,17 @@
     
     <!-- 产品图片 -->
     <div class="product-image-container">
-        <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="product-image">
-        <div class="page-indicator">2/8</div>
+        <div class="product-carousel" id="imgCarousel">
+            <div class="carousel-images">
+                <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="carousel-item"/>
+                <% if(secondaryImages!=null){ for(ProductExtraImage s : secondaryImages){ %>
+                <img src="<%= s.getUrl() %>" alt="<%= p.getName() %>" class="carousel-item"/>
+                <% } } %>
+            </div>
+            <div class="carousel-arrow prev">‹</div>
+            <div class="carousel-arrow next">›</div>
+            <div class="page-indicator" id="carouselIndicator"></div>
+        </div>
     </div>
     
     <!-- 产品信息 -->
@@ -70,9 +82,21 @@
         <div class="product-subtitle"><%= shortDesc %></div>
         <div class="product-price"><%= p.getPrice() %></div>
     </div>
-    
+
+    <!-- 商品介绍图 -->
+    <div class="product-intro-images">
+        <% if(introImages!=null){ for(ProductExtraImage d : introImages){ %>
+            <img src="<%= d.getUrl() %>" alt="介绍图" class="intro-image"/>
+        <% } } %>
+    </div>
+
     <!-- 底部操作按钮 -->
     <div class="product-actions">
+        <button class="btn-home" onclick="location.href='index.jsp'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        </button>
         <form method="post" style="flex: 1; margin: 0;">
             <input type="hidden" name="addCart" value="1">
             <button type="submit" class="btn-cart">加入购物车</button>

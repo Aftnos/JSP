@@ -29,18 +29,7 @@
     <link rel="stylesheet" href="css/cart.css"/>
 </head>
 <body>
-<header class="header">
-    <div class="header-top">
-        <div class="logo"><a href="index.jsp" style="color:#ff6700;text-decoration:none;">小米商城</a></div>
-        <div class="user-info">
-            <% if(session.getAttribute("user")!=null){ %>
-            欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" class="logout-btn">退出</a>
-            <% }else{ %>
-            <a href="login.jsp" class="login-btn">登录</a> | <a href="register.jsp" class="login-btn">注册</a>
-            <% } %>
-        </div>
-    </div>
-</header>
+
 
 <div class="cart-container">
     <div class="cart-header">
