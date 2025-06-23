@@ -62,15 +62,18 @@
     </div>
     
     <!-- 产品图片 -->
-    <div class="product-image-container product-image-gallery">
-        <% if(images!=null && !images.isEmpty()){ for(ProductImage img : images){ %>
-            <img src="<%= img.getUrl() %>" alt="<%= p.getName() %>" class="product-image"/>
-        <% } } else { %>
-            <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="product-image"/>
-        <% } %>
-        <% if(secondaryImages!=null){ for(ProductExtraImage s : secondaryImages){ %>
-            <img src="<%= s.getUrl() %>" alt="<%= p.getName() %>" class="product-image"/>
-        <% } } %>
+    <div class="product-image-container">
+        <div class="product-carousel" id="imgCarousel">
+            <div class="carousel-images">
+                <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="carousel-item"/>
+                <% if(secondaryImages!=null){ for(ProductExtraImage s : secondaryImages){ %>
+                <img src="<%= s.getUrl() %>" alt="<%= p.getName() %>" class="carousel-item"/>
+                <% } } %>
+            </div>
+            <div class="carousel-arrow prev">‹</div>
+            <div class="carousel-arrow next">›</div>
+            <div class="page-indicator" id="carouselIndicator"></div>
+        </div>
     </div>
     
     <!-- 产品信息 -->
