@@ -99,9 +99,39 @@
         </button>
         <form method="post" style="flex: 1; margin: 0;">
             <input type="hidden" name="addCart" value="1">
-            <button type="submit" class="btn-cart">加入购物车</button>
+            <button type="submit" class="btn-cart" onclick="buyNow(<%= p.getId() %>)">加入购物车</button>
         </form>
-        <button class="btn-buy" onclick="buyNow(<%= p.getId() %>)">立即购买</button>
+        <button class="btn-buy" onclick="buyNowAndRedirect(<%= p.getId() %>)">立即购买</button>
+        <script>
+            function buyNowAndRedirect(productId) {
+                // 添加加载提示
+                var button = event.target;
+                button.disabled = true;
+                button.textContent = '添加中...';
+                
+                // 使用AJAX提交请求
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'product.jsp?id=' + productId, true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            // 添加成功后跳转到购物车页面
+                            window.location.href = 'cart.jsp';
+                        } else {
+                            // 恢复按钮状态
+                            button.disabled = false;
+                            button.textContent = '立即购买';
+                            alert('添加到购物车失败，请重试');
+                        }
+                    }
+                };
+                
+                // 发送请求
+                xhr.send('addCart=1');
+            }
+        </script>
     </div>
 </div>
 

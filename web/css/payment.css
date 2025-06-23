@@ -1,11 +1,85 @@
-        .payment-container {
-            max-width: 400px;
-            margin: 20px auto;
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-        }
+.payment-container {
+    max-width: 400px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    width: 90%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .payment-container {
+        max-width: 100%;
+        margin: 10px;
+        width: calc(100% - 20px);
+        border-radius: 8px;
+    }
+    
+    .payment-header {
+        padding: 15px;
+    }
+    
+    .order-info {
+        padding: 15px;
+    }
+    
+    .payment-methods {
+        padding: 15px;
+    }
+    
+    .credit-options {
+        padding: 15px;
+    }
+    
+    .order-amount {
+        font-size: 28px;
+    }
+    
+    .pay-button {
+        margin: 15px;
+        width: calc(100% - 30px);
+        padding: 12px;
+    }
+    
+    .message {
+        margin: 15px;
+    }
+    
+    .back-link {
+        margin: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-container {
+        margin: 5px;
+        width: calc(100% - 10px);
+    }
+    
+    .payment-header h2 {
+        font-size: 16px;
+    }
+    
+    .order-amount {
+        font-size: 24px;
+    }
+    
+    .payment-icon, .credit-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
+    }
+    
+    .payment-name {
+        font-size: 13px;
+    }
+    
+    .payment-company {
+        font-size: 11px;
+    }
+}
         .payment-header {
             background: linear-gradient(135deg, #ff6b35, #f7931e);
             color: white;

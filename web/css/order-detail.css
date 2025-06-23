@@ -62,3 +62,42 @@
     color: #666;
     border-bottom: 1px dashed #eee;
 }
+
+/* 无收货地址警告样式 */
+.no-address-warning {
+    text-align: center;
+    padding: 20px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.warning-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.warning-text {
+    font-size: 14px;
+    color: #856404;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.add-address-link {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.add-address-link:hover {
+    background: #0056b3;
+    text-decoration: none;
+    color: white;
+}

@@ -11,7 +11,7 @@ function buyNow(productId) {
     form.submit();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var carousel = document.getElementById('imgCarousel');
     if (!carousel) return;
     var container = carousel.querySelector('.carousel-images');
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (indicator) indicator.textContent = (index + 1) + '/' + images.length;
     }
 
-    prev.addEventListener('click', function() {
+    prev.addEventListener('click', function () {
         index = (index - 1 + images.length) % images.length;
         update();
     });
-    next.addEventListener('click', function() {
+    next.addEventListener('click', function () {
         index = (index + 1) % images.length;
         update();
     });

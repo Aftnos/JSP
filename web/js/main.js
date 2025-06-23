@@ -10,6 +10,11 @@ function addToCart(pid){
   form.submit();
 }
 
+function addToCart1(pid){
+  // 跳转到商品详情页面
+  window.location.href = 'product.jsp?id=' + pid;
+}
+
 document.addEventListener('DOMContentLoaded',function(){
   var page=location.pathname.split('/').pop();
   document.querySelectorAll('.bottom-nav a').forEach(function(a){
