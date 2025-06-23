@@ -49,21 +49,7 @@ function toggleUserMenu() {
 
 // 重新登录功能
 function reLogin() {
-    if (confirm('确定要重新登录吗？')) {
-        // 清除当前会话信息
-        sessionStorage.clear();
-        localStorage.removeItem('userInfo');
-
-        // 先清除服务器端session，然后跳转到登录页面
-        fetch('../logout-session.jsp', {
-            method: 'POST'
-        }).then(() => {
-            window.location.href = '../login.jsp?relogin=true';
-        }).catch(() => {
-            // 如果请求失败，直接跳转并添加参数强制重新登录
-            window.location.href = '../login.jsp?relogin=true';
-        });
-    }
+    window.location.href = '../index.jsp';
 }
 
 // 退出登录功能

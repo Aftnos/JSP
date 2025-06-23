@@ -3,6 +3,7 @@
 <%@ page import="com.entity.Product" %>
 <%@ page import="com.entity.Category" %>
 <%@ page import="com.entity.ProductImage" %>
+<%@ page import="com.entity.ProductExtraImage" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="javax.servlet.http.Part" %>
@@ -97,6 +98,88 @@
                     } catch (Exception e) {
                         operationResult += "\n图片上传处理失败: " + e.getMessage();
                     }
+
+                    // 处理副展示图
+                    try {
+                        Part secPart = request.getPart("secondaryImage");
+                        if (secPart != null && secPart.getSize() > 0) {
+                            String fileName = secPart.getSubmittedFileName();
+                            if (fileName != null && !fileName.trim().isEmpty()) {
+                                String fileExtension = "";
+                                int lastDotIndex = fileName.lastIndexOf('.');
+                                if (lastDotIndex > 0) {
+                                    fileExtension = fileName.substring(lastDotIndex);
+                                }
+                                String uniqueFileName = "product_" + newProduct.getId() + "_" + UUID.randomUUID().toString() + fileExtension;
+                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                File uploadDir = new File(uploadPath);
+                                if (!uploadDir.exists()) {
+                                    uploadDir.mkdirs();
+                                }
+                                String filePath = uploadPath + File.separator + uniqueFileName;
+                                try {
+                                    secPart.write(filePath);
+                                    String secUrl = "/images/products/" + uniqueFileName;
+                                    ProductExtraImage img = new ProductExtraImage();
+                                    img.setProductId(newProduct.getId());
+                                    img.setUrl(secUrl);
+                                    img.setType("secondary");
+                                    boolean imageResult = ServiceLayer.addProductExtraImage(img);
+                                    if (imageResult) {
+                                        operationResult += "\n副图片上传成功: " + uniqueFileName;
+                                    } else {
+                                        operationResult += "\n副图片保存到数据库失败";
+                                        new File(filePath).delete();
+                                    }
+                                } catch (IOException e) {
+                                    operationResult += "\n副图片保存失败: " + e.getMessage();
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        operationResult += "\n副图片上传处理失败: " + e.getMessage();
+                    }
+
+                    // 处理介绍图
+                    try {
+                        Part introPart = request.getPart("introImage");
+                        if (introPart != null && introPart.getSize() > 0) {
+                            String fileName = introPart.getSubmittedFileName();
+                            if (fileName != null && !fileName.trim().isEmpty()) {
+                                String fileExtension = "";
+                                int lastDotIndex = fileName.lastIndexOf('.');
+                                if (lastDotIndex > 0) {
+                                    fileExtension = fileName.substring(lastDotIndex);
+                                }
+                                String uniqueFileName = "product_" + newProduct.getId() + "_" + UUID.randomUUID().toString() + fileExtension;
+                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                File uploadDir = new File(uploadPath);
+                                if (!uploadDir.exists()) {
+                                    uploadDir.mkdirs();
+                                }
+                                String filePath = uploadPath + File.separator + uniqueFileName;
+                                try {
+                                    introPart.write(filePath);
+                                    String introUrl = "/images/products/" + uniqueFileName;
+                                    ProductExtraImage img = new ProductExtraImage();
+                                    img.setProductId(newProduct.getId());
+                                    img.setUrl(introUrl);
+                                    img.setType("intro");
+                                    boolean imageResult = ServiceLayer.addProductExtraImage(img);
+                                    if (imageResult) {
+                                        operationResult += "\n介绍图片上传成功: " + uniqueFileName;
+                                    } else {
+                                        operationResult += "\n介绍图片保存到数据库失败";
+                                        new File(filePath).delete();
+                                    }
+                                } catch (IOException e) {
+                                    operationResult += "\n介绍图片保存失败: " + e.getMessage();
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        operationResult += "\n介绍图片上传处理失败: " + e.getMessage();
+                    }
                 }
                 
                 if (result) {
@@ -134,8 +217,109 @@
                 operationResult += "商品名称: " + name + "\n";
                 operationResult += "商品价格: ¥" + priceStr + "\n";
                 operationResult += "库存数量: " + stockStr;
+
                 if (result) {
-                    // 刷新页面数据
+                    try {
+                        Part filePart = request.getPart("productImage");
+                        if (filePart != null && filePart.getSize() > 0) {
+                            String fileName = filePart.getSubmittedFileName();
+                            if (fileName != null && !fileName.trim().isEmpty()) {
+                                String fileExtension = "";
+                                int lastDotIndex = fileName.lastIndexOf('.');
+                                if (lastDotIndex > 0) {
+                                    fileExtension = fileName.substring(lastDotIndex);
+                                }
+                                String uniqueFileName = "product_" + productId + "_" + UUID.randomUUID().toString() + fileExtension;
+                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                File uploadDir = new File(uploadPath);
+                                if (!uploadDir.exists()) {
+                                    uploadDir.mkdirs();
+                                }
+                                String filePath = uploadPath + File.separator + uniqueFileName;
+                                try {
+                                    filePart.write(filePath);
+                                    String imageUrl = "/images/products/" + uniqueFileName;
+                                    ProductImage img = new ProductImage();
+                                    img.setProductId(productId);
+                                    img.setUrl(imageUrl);
+                                    ServiceLayer.addProductImage(img);
+                                } catch (IOException e) {
+                                    operationResult += "\n图片保存失败: " + e.getMessage();
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        operationResult += "\n图片上传处理失败: " + e.getMessage();
+                    }
+
+                    try {
+                        Part secPart = request.getPart("secondaryImage");
+                        if (secPart != null && secPart.getSize() > 0) {
+                            String fileName = secPart.getSubmittedFileName();
+                            if (fileName != null && !fileName.trim().isEmpty()) {
+                                String fileExtension = "";
+                                int lastDotIndex = fileName.lastIndexOf('.');
+                                if (lastDotIndex > 0) {
+                                    fileExtension = fileName.substring(lastDotIndex);
+                                }
+                                String uniqueFileName = "product_" + productId + "_" + UUID.randomUUID().toString() + fileExtension;
+                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                File uploadDir = new File(uploadPath);
+                                if (!uploadDir.exists()) {
+                                    uploadDir.mkdirs();
+                                }
+                                String filePath = uploadPath + File.separator + uniqueFileName;
+                                try {
+                                    secPart.write(filePath);
+                                    String secUrl = "/images/products/" + uniqueFileName;
+                                    ProductExtraImage img = new ProductExtraImage();
+                                    img.setProductId(productId);
+                                    img.setUrl(secUrl);
+                                    img.setType("secondary");
+                                    ServiceLayer.addProductExtraImage(img);
+                                } catch (IOException e) {
+                                    operationResult += "\n副图片保存失败: " + e.getMessage();
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        operationResult += "\n副图片上传处理失败: " + e.getMessage();
+                    }
+
+                    try {
+                        Part introPart = request.getPart("introImage");
+                        if (introPart != null && introPart.getSize() > 0) {
+                            String fileName = introPart.getSubmittedFileName();
+                            if (fileName != null && !fileName.trim().isEmpty()) {
+                                String fileExtension = "";
+                                int lastDotIndex = fileName.lastIndexOf('.');
+                                if (lastDotIndex > 0) {
+                                    fileExtension = fileName.substring(lastDotIndex);
+                                }
+                                String uniqueFileName = "product_" + productId + "_" + UUID.randomUUID().toString() + fileExtension;
+                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                File uploadDir = new File(uploadPath);
+                                if (!uploadDir.exists()) {
+                                    uploadDir.mkdirs();
+                                }
+                                String filePath = uploadPath + File.separator + uniqueFileName;
+                                try {
+                                    introPart.write(filePath);
+                                    String introUrl = "/images/products/" + uniqueFileName;
+                                    ProductExtraImage img = new ProductExtraImage();
+                                    img.setProductId(productId);
+                                    img.setUrl(introUrl);
+                                    img.setType("intro");
+                                    ServiceLayer.addProductExtraImage(img);
+                                } catch (IOException e) {
+                                    operationResult += "\n介绍图片保存失败: " + e.getMessage();
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        operationResult += "\n介绍图片上传处理失败: " + e.getMessage();
+                    }
+
                     response.sendRedirect(request.getRequestURI());
                     return;
                 }
@@ -350,9 +534,9 @@
                         <img src="../../images/default-avatar.png" alt="用户头像" class="user-avatar" id="userAvatar" onclick="toggleUserMenu()" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFNUU1RTUiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iNiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNMzAgMzJDMzAgMjYuNDc3MSAyNS41MjI5IDIyIDIwIDIyQzE0LjQ3NzEgMjIgMTAgMjYuNDc3MSAxMCAzMkgzMFoiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+'">
                         <!-- 用户下拉菜单 -->
                         <div class="user-dropdown" id="userDropdown">
-                            <div class="dropdown-item" onclick="reLogin()">
-                                <i class="icon">🔄</i>
-                                <span>重新登录</span>
+                            <div class="dropdown-item" onclick="window.location.href='../../index.jsp'">
+                                <i class="icon">🏠</i>
+                                <span>返回用户端</span>
                             </div>
                             <div class="dropdown-item" onclick="logout()">
                                 <i class="icon">🚪</i>
@@ -499,6 +683,13 @@
                                                 String imageUrl = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNEREREREQiLz4KPGF0aCBkPSJNMjUgMjVIMzVWMzVIMjVWMjVaIiBmaWxsPSIjQkJCQkJCIi8+PC9zdmc+";
                                                 if (productImages != null && !productImages.isEmpty()) {
                                                     imageUrl = productImages.get(0).getUrl();
+                                                    if (imageUrl.startsWith("web/")) {
+                                                        imageUrl = imageUrl.substring(3);
+                                                    }
+                                                    if (!imageUrl.startsWith("/")) {
+                                                        imageUrl = "/" + imageUrl;
+                                                    }
+                                                    imageUrl = request.getContextPath() + imageUrl;
                                                 }
                                             %>
                                             <img src="<%= imageUrl %>" alt="商品图片" class="product-thumb" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNEREREREQiLz4KPGF0aCBkPSJNMjUgMjVIMzVWMzVIMjVWMjVaIiBmaWxsPSIjQkJCQkJCIi8+PC9zdmc+'">
@@ -623,6 +814,14 @@
                         <div class="image-preview" id="imagePreview" style="display: none;">
                             <img id="previewImg" src="" alt="图片预览" style="max-width: 200px; max-height: 200px; margin-top: 10px;">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="secondaryImage">副展示图：</label>
+                        <input type="file" id="secondaryImage" name="secondaryImage" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="introImage">详细介绍图：</label>
+                        <input type="file" id="introImage" name="introImage" class="form-control" accept="image/*">
                     </div>
                 </form>
             </div>
@@ -928,6 +1127,18 @@
             if (fileInput.files.length > 0) {
                 var clonedFileInput = fileInput.cloneNode(true);
                 submitForm.appendChild(clonedFileInput);
+            }
+
+            var secInput = document.getElementById('secondaryImage');
+            if (secInput.files.length > 0) {
+                var cloneSec = secInput.cloneNode(true);
+                submitForm.appendChild(cloneSec);
+            }
+
+            var introInput = document.getElementById('introImage');
+            if (introInput.files.length > 0) {
+                var cloneIntro = introInput.cloneNode(true);
+                submitForm.appendChild(cloneIntro);
             }
             
             document.body.appendChild(submitForm);
