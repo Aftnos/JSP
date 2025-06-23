@@ -63,7 +63,7 @@
 - **`boolean adminUnbindSN(String code)`**：管理员解绑指定 SN。
 
 ## 售后相关
-- **`boolean applyAfterSale(AfterSale a)`**：提交售后申请。
+- **`boolean product_id(AfterSale a)`**：提交售后申请。
 - **`List<AfterSale> getAfterSalesByUser(int userId)`**：查询用户的售后记录。
 - **`List<AfterSale> listAllAfterSales()`**：获取全部售后工单（管理员）。
 - **`boolean updateAfterSaleStatus(int id, String status, String remark)`**：修改售后单状态并备注。

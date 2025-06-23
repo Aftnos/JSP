@@ -1,18 +1,80 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.User" %>
+<%@ page import="com.entity.Binding" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%
-    // 获取所有用户数据
-    List<User> allUsers = ServiceLayer.getAllUsers();
-    request.setAttribute("allUsers", allUsers);
+    // 获取搜索参数
+    String searchKeyword = request.getParameter("searchKeyword");
+    
+    // 处理各种操作
+    String action = request.getParameter("action");
+    String operationResult = null;
+    
+    // 绑定记录列表
+    List<Binding> displayBindings = new ArrayList<>();
+    
+    // 用户映射，方便显示用户名
+    java.util.Map<Integer, String> userMap = new java.util.HashMap<>();
+    
+    try {
+        // 获取所有用户用于显示用户名
+        List<User> allUsers = ServiceLayer.getAllUsers();
+        if (allUsers != null) {
+            for (User user : allUsers) {
+                userMap.put(user.getId(), user.getUsername());
+            }
+        }
+        
+        // 获取所有绑定记录
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            // 根据用户名或SN码模糊搜索
+            String keyword = searchKeyword.trim().toLowerCase();
+            for (User user : allUsers) {
+                List<Binding> userBindings = ServiceLayer.getBindingsByUser(user.getId());
+                if (userBindings != null) {
+                    for (Binding binding : userBindings) {
+                        // 检查用户名或SN码是否包含关键词
+                        boolean matchUser = user.getUsername().toLowerCase().contains(keyword);
+                        boolean matchSN = binding.getSnCode() != null && binding.getSnCode().toLowerCase().contains(keyword);
+                        if (matchUser || matchSN) {
+                            displayBindings.add(binding);
+                        }
+                    }
+                }
+            }
+        } else {
+            // 如果没有搜索条件，显示所有绑定记录
+            for (User user : allUsers) {
+                List<Binding> userBindings = ServiceLayer.getBindingsByUser(user.getId());
+                if (userBindings != null) {
+                    displayBindings.addAll(userBindings);
+                }
+            }
+        }
+        
+        // 按绑定时间倒序排列
+        if (displayBindings != null && !displayBindings.isEmpty()) {
+            displayBindings.sort((b1, b2) -> {
+                if (b1.getBindTime() == null && b2.getBindTime() == null) return 0;
+                if (b1.getBindTime() == null) return 1;
+                if (b2.getBindTime() == null) return -1;
+                return b2.getBindTime().compareTo(b1.getBindTime());
+            });
+        }
+    } catch (Exception e) {
+        operationResult = "查询失败：" + e.getMessage();
+        displayBindings = new ArrayList<>();
+    }
 %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户资料管理 - 小米商城管理系统</title>
+    <title>SN绑定管理 - 小米商城管理系统</title>
     <!-- 引入基础样式 -->
     <link rel="stylesheet" type="text/css" href="../../static/css/admin-layout.css">
     <!-- 引入主样式 -->
@@ -156,26 +218,52 @@
             <div class="page-content" id="pageContent">
                 <!-- 页面标题 -->
                 <div class="page-header">
-                    <h1 class="page-title">用户资料管理</h1>
-                    <p class="page-subtitle">管理系统用户的基本信息和账户状态</p>
+                    <h1 class="page-title">SN绑定管理</h1>
+                    <p class="page-subtitle">查询和管理用户SN码绑定记录</p>
                 </div>
+                
+                <!-- 操作结果显示 -->
+                <%
+                    if (operationResult != null) {
+                %>
+                <div class="alert alert-info" style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; font-family: monospace; white-space: pre-line;">
+                    <strong>操作结果:</strong><br>
+                    <%= operationResult %>
+                </div>
+                <%
+                    }
+                %>
+                
+                <!-- 搜索结果提示 -->
+                <%
+                    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+                        int resultCount = (displayBindings != null) ? displayBindings.size() : 0;
+                %>
+                <div class="alert alert-success" style="margin-bottom: 20px; padding: 15px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px;">
+                    <strong>搜索结果:</strong> 关键词: "<%= searchKeyword %>" - 找到 <%= resultCount %> 个绑定记录
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSearch()" style="margin-left: 10px; font-size: 12px;">清除搜索</button>
+                </div>
+                <%
+                    }
+                %>
                 
                 <!-- 工具栏 -->
                 <div class="toolbar">
                     <!-- 搜索区域 -->
-                    <div class="search-section">
-                        <input type="text" class="search-input" placeholder="搜索用户名、邮箱或电话号码..." id="searchInput">
-                        <button class="btn btn-primary" onclick="searchUsers()">
-                            🔍 搜索
-                        </button>
-                    </div>
-                    
-                    <!-- 操作按钮 -->
-                    <div class="action-buttons">
-                        <button class="btn btn-danger" onclick="batchDelete()">
-                            🗑️ 批量删除
-                        </button>
-                    </div>
+                    <form method="get" action="" style="display: contents;">
+                        <div class="search-section">
+                            <input type="text" class="search-input" placeholder="搜索用户名或SN码..." id="searchInput" name="searchKeyword" value="<%= (searchKeyword != null) ? searchKeyword : "" %>">
+                            
+                            <button type="submit" class="btn btn-primary">
+                                🔍 搜索
+                            </button>
+                            
+                            <!-- 清除搜索按钮 -->
+                            <button type="button" class="btn btn-secondary" onclick="clearSearch()">
+                                🗑️ 清除
+                            </button>
+                        </div>
+                    </form>
                 </div>
                 
                 <!-- 数据表格 -->
@@ -184,53 +272,40 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th width="50">
-                                        <input type="checkbox" class="checkbox" id="selectAll" onchange="toggleSelectAll()">
-                                    </th>
                                     <th width="80">序号</th>
-                                    <th width="100">用户ID</th>
-                                    <th width="150">用户名称</th>
-                                    <th width="200">邮箱</th>
-                                    <th width="150">电话号码</th>
-                                    <th width="200">操作</th>
+                                    <th width="150">用户名</th>
+                                    <th width="220">SN码</th>
+                                    <th width="180">绑定时间</th>
                                 </tr>
                             </thead>
-                            <tbody id="userTableBody">
+                            <tbody id="bindingTableBody">
                                 <%
-                                    List<User> users = (List<User>) request.getAttribute("allUsers");
-                                    if (users != null && !users.isEmpty()) {
-                                        for (int i = 0; i < users.size(); i++) {
-                                            User user = users.get(i);
+                                    if (displayBindings != null && !displayBindings.isEmpty()) {
+                                        int index = 1;
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        for (Binding binding : displayBindings) {
+                                            String username = "未知用户";
+                                            if (userMap.containsKey(binding.getUserId())) {
+                                                username = userMap.get(binding.getUserId());
+                                            }
+                                            
+                                            String bindTimeStr = "";
+                                            if (binding.getBindTime() != null) {
+                                                bindTimeStr = sdf.format(binding.getBindTime());
+                                            }
                                 %>
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="checkbox row-checkbox" value="<%= user.getId() %>">
-                                    </td>
-                                    <td><%= i + 1 %></td>
-                                    <td><%= user.getId() %></td>
-                                    <td><%= user.getUsername() %></td>
-                                    <td><%= user.getEmail() != null ? user.getEmail() : "" %></td>
-                                    <td><%= user.getPhone() != null ? user.getPhone() : "" %></td>
-                                    <td>
-                                        <div class="table-actions">
-                                            <button class="btn btn-primary btn-sm" onclick="editUser(<%= user.getId() %>)">
-                                                编辑
-                                            </button>
-                                            <button class="btn btn-success btn-sm" onclick="viewUser(<%= user.getId() %>)">
-                                                查看
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteUser(<%= user.getId() %>)">
-                                                删除
-                                            </button>
-                                        </div>
-                                    </td>
+                                    <td><%= index++ %></td>
+                                    <td><%= username %></td>
+                                    <td><%= binding.getSnCode() != null ? binding.getSnCode() : "" %></td>
+                                    <td><%= bindTimeStr %></td>
                                 </tr>
                                 <%
                                         }
                                     } else {
                                 %>
                                 <tr>
-                                    <td colspan="7" style="text-align: center; padding: 20px;">暂无用户数据</td>
+                                    <td colspan="4" style="text-align: center; padding: 20px;">暂无绑定记录数据</td>
                                 </tr>
                                 <%
                                     }
@@ -238,74 +313,27 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <!-- 分页 -->
-                    <div class="pagination">
-                        <div class="pagination-info">
-                            <%
-                                List<User> paginationUsers = (List<User>) request.getAttribute("allUsers");
-                                int totalCount = paginationUsers != null ? paginationUsers.size() : 0;
-                            %>
-                            显示第 1-<%= totalCount %> 条，共 <%= totalCount %> 条记录
-                        </div>
-                        <div class="pagination-controls">
-                            <button class="page-btn" disabled>上一页</button>
-                            <button class="page-btn active">1</button>
-                            <button class="page-btn" disabled>下一页</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 编辑用户弹框 -->
-    <div class="modal" id="editUserModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>编辑用户信息</h3>
-                <span class="close" onclick="closeEditModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="editUserForm">
-                    <input type="hidden" id="editUserId" name="userId">
-                    
-                    <div class="form-group">
-                        <label for="editUsername">用户名：</label>
-                        <input type="text" id="editUsername" name="username" class="form-control" required>
-                        <span class="error-message" id="usernameError"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="editPassword">密码：</label>
-                        <input type="password" id="editPassword" name="password" class="form-control" required>
-                        <span class="error-message" id="passwordError"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="editEmail">邮箱：</label>
-                        <input type="email" id="editEmail" name="email" class="form-control">
-                        <span class="error-message" id="emailError"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="editPhone">电话号码：</label>
-                        <input type="tel" id="editPhone" name="phone" class="form-control">
-                        <span class="error-message" id="phoneError"></span>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">取消</button>
-                <button type="button" class="btn btn-primary" onclick="saveUserChanges()">保存</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 引入JavaScript -->
+    <!-- 引入基础脚本 -->
+    <script src="../../../static/js/admin-layout.js"></script>
+    <!-- 引入主脚本 -->
     <script src="../../js/main.js"></script>
     <script src="./main.js"></script>
     
-
+    <script>
+        // 清除搜索
+        function clearSearch() {
+            window.location.href = window.location.pathname;
+        }
+        
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SN绑定管理页面已加载');
+        });
+    </script>
 </body>
 </html>

@@ -36,26 +36,7 @@ function searchUsers() {
 // 编辑用户
 function editUser(userId) {
     console.log('编辑用户:', userId);
-    
-    // 从用户数据中找到对应的用户
-    const user = allUsersData.find(u => u.id === userId);
-    if (!user) {
-        alert('未找到用户信息');
-        return;
-    }
-    
-    // 填充表单数据
-    document.getElementById('editUserId').value = user.id;
-    document.getElementById('editUsername').value = user.username;
-    document.getElementById('editPassword').value = ''; // 密码字段留空，需要用户重新输入
-    document.getElementById('editEmail').value = user.email || '';
-    document.getElementById('editPhone').value = user.phone || '';
-    
-    // 清空错误信息
-    clearErrorMessages();
-    
-    // 显示弹框
-    document.getElementById('editUserModal').style.display = 'block';
+    // TODO: 编辑用户功能待实现
 }
 
 // 查看用户
@@ -65,16 +46,79 @@ function viewUser(userId) {
     alert('查看用户功能待实现: ' + userId);
 }
 
-// 删除用户（占位函数）
+// 删除用户
 function deleteUser(userId) {
     console.log('删除用户按钮被点击:', userId);
-    alert('删除功能暂未实现');
+    console.log("----------------------------------------------------------------------");
+    
+    if (confirm('确定要删除这个用户吗？删除后无法恢复！')) {
+        // 发送删除请求
+        fetch('./delete_user.jsp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=single&userId=${userId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                // 刷新页面重新加载数据
+                window.location.reload();
+            } else {
+                alert('删除失败: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('删除用户时发生错误:', error);
+            alert('删除用户时发生错误，请稍后重试');
+        });
+    }
 }
 
-// 批量删除（占位函数）
+// 批量删除
 function batchDelete() {
     console.log('批量删除按钮被点击');
-    alert('批量删除功能暂未实现');
+    
+    // 获取所有选中的用户ID
+    const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+    
+    if (selectedCheckboxes.length === 0) {
+        alert('请先选择要删除的用户');
+        return;
+    }
+    
+    const selectedUserIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
+    
+    if (confirm(`确定要删除选中的 ${selectedUserIds.length} 个用户吗？删除后无法恢复！`)) {
+        // 构建请求参数
+        const formData = new FormData();
+        formData.append('action', 'batch');
+        selectedUserIds.forEach(userId => {
+            formData.append('userIds[]', userId);
+        });
+        
+        // 发送批量删除请求
+        fetch('./delete_user.jsp', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                // 刷新页面重新加载数据
+                window.location.reload();
+            } else {
+                alert('批量删除失败: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('批量删除时发生错误:', error);
+            alert('批量删除时发生错误，请稍后重试');
+        });
+    }
 }
 
 // 全选/取消全选
@@ -86,18 +130,6 @@ function toggleSelectAll() {
         checkbox.checked = selectAllCheckbox.checked;
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 搜索框回车事件
 document.getElementById('searchInput').addEventListener('keypress', function (e) {
@@ -238,81 +270,12 @@ function checkUsernameExists(username, currentUserId) {
 
 // 保存用户更改
 function saveUserChanges() {
-    // 表单验证
-    if (!validateUserForm()) {
-        return;
-    }
-    
-    const userId = parseInt(document.getElementById('editUserId').value);
-    const username = document.getElementById('editUsername').value.trim();
-    const password = document.getElementById('editPassword').value.trim();
-    const email = document.getElementById('editEmail').value.trim();
-    const phone = document.getElementById('editPhone').value.trim();
-    
-    // 检查用户名是否已存在
-    if (checkUsernameExists(username, userId)) {
-        document.getElementById('usernameError').textContent = '用户名已存在，请选择其他用户名';
-        return;
-    }
-    
-    // 构造用户数据
-    const userData = {
-        id: userId,
-        username: username,
-        password: password,
-        email: email || null,
-        phone: phone || null
-    };
-    
-    // 调用后端API更新用户
-    updateUserInDatabase(userData);
+    // TODO: 保存用户更改功能待实现
 }
 
 // 调用后端API更新用户
 function updateUserInDatabase(userData) {
-    // 创建表单数据
-    const formData = new FormData();
-    formData.append('action', 'updateUser');
-    formData.append('userId', userData.id);
-    formData.append('username', userData.username);
-    formData.append('password', userData.password);
-    formData.append('email', userData.email || '');
-    formData.append('phone', userData.phone || '');
-    
-    // 发送AJAX请求
-    console.log('发送用户更新请求:', userData);
-    fetch('../api/user-management.jsp', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        console.log('响应状态:', response.status);
-        if (!response.ok) {
-            throw new Error('网络响应不正常: ' + response.status);
-        }
-        return response.text();
-    })
-    .then(text => {
-        console.log('服务器响应:', text);
-        try {
-            const data = JSON.parse(text);
-            if (data.success) {
-                alert('用户信息更新成功！');
-                closeEditModal();
-                // 刷新页面数据
-                location.reload();
-            } else {
-                alert('更新失败：' + (data.message || '未知错误'));
-            }
-        } catch (e) {
-            console.error('解析JSON失败:', e);
-            alert('服务器响应格式错误');
-        }
-    })
-    .catch(error => {
-        console.error('更新用户时发生错误:', error);
-        alert('更新失败，请稍后重试: ' + error.message);
-    });
+    // TODO: 调用后端API更新用户功能待实现
 }
 
 // 页面加载完成后的初始化

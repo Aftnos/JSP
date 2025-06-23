@@ -5,6 +5,7 @@
       <map>
         <entry key="file://$PROJECT_DIR$/web/admin/aftersales.jsp" value="file://$PROJECT_DIR$/web/admin" />
         <entry key="file://$PROJECT_DIR$/web/admin/categories.jsp" value="file://$PROJECT_DIR$/web/admin" />
+        <entry key="file://$PROJECT_DIR$/web/admin/pages/user/index.jsp" value="file://$PROJECT_DIR$/web/admin/pages/user" />
         <entry key="file://$PROJECT_DIR$/web/index.jsp" value="file://$PROJECT_DIR$/web" />
         <entry key="file://$PROJECT_DIR$/web/test_all_functions.jsp" value="file://$PROJECT_DIR$/web" />
       </map>

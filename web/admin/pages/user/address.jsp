@@ -115,7 +115,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>收货地址管理 - 小米商城管理系统</title>
     <!-- 引入基础样式 -->
-    <link rel="stylesheet" type="text/css" href="../../../static/css/admin-layout.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/admin-layout.css">
     <!-- 引入主样式 -->
     <link rel="stylesheet" type="text/css" href="../../css/main.css">
     <link rel="stylesheet" href="./main.css">
@@ -143,11 +143,11 @@
                 <span class="text">用户管理</span>
                 <div class="submenu-arrow">▼</div>
             </div>
-            <div class="submenu" id="user-menu" style="display: block;">
+            <div class="submenu" id="user-menu" style="display: none;">
                 <div class="submenu-item" onclick="navigateTo('user-profile-management')">
                     <span class="text">用户资料管理</span>
                 </div>
-                <div class="submenu-item active" onclick="navigateTo('address-management')">
+                <div class="submenu-item" onclick="navigateTo('address-management')">
                     <span class="text">收货地址管理</span>
                 </div>
             </div>
@@ -159,9 +159,6 @@
                 <div class="submenu-arrow">▼</div>
             </div>
             <div class="submenu" id="product-menu" style="display: none;">
-                <div class="submenu-item" onclick="navigateTo('category-management')">
-                    <span class="text">分类管理</span>
-                </div>
                 <div class="submenu-item" onclick="navigateTo('product-management')">
                     <span class="text">商品管理</span>
                 </div>
@@ -177,9 +174,6 @@
                 <div class="submenu-item" onclick="navigateTo('order-global-query')">
                     <span class="text">全局查询</span>
                 </div>
-                <div class="submenu-item" onclick="navigateTo('order-status-control')">
-                    <span class="text">状态控制</span>
-                </div>
             </div>
 
             <!-- SN码管理 -->
@@ -189,17 +183,9 @@
                 <div class="submenu-arrow">▼</div>
             </div>
             <div class="submenu" id="sn-menu" style="display: none;">
-                <div class="submenu-item" onclick="navigateTo('sn-batch-generation')">
-                    <span class="text">批量生成</span>
-                </div>
+
                 <div class="submenu-item" onclick="navigateTo('sn-global-query')">
                     <span class="text">全局查询</span>
-                </div>
-                <div class="submenu-item" onclick="navigateTo('sn-status-change')">
-                    <span class="text">状态变更</span>
-                </div>
-                <div class="submenu-item" onclick="navigateTo('sn-unsold-cleanup')">
-                    <span class="text">未售SN清理</span>
                 </div>
             </div>
 
@@ -211,10 +197,7 @@
             </div>
             <div class="submenu" id="sn-binding-menu" style="display: none;">
                 <div class="submenu-item" onclick="navigateTo('sn-forced-unbinding')">
-                    <span class="text">强制解绑</span>
-                </div>
-                <div class="submenu-item" onclick="navigateTo('sn-binding-audit')">
-                    <span class="text">绑定记录审计</span>
+                    <span class="text">全局查询</span>
                 </div>
             </div>
 
@@ -237,15 +220,12 @@
                 <div class="submenu-arrow">▼</div>
             </div>
             <div class="submenu" id="notification-menu" style="display: none;">
-                <div class="submenu-item" onclick="navigateTo('notification-resend')">
-                    <span class="text">通知重发</span>
-                </div>
                 <div class="submenu-item" onclick="navigateTo('message-center-maintenance')">
                     <span class="text">消息中心维护</span>
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
         
         <!-- 主内容区域 -->
         <div class="main-content" id="mainContent">

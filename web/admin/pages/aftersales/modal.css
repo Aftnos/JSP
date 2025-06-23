@@ -1,0 +1,485 @@
+/* 售后管理弹框样式 */
+
+/* 模态框背景 */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+    margin: 0;
+    padding: 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 模态框内容 */
+.modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+    margin: auto;
+    position: relative;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 模态框头部 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #dee2e6;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.close {
+    font-size: 24px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close:hover {
+    color: #333;
+    background: #e9ecef;
+}
+
+/* 模态框主体 */
+.modal-body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* 模态框底部 */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 24px;
+    border-top: 1px solid #dee2e6;
+    background: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+}
+
+/* 表单组样式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #ff6900;
+    box-shadow: 0 0 0 2px rgba(255, 105, 0, 0.2);
+}
+
+.form-control:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* 文本域样式 */
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+/* 选择框样式 */
+select.form-control {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    padding-right: 30px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+select.form-control:focus {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ff6900" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+}
+
+/* 错误信息样式 */
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    min-height: 16px;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    line-height: 1.5;
+    user-select: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #545b62;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: #1e7e34;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover:not(:disabled) {
+    background-color: #138496;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+}
+
+/* 小按钮样式 */
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+/* 详情显示样式 */
+.detail-form {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.detail-form .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.detail-form .form-group label {
+    width: 120px;
+    font-weight: 600;
+    color: #333;
+    margin-right: 15px;
+    flex-shrink: 0;
+    padding-top: 5px;
+    margin-bottom: 0;
+}
+
+.detail-field {
+    flex: 1;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #495057;
+    min-height: 20px;
+    word-break: break-word;
+}
+
+.detail-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+/* 状态标签在弹框中的样式 */
+.detail-field .status-badge {
+    margin: 0;
+    display: inline-block;
+}
+
+/* 加载状态 */
+.modal-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.modal-loading::before {
+    content: "⏳";
+    font-size: 24px;
+    display: block;
+    margin-bottom: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+    
+    .detail-form .form-group {
+        flex-direction: column;
+    }
+    
+    .detail-form .form-group label {
+        width: 100%;
+        margin-bottom: 5px;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .modal-header {
+        border-radius: 0;
+    }
+    
+    .modal-footer {
+        border-radius: 0;
+    }
+}
+
+/* 滚动条样式 */
+.modal-body::-webkit-scrollbar,
+.detail-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track,
+.detail-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb,
+.detail-text::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover,
+.detail-text::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 表单验证样式 */
+.form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+}
+
+/* 必填字段标识 */
+.required::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* 帮助文本 */
+.form-text {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 5px;
+    display: block;
+}
+
+/* 分隔线 */
+.modal-divider {
+    height: 1px;
+    background: #dee2e6;
+    margin: 20px 0;
+    border: none;
+}
+
+/* 图标样式 */
+.modal-icon {
+    font-size: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* 提示信息样式 */
+.modal-tip {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.modal-tip.tip-warning {
+    background: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.modal-tip.tip-info {
+    background: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.modal-tip.tip-success {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.modal-tip.tip-danger {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}

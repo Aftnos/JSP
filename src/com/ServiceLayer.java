@@ -443,6 +443,8 @@ public class ServiceLayer {
 
     public static List<SNCode> getSNCodesByOrder(int orderId) {
         try {
+            // 注意：当前实现假设batch_id等于order_id
+            // 在实际应用中，可能需要通过order_items表查找相关的SN码
             return Model.listSNCodesByBatch(orderId);
         } catch (SQLException e) {
             e.printStackTrace();
