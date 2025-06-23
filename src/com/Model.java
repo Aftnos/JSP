@@ -128,6 +128,11 @@ public class Model {
         return addressDAO.listAll();
     }
 
+    // Check if an address is referenced by any order
+    public static boolean addressHasOrders(int addressId) throws SQLException {
+        return orderDAO.existsByAddressId(addressId);
+    }
+
     // Category operations
     public static List<Category> listCategories() throws SQLException {
         return categoryDAO.listAll();
@@ -185,6 +190,10 @@ public class Model {
 
     public static int markOrderPaid(int id) throws SQLException {
         return orderDAO.markPaid(id);
+    }
+
+    public static int cancelOrder(int id) throws SQLException {
+        return orderDAO.updateStatus(id, "CANCELLED");
     }
 
     public static int addOrderItems(int orderId, List<OrderItem> items) throws SQLException {

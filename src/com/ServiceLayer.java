@@ -227,7 +227,24 @@ public class ServiceLayer {
 
     public static boolean deleteAddress(int id) {
         try {
+            // If the address is used by any order, do not attempt deletion
+            if (Model.addressHasOrders(id)) {
+                return false;
+            }
             return Model.deleteAddress(id) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Determine whether an address can be safely deleted.
+     * Returns true if any order references this address.
+     */
+    public static boolean addressHasOrders(int addressId) {
+        try {
+            return Model.addressHasOrders(addressId);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -390,6 +407,15 @@ public class ServiceLayer {
         }
     }
 
+    public static boolean cancelOrder(int id) {
+        try {
+            return Model.cancelOrder(id) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Order items
     public static boolean addOrderItems(int orderId, List<OrderItem> items) {
         try {
@@ -500,6 +526,10 @@ public class ServiceLayer {
 
     // After sale
     public static boolean applyAfterSale(AfterSale a) {
+        // Ensure a default status to avoid null being persisted
+        if (a.getStatus() == null || a.getStatus().trim().isEmpty()) {
+            a.setStatus("待处理");
+        }
         try {
             return Model.applyAfterSale(a) > 0;
         } catch (SQLException e) {
