@@ -2,8 +2,13 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.Product" %>
 <%@ page import="com.entity.Category" %>
+<%@ page import="com.entity.ProductImage" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="javax.servlet.http.Part" %>
+<%@ page import="java.io.File" %>
+<%@ page import="java.io.IOException" %>
+<%@ page import="java.util.UUID" %>
 <%
     // 获取搜索参数
     String searchKeyword = request.getParameter("searchKeyword");
@@ -37,10 +42,66 @@
                 operationResult += "商品名称: " + name + "\n";
                 operationResult += "商品价格: ¥" + priceStr + "\n";
                 operationResult += "库存数量: " + stockStr;
+                
+                // 如果商品添加成功，处理图片上传
+                if (result && newProduct.getId() > 0) {
+                    try {
+                        Part filePart = request.getPart("productImage");
+                        if (filePart != null && filePart.getSize() > 0) {
+                            String fileName = filePart.getSubmittedFileName();
+                            if (fileName != null && !fileName.trim().isEmpty()) {
+                                // 获取文件扩展名
+                                String fileExtension = "";
+                                int lastDotIndex = fileName.lastIndexOf(".");
+                                if (lastDotIndex > 0) {
+                                    fileExtension = fileName.substring(lastDotIndex);
+                                }
+                                
+                                // 生成唯一文件名
+                                String uniqueFileName = "product_" + newProduct.getId() + "_" + UUID.randomUUID().toString() + fileExtension;
+                                
+                                // 设置保存路径 - 保存到源码目录
+                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                File uploadDir = new File(uploadPath);
+                                if (!uploadDir.exists()) {
+                                    uploadDir.mkdirs();
+                                }
+                                
+                                String filePath = uploadPath + File.separator + uniqueFileName;
+                                
+                                try {
+                                    // 保存文件
+                                    filePart.write(filePath);
+                                    
+                                    // 生成相对URL路径
+                                    String imageUrl = "/images/products/" + uniqueFileName;
+                                    
+                                    // 保存到数据库
+                                    ProductImage img = new ProductImage();
+                                    img.setProductId(newProduct.getId());
+                                    img.setUrl(imageUrl);
+                                    
+                                    boolean imageResult = ServiceLayer.addProductImage(img);
+                                    if (imageResult) {
+                                        operationResult += "\n图片上传成功: " + uniqueFileName;
+                                    } else {
+                                        operationResult += "\n图片保存到数据库失败";
+                                        // 删除已上传的文件
+                                        new File(filePath).delete();
+                                    }
+                                } catch (IOException e) {
+                                    operationResult += "\n图片保存失败: " + e.getMessage();
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        operationResult += "\n图片上传处理失败: " + e.getMessage();
+                    }
+                }
+                
                 if (result) {
-                    // 刷新页面数据
-                    response.sendRedirect(request.getRequestURI());
-                    return;
+                    // 添加成功，页面将自动显示更新后的商品列表
+                    // 移除重定向，让页面自然刷新显示新数据
                 }
             } catch (Exception e) {
                 operationResult = "添加商品失败: " + e.getMessage();
@@ -432,7 +493,15 @@
                                     <td><%= index++ %></td>
                                     <td>
                                         <div class="product-image">
-                                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNEREREREQiLz4KPHBhdGggZD0iTTI1IDI1SDM1VjM1SDI1VjI1WiIgZmlsbD0iI0JCQkJCQiIvPgo8L3N2Zz4=" alt="商品图片" class="product-thumb">
+                                            <%
+                                                // 获取商品的第一张图片
+                                                List<ProductImage> productImages = ServiceLayer.listProductImages(product.getId());
+                                                String imageUrl = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNEREREREQiLz4KPGF0aCBkPSJNMjUgMjVIMzVWMzVIMjVWMjVaIiBmaWxsPSIjQkJCQkJCIi8+PC9zdmc+";
+                                                if (productImages != null && !productImages.isEmpty()) {
+                                                    imageUrl = productImages.get(0).getUrl();
+                                                }
+                                            %>
+                                            <img src="<%= imageUrl %>" alt="商品图片" class="product-thumb" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNEREREREQiLz4KPGF0aCBkPSJNMjUgMjVIMzVWMzVIMjVWMjVaIiBmaWxsPSIjQkJCQkJCIi8+PC9zdmc+'">
                                         </div>
                                     </td>
                                     <td><%= product.getName() != null ? product.getName() : "" %></td>
@@ -602,7 +671,7 @@
                         <label>商品图片：</label>
                         <div class="view-field">
                             <div class="image-preview" id="viewImagePreview">
-                                <img id="viewPreviewImg" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik02MCA2MEgxNDBWMTQwSDYwVjYwWiIgZmlsbD0iI0RERERERCIvPgo8cGF0aCBkPSJNODAgODBIMTIwVjEyMEg4MFY4MFoiIGZpbGw9IiNCQkJCQkIiLz4KPC9zdmc+" alt="商品图片" style="max-width: 200px; max-height: 200px; border: 1px solid #ddd; border-radius: 4px;">
+                                <img id="viewPreviewImg" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik02MCA2MEgxNDBWMTQwSDYwVjYwWiIgZmlsbD0iI0RERERERCIvPgo8cGF0aCBkPSJNODAgODBIMTIwVjEyMEg4MFY4MFoiIGZpbGw9IiNCQkJCQkIiLz4KPC9zdmc+" alt="商品图片" style="max-width: 200px; max-height: 200px; border: 1px solid #ddd; border-radius: 4px;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik02MCA2MEgxNDBWMTQwSDYwVjYwWiIgZmlsbD0iI0RERERERCIvPgo8cGF0aCBkPSJNODAgODBIMTIwVjEyMEg4MFY4MFoiIGZpbGw9IiNCQkJCQkIiLz4KPC9zdmc+'">
                             </div>
                         </div>
                     </div>
@@ -701,11 +770,12 @@
                 var cells = row.querySelectorAll('td');
                 
                 // 获取商品信息（根据表格列的顺序）
-                var productName = cells[1].textContent.trim();
-                var categoryName = cells[2].textContent.trim();
-                var price = cells[3].textContent.trim();
-                var stock = cells[4].textContent.trim();
-                var description = cells[5].textContent.trim();
+                var productImage = cells[2].querySelector('img').src; // 获取图片URL
+                var productName = cells[3].textContent.trim();
+                var categoryName = cells[4].textContent.trim();
+                var price = cells[5].textContent.trim();
+                var stock = cells[6].textContent.trim();
+                var description = cells[7].textContent.trim();
                 
                 // 填充查看弹窗的字段
                 document.getElementById('viewProductName').textContent = productName;
@@ -713,6 +783,9 @@
                 document.getElementById('viewProductStock').textContent = stock;
                 document.getElementById('viewProductCategory').textContent = categoryName;
                 document.getElementById('viewProductDescription').textContent = description || '暂无描述';
+                
+                // 设置商品图片
+                document.getElementById('viewPreviewImg').src = productImage;
                 
                 // 显示查看弹窗
                 document.getElementById('viewProductModal').style.display = 'block';
@@ -793,7 +866,6 @@
         // 保存商品
         function saveProduct() {
             var form = document.getElementById('productForm');
-            var formData = new FormData(form);
             
             // 验证必填字段
             var name = document.getElementById('productName').value.trim();
@@ -819,10 +891,11 @@
                 return;
             }
             
-            // 创建隐藏表单提交数据
+            // 创建支持文件上传的表单
             var submitForm = document.createElement('form');
             submitForm.method = 'post';
             submitForm.action = '';
+            submitForm.enctype = 'multipart/form-data';
             
             // 添加action参数 - 根据是否有productId判断是添加还是编辑
             var actionInput = document.createElement('input');
@@ -849,6 +922,13 @@
                 input.value = document.getElementById(fieldName).value;
                 submitForm.appendChild(input);
             });
+            
+            // 添加文件上传字段
+            var fileInput = document.getElementById('productImage');
+            if (fileInput.files.length > 0) {
+                var clonedFileInput = fileInput.cloneNode(true);
+                submitForm.appendChild(clonedFileInput);
+            }
             
             document.body.appendChild(submitForm);
             submitForm.submit();
