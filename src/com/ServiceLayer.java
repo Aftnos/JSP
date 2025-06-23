@@ -507,6 +507,10 @@ public class ServiceLayer {
 
     // After sale
     public static boolean applyAfterSale(AfterSale a) {
+        // Ensure a default status to avoid null being persisted
+        if (a.getStatus() == null || a.getStatus().trim().isEmpty()) {
+            a.setStatus("待处理");
+        }
         try {
             return Model.applyAfterSale(a) > 0;
         } catch (SQLException e) {
