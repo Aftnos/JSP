@@ -125,12 +125,12 @@
             <div class="item-qty">x<%= item.getQuantity() %></div>
             <div class="item-price">¥<%= item.getPrice() %></div>
         </div>
-        <% if(snList!=null){ for(SNCode sn : snList){ if(sn.getProductId()==item.getProductId()){ %>
+        <% if(snList!=null && order.isPaid() && !"CANCELLED".equalsIgnoreCase(order.getStatus())){ for(SNCode sn : snList){ if(sn.getProductId()==item.getProductId()){ %>
         <div class="sn-row">SN: <%= sn.getCode() %></div>
         <% }} } %>
         <% } %>
     </div>
-    <% if(!order.isPaid()){ %>
+    <% if(!order.isPaid() && !"CANCELLED".equalsIgnoreCase(order.getStatus())){ %>
     <div class="order-actions" style="margin-top:15px;">
         <a href="payment.jsp?orderId=<%=order.getId()%>" class="pay-btn">立即支付</a>
         <form method="post" style="display:inline;" onsubmit="return confirm('确定取消订单?');">
