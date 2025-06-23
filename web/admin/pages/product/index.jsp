@@ -10,6 +10,7 @@
 <%@ page import="java.io.File" %>
 <%@ page import="java.io.IOException" %>
 <%@ page import="java.util.UUID" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     // 获取搜索参数
     String searchKeyword = request.getParameter("searchKeyword");

@@ -3,6 +3,7 @@
 <%@ page import="com.entity.Address" %>
 <%@ page import="com.entity.User" %>
 <%@ page import="java.util.List" %>
+<%@ include file="../checkAdmin.jsp" %>
 
 <%
     // 获取所有用户用于测试

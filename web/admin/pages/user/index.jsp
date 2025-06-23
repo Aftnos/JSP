@@ -2,6 +2,7 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.User" %>
 <%@ page import="java.util.*" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     request.setCharacterEncoding("UTF-8");
     String action = request.getParameter("action");

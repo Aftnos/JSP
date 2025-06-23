@@ -5,6 +5,7 @@
 <%@ page import="com.entity.Order" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
+<%@ include file="../checkAdmin.jsp" %>
 
 <%
     // 获取所有商品和订单用于测试

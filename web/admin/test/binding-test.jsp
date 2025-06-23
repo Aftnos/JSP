@@ -3,6 +3,7 @@
 <%@ page import="com.entity.User" %>
 <%@ page import="com.entity.Binding" %>
 <%@ page import="java.util.List" %>
+<%@ include file="../checkAdmin.jsp" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

@@ -2,6 +2,7 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="java.util.Arrays" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");

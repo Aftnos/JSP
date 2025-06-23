@@ -7,6 +7,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     // 处理状态更新请求
     String action = request.getParameter("action");
