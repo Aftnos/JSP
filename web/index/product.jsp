@@ -28,7 +28,7 @@
     String msg=null;
     if("POST".equalsIgnoreCase(request.getMethod()) && request.getParameter("addCart")!=null){
         Object obj=session.getAttribute("user");
-        if(obj==null){response.sendRedirect("login.jsp"); return;} 
+        if(obj==null){response.sendRedirect("login.jsp"); return;}
         com.entity.User u=(com.entity.User)obj;
         CartItem item=new CartItem();
         item.setUserId(u.getId());
@@ -38,6 +38,41 @@
             msg="已加入购物车";
         }else{
             msg="加入购物车失败";
+        }
+    }
+    // 立即购买
+    if("POST".equalsIgnoreCase(request.getMethod()) && request.getParameter("buyNow")!=null){
+        Object obj=session.getAttribute("user");
+        if(obj==null){response.sendRedirect("login.jsp"); return;}
+        com.entity.User u=(com.entity.User)obj;
+        java.util.List<com.entity.Address> adds = ServiceLayer.getAddresses(u.getId());
+        com.entity.Address addr = null;
+        if(adds!=null){
+            for(com.entity.Address a:adds){ if(a.isDefault()){ addr=a; break; } }
+            if(addr==null && !adds.isEmpty()) addr = adds.get(0);
+        }
+        if(addr==null){
+            msg="请先添加收货地址";
+        }else{
+            java.util.List<com.entity.OrderItem> ois=new java.util.ArrayList<>();
+            com.entity.OrderItem oi=new com.entity.OrderItem();
+            oi.setProductId(pid);
+            oi.setQuantity(1);
+            oi.setPrice(p.getPrice());
+            ois.add(oi);
+            com.entity.Order o=new com.entity.Order();
+            o.setUserId(u.getId());
+            o.setAddressId(addr.getId());
+            o.setStatus("NEW");
+            o.setTotal(p.getPrice());
+            o.setPaid(false);
+            o.setItems(ois);
+            if(ServiceLayer.createOrder(o)){
+                response.sendRedirect("payment.jsp?orderId="+o.getId());
+                return;
+            }else{
+                msg="创建订单失败";
+            }
         }
     }
 %>

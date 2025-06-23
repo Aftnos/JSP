@@ -88,8 +88,11 @@
             gap: 12px;
             z-index: 100;
         }
+        .product-actions form{
+            flex:1;
+        }
         .btn-cart {
-            flex: 1;
+            width:100%;
             background: #ffa500;
             color: #fff;
             border: none;
