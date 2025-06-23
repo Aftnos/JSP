@@ -4,6 +4,7 @@
 <%@ page import="com.entity.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
+<%@ include file="../checkAdmin.jsp" %>
 
 <%
     // 获取所有用户和售后工单用于测试

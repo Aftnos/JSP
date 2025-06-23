@@ -4,6 +4,7 @@
 <%@ page import="com.entity.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     // 获取搜索参数
     String searchKeyword = request.getParameter("searchKeyword");

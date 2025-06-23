@@ -2,6 +2,7 @@
 <%@ page import="com.ServiceLayer" %>
 <%@ page import="com.entity.User" %>
 <%@ page import="java.util.List" %>
+<%@ include file="../checkAdmin.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>

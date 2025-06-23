@@ -22,6 +22,7 @@
     <div class="settings-section">
         <div class="section-title">管理功能</div>
         <div class="settings-list">
+            <% if (u.isAdmin()) { %>
             <a href="/admin/index.jsp" class="settings-item admin-item">
                 <div class="settings-item-content">
                     <div class="settings-icon">⚙️</div>
@@ -29,6 +30,7 @@
                 </div>
                 <span class="arrow">></span>
             </a>
+            <% } %>
         </div>
     </div>
     

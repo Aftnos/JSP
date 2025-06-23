@@ -3,6 +3,7 @@
 <%@ page import="com.entity.Address" %>
 <%@ page import="com.entity.User" %>
 <%@ page import="java.util.List" %>
+<%@ include file="../../checkAdmin.jsp" %>
 <%
     // 处理各种操作
     String action = request.getParameter("action");
