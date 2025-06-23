@@ -12,11 +12,13 @@
     Product p = ServiceLayer.getProductById(pid);
     if(p==null){ response.sendRedirect("index.jsp"); return; }
     
-    // 获取商品图片
-    List<ProductImage> images = ServiceLayer.listProductImages(pid);
+    // 获取商品主图、副图和介绍图
+    List<ProductImage> mainImgs = ServiceLayer.listProductImagesByType(pid, "main");
+    List<ProductImage> subImgs = ServiceLayer.listProductImagesByType(pid, "sub");
+    List<ProductImage> introImgs = ServiceLayer.listProductImagesByType(pid, "intro");
     String mainImageUrl = "static/image/default-product.jpg"; // 默认图片
-    if(images != null && !images.isEmpty()) {
-        mainImageUrl = images.get(0).getUrl();
+    if(mainImgs != null && !mainImgs.isEmpty()) {
+        mainImageUrl = mainImgs.get(0).getUrl();
     }
     
     // 截取商品描述前20字
@@ -63,6 +65,14 @@
         <img src="<%= mainImageUrl %>" alt="<%= p.getName() %>" class="product-image">
         <div class="page-indicator">2/8</div>
     </div>
+
+    <% if(subImgs != null && !subImgs.isEmpty()) { %>
+    <div class="sub-images">
+        <% for(ProductImage img : subImgs) { %>
+            <img src="<%= img.getUrl() %>" alt="<%= p.getName() %>">
+        <% } %>
+    </div>
+    <% } %>
     
     <!-- 产品信息 -->
     <div class="product-info">
@@ -79,6 +89,14 @@
         </form>
         <button class="btn-buy" onclick="buyNow(<%= p.getId() %>)">立即购买</button>
     </div>
+
+    <% if(introImgs != null && !introImgs.isEmpty()) { %>
+    <div class="detail-images">
+        <% for(ProductImage img : introImgs) { %>
+            <img src="<%= img.getUrl() %>" alt="detail">
+        <% } %>
+    </div>
+    <% } %>
 </div>
 
 

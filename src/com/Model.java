@@ -86,6 +86,16 @@ public class Model {
         return productImageDAO.listByProduct(productId);
     }
 
+    public static List<ProductImage> listProductImagesByType(int productId, String type) throws SQLException {
+        return productImageDAO.listByProductAndType(productId, type);
+    }
+
+    public static ProductImage getMainProductImage(int productId) throws SQLException {
+        List<ProductImage> imgs = productImageDAO.listByProductAndType(productId, "main");
+        if (imgs.isEmpty()) return null;
+        return imgs.get(0);
+    }
+
     public static ProductImage getProductImageById(int id) throws SQLException {
         return productImageDAO.findById(id);
     }

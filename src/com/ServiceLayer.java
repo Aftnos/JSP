@@ -161,6 +161,24 @@ public class ServiceLayer {
         }
     }
 
+    public static List<ProductImage> listProductImagesByType(int productId, String type) {
+        try {
+            return Model.listProductImagesByType(productId, type);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public static ProductImage getMainProductImage(int productId) {
+        try {
+            return Model.getMainProductImage(productId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static ProductImage getProductImageById(int id) {
         try {
             return Model.getProductImageById(id);

@@ -133,3 +133,30 @@
             font-size: 12px;
             font-weight: 500;
         }
+
+        .sub-images {
+            display: flex;
+            overflow-x: auto;
+            background: #fff;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .sub-images img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .detail-images {
+            background: #fff;
+            padding: 8px 0;
+            margin-bottom: 60px;
+        }
+
+        .detail-images img {
+            width: 100%;
+            display: block;
+        }

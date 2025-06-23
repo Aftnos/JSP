@@ -10,10 +10,26 @@ import java.util.List;
 public class ProductImageDAO {
     public List<ProductImage> listByProduct(int productId) throws SQLException {
         List<ProductImage> list = new ArrayList<>();
-        String sql = "SELECT * FROM product_images WHERE product_id=?";
+        String sql = "SELECT * FROM product_images WHERE product_id=? ORDER BY id";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(map(rs));
+                }
+            }
+        }
+        return list;
+    }
+
+    public List<ProductImage> listByProductAndType(int productId, String type) throws SQLException {
+        List<ProductImage> list = new ArrayList<>();
+        String sql = "SELECT * FROM product_images WHERE product_id=? AND type=? ORDER BY id";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setString(2, type);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(map(rs));
@@ -38,11 +54,12 @@ public class ProductImageDAO {
     }
 
     public int insert(ProductImage img) throws SQLException {
-        String sql = "INSERT INTO product_images(product_id,url) VALUES(?,?)";
+        String sql = "INSERT INTO product_images(product_id,url,type) VALUES(?,?,?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, img.getProductId());
             ps.setString(2, img.getUrl());
+            ps.setString(3, img.getType());
             int affected = ps.executeUpdate();
             if (affected > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -54,12 +71,13 @@ public class ProductImageDAO {
     }
 
     public int update(ProductImage img) throws SQLException {
-        String sql = "UPDATE product_images SET product_id=?, url=? WHERE id=?";
+        String sql = "UPDATE product_images SET product_id=?, url=?, type=? WHERE id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, img.getProductId());
             ps.setString(2, img.getUrl());
-            ps.setInt(3, img.getId());
+            ps.setString(3, img.getType());
+            ps.setInt(4, img.getId());
             return ps.executeUpdate();
         }
     }
@@ -78,6 +96,7 @@ public class ProductImageDAO {
         img.setId(rs.getInt("id"));
         img.setProductId(rs.getInt("product_id"));
         img.setUrl(rs.getString("url"));
+        img.setType(rs.getString("type"));
         return img;
     }
 }
