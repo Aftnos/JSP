@@ -62,21 +62,19 @@
                                 // 生成唯一文件名
                                 String uniqueFileName = "product_" + newProduct.getId() + "_" + UUID.randomUUID().toString() + fileExtension;
                                 
-                                // 设置保存路径 - 保存到源码目录
-                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                // 动态生成保存路径
+                                String uploadPath = application.getRealPath("/images/products/" + newProduct.getId());
                                 File uploadDir = new File(uploadPath);
-                                if (!uploadDir.exists()) {
-                                    uploadDir.mkdirs();
-                                }
-                                
+                                if (!uploadDir.exists()) uploadDir.mkdirs();
+
                                 String filePath = uploadPath + File.separator + uniqueFileName;
                                 
                                 try {
                                     // 保存文件
                                     filePart.write(filePath);
-                                    
+
                                     // 生成相对URL路径
-                                    String imageUrl = "/images/products/" + uniqueFileName;
+                                    String imageUrl = "/images/products/" + newProduct.getId() + "/" + uniqueFileName;
                                     
                                     // 保存到数据库
                                     ProductImage img = new ProductImage();
@@ -112,15 +110,13 @@
                                     fileExtension = fileName.substring(lastDotIndex);
                                 }
                                 String uniqueFileName = "product_" + newProduct.getId() + "_" + UUID.randomUUID().toString() + fileExtension;
-                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                String uploadPath = application.getRealPath("/images/products/" + newProduct.getId());
                                 File uploadDir = new File(uploadPath);
-                                if (!uploadDir.exists()) {
-                                    uploadDir.mkdirs();
-                                }
+                                if (!uploadDir.exists()) uploadDir.mkdirs();
                                 String filePath = uploadPath + File.separator + uniqueFileName;
                                 try {
                                     secPart.write(filePath);
-                                    String secUrl = "/images/products/" + uniqueFileName;
+                                    String secUrl = "/images/products/" + newProduct.getId() + "/" + uniqueFileName;
                                     ProductExtraImage img = new ProductExtraImage();
                                     img.setProductId(newProduct.getId());
                                     img.setUrl(secUrl);
@@ -153,15 +149,13 @@
                                     fileExtension = fileName.substring(lastDotIndex);
                                 }
                                 String uniqueFileName = "product_" + newProduct.getId() + "_" + UUID.randomUUID().toString() + fileExtension;
-                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                String uploadPath = application.getRealPath("/images/products/" + newProduct.getId());
                                 File uploadDir = new File(uploadPath);
-                                if (!uploadDir.exists()) {
-                                    uploadDir.mkdirs();
-                                }
+                                if (!uploadDir.exists()) uploadDir.mkdirs();
                                 String filePath = uploadPath + File.separator + uniqueFileName;
                                 try {
                                     introPart.write(filePath);
-                                    String introUrl = "/images/products/" + uniqueFileName;
+                                    String introUrl = "/images/products/" + newProduct.getId() + "/" + uniqueFileName;
                                     ProductExtraImage img = new ProductExtraImage();
                                     img.setProductId(newProduct.getId());
                                     img.setUrl(introUrl);
@@ -231,15 +225,13 @@
                                     fileExtension = fileName.substring(lastDotIndex);
                                 }
                                 String uniqueFileName = "product_" + productId + "_" + UUID.randomUUID().toString() + fileExtension;
-                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                String uploadPath = application.getRealPath("/images/products/" + productId);
                                 File uploadDir = new File(uploadPath);
-                                if (!uploadDir.exists()) {
-                                    uploadDir.mkdirs();
-                                }
+                                if (!uploadDir.exists()) uploadDir.mkdirs();
                                 String filePath = uploadPath + File.separator + uniqueFileName;
                                 try {
                                     filePart.write(filePath);
-                                    String imageUrl = "/images/products/" + uniqueFileName;
+                                    String imageUrl = "/images/products/" + productId + "/" + uniqueFileName;
                                     ProductImage img = new ProductImage();
                                     img.setProductId(productId);
                                     img.setUrl(imageUrl);
@@ -264,15 +256,13 @@
                                     fileExtension = fileName.substring(lastDotIndex);
                                 }
                                 String uniqueFileName = "product_" + productId + "_" + UUID.randomUUID().toString() + fileExtension;
-                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                String uploadPath = application.getRealPath("/images/products/" + productId);
                                 File uploadDir = new File(uploadPath);
-                                if (!uploadDir.exists()) {
-                                    uploadDir.mkdirs();
-                                }
+                                if (!uploadDir.exists()) uploadDir.mkdirs();
                                 String filePath = uploadPath + File.separator + uniqueFileName;
                                 try {
                                     secPart.write(filePath);
-                                    String secUrl = "/images/products/" + uniqueFileName;
+                                    String secUrl = "/images/products/" + productId + "/" + uniqueFileName;
                                     ProductExtraImage img = new ProductExtraImage();
                                     img.setProductId(productId);
                                     img.setUrl(secUrl);
@@ -298,15 +288,13 @@
                                     fileExtension = fileName.substring(lastDotIndex);
                                 }
                                 String uniqueFileName = "product_" + productId + "_" + UUID.randomUUID().toString() + fileExtension;
-                                String uploadPath = "f:/项目文件/实训/JSP/web/images/products/";
+                                String uploadPath = application.getRealPath("/images/products/" + productId);
                                 File uploadDir = new File(uploadPath);
-                                if (!uploadDir.exists()) {
-                                    uploadDir.mkdirs();
-                                }
+                                if (!uploadDir.exists()) uploadDir.mkdirs();
                                 String filePath = uploadPath + File.separator + uniqueFileName;
                                 try {
                                     introPart.write(filePath);
-                                    String introUrl = "/images/products/" + uniqueFileName;
+                                    String introUrl = "/images/products/" + productId + "/" + uniqueFileName;
                                     ProductExtraImage img = new ProductExtraImage();
                                     img.setProductId(productId);
                                     img.setUrl(introUrl);
@@ -532,7 +520,7 @@
                         <div class="welcome-text">欢迎进入小米商城管理系统</div>
                     </div>
                     <div class="user-avatar-container">
-                        <img src="../../images/default-avatar.png" alt="用户头像" class="user-avatar" id="userAvatar" onclick="toggleUserMenu()" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFNUU1RTUiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iNiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNMzAgMzJDMzAgMjYuNDc3MSAyNS41MjI5IDIyIDIwIDIyQzE0LjQ3NzEgMjIgMTAgMjYuNDc3MSAxMCAzMkgzMFoiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+'">
+                        <img src="../../images/default.png" alt="用户头像" class="user-avatar" id="userAvatar" onclick="toggleUserMenu()" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFNUU1RTUiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iNiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNMzAgMzJDMzAgMjYuNDc3MSAyNS41MjI5IDIyIDIwIDIyQzE0LjQ3NzEgMjIgMTAgMjYuNDc3MSAxMCAzMkgzMFoiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+'">
                         <!-- 用户下拉菜单 -->
                         <div class="user-dropdown" id="userDropdown">
                             <div class="dropdown-item" onclick="window.location.href='../../index.jsp'">
@@ -764,7 +752,8 @@
                 <span class="close" onclick="closeProductModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="productForm">
+                <form id="productForm" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="formAction" name="action">
                     <input type="hidden" id="productId" name="productId">
                     
                     <div class="form-group">
@@ -1091,59 +1080,11 @@
                 return;
             }
             
-            // 创建支持文件上传的表单
-            var submitForm = document.createElement('form');
-            submitForm.method = 'post';
-            submitForm.action = '';
-            submitForm.enctype = 'multipart/form-data';
-            
-            // 添加action参数 - 根据是否有productId判断是添加还是编辑
-            var actionInput = document.createElement('input');
-            actionInput.type = 'hidden';
-            actionInput.name = 'action';
-            actionInput.value = productId ? 'edit' : 'add';
-            submitForm.appendChild(actionInput);
-            
-            // 如果是编辑，添加productId
-            if (productId) {
-                var idInput = document.createElement('input');
-                idInput.type = 'hidden';
-                idInput.name = 'productId';
-                idInput.value = productId;
-                submitForm.appendChild(idInput);
-            }
-            
-            // 添加表单数据
-            var fields = ['productName', 'productPrice', 'productStock', 'productCategory', 'productDescription'];
-            fields.forEach(function(fieldName) {
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = fieldName;
-                input.value = document.getElementById(fieldName).value;
-                submitForm.appendChild(input);
-            });
-            
-            // 添加文件上传字段
-            var fileInput = document.getElementById('productImage');
-            if (fileInput.files.length > 0) {
-                var clonedFileInput = fileInput.cloneNode(true);
-                submitForm.appendChild(clonedFileInput);
-            }
+            // 设置 action 参数，根据是否有 productId 判断是添加还是编辑
+            document.getElementById('formAction').value = productId ? 'edit' : 'add';
 
-            var secInput = document.getElementById('secondaryImage');
-            if (secInput.files.length > 0) {
-                var cloneSec = secInput.cloneNode(true);
-                submitForm.appendChild(cloneSec);
-            }
-
-            var introInput = document.getElementById('introImage');
-            if (introInput.files.length > 0) {
-                var cloneIntro = introInput.cloneNode(true);
-                submitForm.appendChild(cloneIntro);
-            }
-            
-            document.body.appendChild(submitForm);
-            submitForm.submit();
+            // 提交表单
+            form.submit();
         }
         
         // 关闭商品弹框
