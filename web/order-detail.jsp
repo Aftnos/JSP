@@ -89,11 +89,19 @@
             <div>总金额：¥<%= total %></div>
         </div>
         <div class="address-info">
-            <select name="addressId" class="address-select" required>
-                <% for(Address a:adds){ %>
-                <option value="<%=a.getId()%>"><%=a.getDetail()%></option>
-                <% } %>
-            </select>
+            <% if(adds == null || adds.isEmpty()){ %>
+                <div class="no-address-warning">
+                    <div class="warning-icon">⚠️</div>
+                    <div class="warning-text">您还没有添加收货地址</div>
+                    <a href="addresses.jsp?showForm=true" class="add-address-link">立即添加收货地址</a>
+                </div>
+            <% } else { %>
+                <select name="addressId" class="address-select" required>
+                    <% for(Address a:adds){ %>
+                    <option value="<%=a.getId()%>"><%=a.getDetail()%></option>
+                    <% } %>
+                </select>
+            <% } %>
         </div>
         <div class="items-section">
             <% for(OrderItem item : items){ Product p = products.stream().filter(x->x.getId()==item.getProductId()).findFirst().orElse(null); %>
@@ -104,7 +112,9 @@
             </div>
             <% } %>
         </div>
-        <button type="submit" class="pay-btn">立即支付</button>
+        <% if(adds != null && !adds.isEmpty()){ %>
+            <button type="submit" class="pay-btn">立即支付</button>
+        <% } %>
     </form>
 <% }else{ %>
     <div class="order-info">

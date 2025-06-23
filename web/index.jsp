@@ -49,6 +49,7 @@
 <header class="header">
     <div class="header-top">
         <div class="search-container">
+            <div class="logo-text" style="font-size: 14px;">小米<br>商城</div>
             <form action="index.jsp" method="get" class="search-form">
                 <input type="text" name="q" placeholder="搜索商品名称" value="<%= q==null?"":q %>" class="search-input"/>
                 <button type="submit" class="search-btn">
@@ -65,7 +66,6 @@
             </a>
             <div class="user-info">
                 <% if(session.getAttribute("user")!=null){ %>
-                    <span>欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %></span>
                     <a href="logout.jsp" class="logout-btn">退出</a>
                 <% }else{ %>
                     <a href="login.jsp" class="login-btn">登录</a>
@@ -140,7 +140,7 @@
                         <div class="product-price">
                             <span class="current-price">¥<%= p.getPrice() %></span>
                         </div>
-                        <button class="buy-btn" onclick="addToCart(<%= p.getId() %>)">立即购买</button>
+                        <button class="buy-btn" onclick="addToCart1(<%= p.getId() %>)">立即购买</button>
                     </div>
                 </div>
                 <% } %>

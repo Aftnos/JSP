@@ -18,14 +18,20 @@
     <link rel="stylesheet" href="css/orders.css"/>
 </head>
 <body>
-<header>
-    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div class="user">
-        <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
-        <% }else{ %>
-        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
-        <% } %>
+<!-- 顶部导航栏 -->
+<header class="header">
+    <div class="header-top">
+        <div class="logo">
+            <a href="index.jsp" style="color:#ff6700;text-decoration:none;font-weight:600;">小米商城</a>
+        </div>
+        <div class="page-title">我的订单</div>
+        <div class="user-info">
+            <% if(session.getAttribute("user")!=null){ %>
+                <a href="logout.jsp" class="logout-btn">退出</a>
+            <% }else{ %>
+                <a href="login.jsp" class="login-btn">登录</a>
+            <% } %>
+        </div>
     </div>
 </header>
 
@@ -38,7 +44,7 @@
     </div>
     <!-- 订单列表 -->
     <div class="order-list">
-        <h3 style="margin: 20px 0; color: #333;">我的订单</h3>
+        <h3 style="margin: 20px 16px 10px 16px; color: #333; font-size: 16px; font-weight: 600;">订单列表</h3>
         <% for(Order o:orders){
             boolean match = true;
             if("paid".equals(filterStatus)) match = o.isPaid();
@@ -49,7 +55,7 @@
             String statusClass = o.isPaid() ? "paid" : "";
             if("CANCELLED".equalsIgnoreCase(o.getStatus())){ statusText = "已取消"; statusClass = "cancelled"; }
         %>
-        <div class="order-card">
+        <div class="order-card" style="margin: 5px 5px">
             <div class="order-card-header">
                 <div class="order-id">订单号：<%= o.getId() %></div>
                 <div class="order-status <%= statusClass %>"><%= statusText %></div>

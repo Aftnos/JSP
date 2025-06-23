@@ -117,7 +117,7 @@
                 if(rImgs != null && !rImgs.isEmpty()) rImg = rImgs.get(0).getUrl();
             %>
             <div class="recommended-item">
-                <div class="recommended-image"><img src="<%=rImg%>" alt="<%=rp.getName()%>" style="width:80px;height:auto;"/></div>
+                <div class="recommended-image"><img src="<%=rImg%>" alt="<%=rp.getName()%>" style="height:100%;width:auto;"/></div>
                 <div class="recommended-info">
                     <a href="product.jsp?id=<%=rp.getId()%>" class="recommended-name"><%=rp.getName()%></a>
                     <div class="recommended-price">
