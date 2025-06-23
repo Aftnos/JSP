@@ -268,6 +268,13 @@ public class Model {
         return bindingDAO.unbind(code);
     }
 
+    /**
+     * Remove all bindings for a specific user. Used prior to deleting a user.
+     */
+    public static int deleteBindingsByUser(int userId) throws SQLException {
+        return bindingDAO.deleteByUserId(userId);
+    }
+
     // After sale
     public static int applyAfterSale(AfterSale a) throws SQLException {
         return afterSaleDAO.insert(a);
