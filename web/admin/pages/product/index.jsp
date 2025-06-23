@@ -3,6 +3,7 @@
 <%@ page import="com.entity.Product" %>
 <%@ page import="com.entity.Category" %>
 <%@ page import="com.entity.ProductImage" %>
+<%@ page import="com.entity.ProductExtraImage" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="javax.servlet.http.Part" %>
