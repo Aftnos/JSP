@@ -538,10 +538,17 @@
                                             String statusText = "未知";
                                             String statusClass = "";
                                             if (order.getStatus() != null) {
+                                                boolean isPaid = order.isPaid();
+                                                String str = isPaid ? "已付款" : "待付款";
                                                 switch (order.getStatus()) {
                                                     case "pending":
-                                                        statusText = "待付款";
-                                                        statusClass = "status-pending";
+                                                        if (isPaid) {
+                                                            statusText = "已付款";
+                                                            statusClass = "status-paid";
+                                                        } else {
+                                                            statusText = "待付款";
+                                                            statusClass = "status-pending";
+                                                        }
                                                         break;
                                                     case "paid":
                                                         statusText = "已付款";
@@ -559,9 +566,13 @@
                                                         statusText = "已完成";
                                                         statusClass = "status-completed";
                                                         break;
-                                                    case "cancelled":
+                                                    case "CANCELLED":
                                                         statusText = "已取消";
                                                         statusClass = "status-cancelled";
+                                                        break;
+                                                    case "REFUNDED":
+                                                        statusText = "已退款";
+                                                        statusClass = "status-refunded";
                                                         break;
                                                 }
                                             }
