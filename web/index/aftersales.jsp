@@ -28,17 +28,6 @@
     <link rel="stylesheet" href="css/aftersales.css"/>
 </head>
 <body>
-<header>
-    <div class="logo"><a href="index.jsp" style="color:#fff;text-decoration:none;">小米商城</a></div>
-    <div class="user">
-        <% if(session.getAttribute("user")!=null){ %>
-        欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %> | <a href="logout.jsp" style="color:#fff;">退出</a>
-        <% }else{ %>
-        <a href="login.jsp" style="color:#fff;">登录</a> | <a href="register.jsp" style="color:#fff;">注册</a>
-        <% } %>
-    </div>
-</header>
-
 <div class="service-header">
     <div class="service-title">售后服务</div>
     <a href="service.jsp" class="back-btn">返回</a>

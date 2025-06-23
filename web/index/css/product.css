@@ -1,4 +1,4 @@
-        body {
+body {
             margin: 0;
             padding: 0;
             background: #f5f5f5;
@@ -102,15 +102,33 @@
         }
         .product-actions {
             position: fixed;
-            bottom: 70px; /* 在底部导航上方 */
+            bottom: 54px; /* 紧贴底部导航栏 */
             left: 0;
             right: 0;
             background: #fff;
             border-top: 1px solid #e0e0e0;
             padding: 12px 16px;
             display: flex;
-            gap: 12px;
+            align-items: center;
+            gap: 4px;
             z-index: 100;
+        }
+        .btn-home {
+            background: none;
+            color: #666;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 8px;
+        }
+        .btn-home:hover {
+            background: #f5f5f5;
         }
         .btn-cart {
             flex: 1;

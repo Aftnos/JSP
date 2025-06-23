@@ -48,12 +48,6 @@
 <!-- 顶部导航栏 -->
 <header class="header">
     <div class="header-top">
-        <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff6700">
-                <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
-            </svg>
-            <span>小米商城</span>
-        </div>
         <div class="search-container">
             <form action="index.jsp" method="get" class="search-form">
                 <input type="text" name="q" placeholder="搜索商品名称" value="<%= q==null?"":q %>" class="search-input"/>

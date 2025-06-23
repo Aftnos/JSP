@@ -31,19 +31,6 @@
     <link rel="stylesheet" href="css/my.css"/>
 </head>
 <body>
-<header class="header">
-    <div class="header-top">
-        <div class="logo"><a href="index.jsp" style="color:#ff6700;text-decoration:none;">小米商城</a></div>
-        <div class="user-info">
-            <% if(session.getAttribute("user")!=null){ %>
-            欢迎，<%= ((com.entity.User)session.getAttribute("user")).getUsername() %>
-            <% }else{ %>
-            <a href="login.jsp" class="login-btn">登录</a> | <a href="register.jsp" class="login-btn">注册</a>
-            <% } %>
-        </div>
-    </div>
-</header>
-
 <div class="profile-container">
     <!-- 用户信息头部 -->
     <div class="profile-header">
@@ -74,20 +61,10 @@
             <a href="orders.jsp" class="view-all">全部订单 ></a>
         </div>
         <div class="order-stats">
-            <a href="orders.jsp?status=pending" class="order-stat">
+            <a href="orders.jsp" class="order-stat">
                 <div class="stat-icon">📦</div>
-                <div class="stat-label">待付款</div>
-                <div class="stat-count"><%= pendingCount %></div>
-            </a>
-            <a href="orders.jsp?status=shipped" class="order-stat">
-                <div class="stat-icon">🚚</div>
-                <div class="stat-label">待收货</div>
-                <div class="stat-count"><%= shippedCount %></div>
-            </a>
-            <a href="aftersales.jsp" class="order-stat">
-                <div class="stat-icon">🔧</div>
-                <div class="stat-label">退换修</div>
-                <div class="stat-count"><%= returnCount %></div>
+                <div class="stat-label">全部订单</div>
+                <div class="stat-count"><%= orders.size() %></div>
             </a>
         </div>
     </div>
@@ -101,10 +78,10 @@
             </div>
             <div class="menu-arrow">></div>
         </a>
-        <a href="service.jsp" class="menu-item">
-            <div class="menu-icon">😊</div>
+        <a href="aftersales.jsp" class="menu-item">
+            <div class="menu-icon">🛠️</div>
             <div class="menu-content">
-                <div class="menu-title">开发预留功能</div>
+                <div class="menu-title">售后申请</div>
             </div>
             <div class="menu-arrow">></div>
         </a>

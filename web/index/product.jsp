@@ -92,6 +92,11 @@
 
     <!-- 底部操作按钮 -->
     <div class="product-actions">
+        <button class="btn-home" onclick="location.href='index.jsp'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        </button>
         <form method="post" style="flex: 1; margin: 0;">
             <input type="hidden" name="addCart" value="1">
             <button type="submit" class="btn-cart">加入购物车</button>
