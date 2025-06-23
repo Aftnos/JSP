@@ -37,7 +37,7 @@
             Order o = new Order();
             o.setUserId(u.getId());
             o.setAddressId(addrId);
-            o.setStatus("NEW");
+            o.setStatus("pending");
             o.setTotal(total);
             o.setPaid(false);
             o.setItems(items);

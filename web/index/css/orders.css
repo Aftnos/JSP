@@ -68,10 +68,14 @@
             background: #f0f0f0;
             color: #666;
         }
-        .order-status.paid {
-            background: #f6ffed;
-            color: #52c41a;
-        }
+.order-status.paid {
+    background: #f6ffed;
+    color: #52c41a;
+}
+.order-status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
         .order-total {
             font-size: 18px;
             font-weight: 500;
@@ -120,4 +124,21 @@
             background: #ff6b35;
             color: #fff;
             text-decoration: none;
+        }
+        .order-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .filter-link {
+            background: #f0f0f0;
+            color: #666;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .filter-link.active, .filter-link:hover {
+            background: #ff6b35;
+            color: #fff;
         }
