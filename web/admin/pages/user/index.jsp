@@ -278,7 +278,7 @@
                     
                     <div class="form-group">
                         <label for="editPassword">密码：</label>
-                        <input type="password" id="editPassword" name="password" class="form-control" required>
+                        <input type="password" id="editPassword" name="password" class="form-control">
                         <span class="error-message" id="passwordError"></span>
                     </div>
                     

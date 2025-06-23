@@ -35,8 +35,18 @@ function searchUsers() {
 
 // 编辑用户
 function editUser(userId) {
-    console.log('编辑用户:', userId);
-    // TODO: 编辑用户功能待实现
+    const user = allUsersData.find(u => u.id === userId);
+    if (!user) {
+        alert('未找到用户信息！');
+        return;
+    }
+    document.getElementById('editUserId').value = user.id;
+    document.getElementById('editUsername').value = user.username;
+    document.getElementById('editPassword').value = '';
+    document.getElementById('editEmail').value = user.email || '';
+    document.getElementById('editPhone').value = user.phone || '';
+    clearErrorMessages();
+    document.getElementById('editUserModal').style.display = 'block';
 }
 
 // 查看用户
@@ -270,13 +280,52 @@ function checkUsernameExists(username, currentUserId) {
 
 // 保存用户更改
 function saveUserChanges() {
-    // TODO: 保存用户更改功能待实现
+    const userId = parseInt(document.getElementById('editUserId').value);
+
+    if (!validateUserForm()) {
+        return;
+    }
+
+    const username = document.getElementById('editUsername').value.trim();
+    const password = document.getElementById('editPassword').value.trim();
+    const email = document.getElementById('editEmail').value.trim();
+    const phone = document.getElementById('editPhone').value.trim();
+
+    if (checkUsernameExists(username, userId)) {
+        document.getElementById('usernameError').textContent = '用户名已存在';
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.append('userId', userId);
+    params.append('username', username);
+    params.append('password', password);
+    params.append('email', email);
+    params.append('phone', phone);
+
+    fetch('./update_user.jsp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.reload();
+            } else {
+                alert('编辑失败: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('更新用户时发生错误:', error);
+            alert('更新用户时发生错误，请稍后重试');
+        });
 }
 
 // 调用后端API更新用户
-function updateUserInDatabase(userData) {
-    // TODO: 调用后端API更新用户功能待实现
-}
 
 // 页面加载完成后的初始化
 document.addEventListener('DOMContentLoaded', function () {
