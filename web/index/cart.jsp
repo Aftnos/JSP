@@ -15,34 +15,6 @@
     }else if("delete".equals(action)){
         int id=Integer.parseInt(request.getParameter("id"));
         if(ServiceLayer.removeCartItem(id)) message="已删除"; else message="失败";
-    }else if("order".equals(action)){
-        int addrId=Integer.parseInt(request.getParameter("addressId"));
-        java.math.BigDecimal t=new java.math.BigDecimal("0");
-        java.util.List<Product> ps=ServiceLayer.listProducts();
-        java.util.List<CartItem> its=ServiceLayer.getCartItems(u.getId());
-        java.util.List<OrderItem> ois=new java.util.ArrayList<>();
-        for(CartItem c:its){
-            Product p=ps.stream().filter(x->x.getId()==c.getProductId()).findFirst().orElse(null);
-            if(p!=null){
-                t=t.add(p.getPrice().multiply(new java.math.BigDecimal(c.getQuantity())));
-                OrderItem oi=new OrderItem();
-                oi.setProductId(p.getId());
-                oi.setQuantity(c.getQuantity());
-                oi.setPrice(p.getPrice());
-                ois.add(oi);
-            }
-        }
-        Order o=new Order();
-        o.setUserId(u.getId());
-        o.setAddressId(addrId);
-        o.setStatus("NEW");
-        o.setTotal(t);
-        o.setPaid(false);
-        o.setItems(ois);
-        if(ServiceLayer.createOrder(o)){
-            for(CartItem c:its){ServiceLayer.removeCartItem(c.getId());}
-            message="订单已创建";
-        }else message="创建失败";
     }
     java.util.List<CartItem> items=ServiceLayer.getCartItems(u.getId());
     java.util.List<Product> products=ServiceLayer.listProducts();
@@ -138,16 +110,7 @@
     </div>
     
     <div class="checkout-section">
-        <form method="post">
-            <input type="hidden" name="action" value="order"/>
-            <select name="addressId" class="address-select">
-                <option value="">选择收货地址</option>
-                <% for(Address a : ServiceLayer.getAddresses(u.getId())){ %>
-                <option value="<%= a.getId() %>"><%= a.getDetail() %></option>
-                <% } %>
-            </select>
-            <button type="submit" class="checkout-btn">结算(<%=items.size()%>)</button>
-        </form>
+        <a href="order-detail.jsp" class="checkout-btn" style="display:inline-block;text-align:center;">结算(<%=items.size()%>)</a>
     </div>
     
     <% } %>

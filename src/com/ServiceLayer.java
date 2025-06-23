@@ -390,6 +390,15 @@ public class ServiceLayer {
         }
     }
 
+    public static boolean cancelOrder(int id) {
+        try {
+            return Model.cancelOrder(id) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Order items
     public static boolean addOrderItems(int orderId, List<OrderItem> items) {
         try {
