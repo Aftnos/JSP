@@ -39,5 +39,8 @@
         }
     } catch (Exception e) {
         out.print("{\"success\": false, \"message\": \"更新用户时发生错误: " + e.getMessage() + "\"}");
+    } finally {
+        out.flush();
+        out.close();
     }
 %>

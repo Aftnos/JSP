@@ -70,8 +70,12 @@ function deleteUser(userId) {
             },
             body: `action=single&userId=${userId}`
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(resp => resp.text())
+        .then(text => {
+            let data;
+            try { data = JSON.parse(text); } catch (e) {
+                throw new Error('Invalid JSON: ' + text);
+            }
             if (data.success) {
                 alert(data.message);
                 // 刷新页面重新加载数据
@@ -114,8 +118,12 @@ function batchDelete() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(resp => resp.text())
+        .then(text => {
+            let data;
+            try { data = JSON.parse(text); } catch (e) {
+                throw new Error('Invalid JSON: ' + text);
+            }
             if (data.success) {
                 alert(data.message);
                 // 刷新页面重新加载数据
@@ -310,8 +318,12 @@ function saveUserChanges() {
         },
         body: params.toString()
     })
-        .then(response => response.json())
-        .then(data => {
+        .then(resp => resp.text())
+        .then(text => {
+            let data;
+            try { data = JSON.parse(text); } catch (e) {
+                throw new Error('Invalid JSON: ' + text);
+            }
             if (data.success) {
                 alert(data.message);
                 window.location.reload();
