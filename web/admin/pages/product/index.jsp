@@ -684,7 +684,7 @@
                                                 if (productImages != null && !productImages.isEmpty()) {
                                                     imageUrl = productImages.get(0).getUrl();
                                                     if (imageUrl.startsWith("web/")) {
-                                                        imageUrl = imageUrl.substring(3);
+                                                        imageUrl = imageUrl.substring(4);
                                                     }
                                                     if (!imageUrl.startsWith("/")) {
                                                         imageUrl = "/" + imageUrl;
