@@ -41,7 +41,8 @@
         o.setItems(ois);
         if(ServiceLayer.createOrder(o)){
             for(CartItem c:its){ServiceLayer.removeCartItem(c.getId());}
-            message="订单已创建";
+            response.sendRedirect("order-detail.jsp?id="+o.getId());
+            return;
         }else message="创建失败";
     }
     java.util.List<CartItem> items=ServiceLayer.getCartItems(u.getId());

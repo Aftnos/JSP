@@ -187,6 +187,10 @@ public class Model {
         return orderDAO.markPaid(id);
     }
 
+    public static int updateOrderAddress(int id, int addressId) throws SQLException {
+        return orderDAO.updateAddress(id, addressId);
+    }
+
     public static int addOrderItems(int orderId, List<OrderItem> items) throws SQLException {
         return orderItemDAO.insertBatch(orderId, items);
     }

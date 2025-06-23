@@ -99,6 +99,17 @@ public class OrderDAO {
         }
     }
 
+    /** Update the shipping address of an order */
+    public int updateAddress(int id, int addressId) throws SQLException {
+        String sql = "UPDATE orders SET address_id=? WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, addressId);
+            ps.setInt(2, id);
+            return ps.executeUpdate();
+        }
+    }
+
     private Order map(ResultSet rs) throws SQLException {
         Order o = new Order();
         o.setId(rs.getInt("id"));

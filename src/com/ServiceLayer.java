@@ -390,6 +390,16 @@ public class ServiceLayer {
         }
     }
 
+    // 更新订单地址
+    public static boolean updateOrderAddress(int id, int addressId) {
+        try {
+            return Model.updateOrderAddress(id, addressId) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Order items
     public static boolean addOrderItems(int orderId, List<OrderItem> items) {
         try {
